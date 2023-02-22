@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace BookingWebAPI.DAL.Tests.Integration
 {
-    internal class CRURepositoryTest : IntegrationTestBase
+    internal class CRURepositoryTests : IntegrationTestBase
     {
         private CRURepository<Site> _repository;
         private Site _siteForAdding;
@@ -35,7 +35,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [Test]
         public async Task CreateOrUpdateAsync_Test_UpdateExistingEntity()
         {
-            var newSiteDescription = $"Site description modified by {nameof(CRURepositoryTest)}.";
+            var newSiteDescription = $"Site description modified by {nameof(CRURepositoryTests)}.";
             var activeSite = await _repository.GetAsync(new Guid(TestDatabaseSeeder.SiteConstants.ActiveSiteId));
 
             activeSite.Description = newSiteDescription;
