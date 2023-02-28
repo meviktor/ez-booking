@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BookingWebAPI.Common.Constants;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookingWebAPI.Common.Models
 {
-    [Index(nameof(Name), Name = "UQ_Site_Name", IsUnique = true)]
+    [Index(nameof(Name), Name = DatabaseConstraintNames.Site_Name_UQ, IsUnique = true)]
     public class Site : ModelBaseVersioned
     {
         [Required]

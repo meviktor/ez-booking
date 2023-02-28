@@ -11,7 +11,7 @@ namespace BookingWebAPI.DAL.Repositories
             : base(dbContext) {}
 
         // TODO: handling concurrency? Tested?
-        public async Task<TEntity> CreateOrUpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> CreateOrUpdateAsync(TEntity entity)
         {
             if (entity.Id != default && !await ExistsAsync(entity.Id))
             {
