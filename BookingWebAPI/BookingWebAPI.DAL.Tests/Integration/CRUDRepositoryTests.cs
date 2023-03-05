@@ -20,8 +20,8 @@ namespace BookingWebAPI.DAL.Tests.Integration
             _repository = new CRUDRepository<Site>(_dbContext);
         }
 
-        [TestCase(TestDatabaseSeeder.EmptyId)]
-        [TestCase(TestDatabaseSeeder.SiteConstants.DeletedSiteId)]
+        [TestCase(TestDatabaseSeeder.Constants.EmptyId)]
+        [TestCase(TestDatabaseSeeder.Constants.DeletedSiteId)]
         public async Task DeleteAsync_Test_CallWithNotExistingId(string idAsString)
         {
             var action = () => _repository.DeleteAsync(new Guid(idAsString));
@@ -34,7 +34,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         {
             var entriesBeforeDelete = await _repository.GetAll().CountAsync();
 
-            var activeSiteId = new Guid(TestDatabaseSeeder.SiteConstants.ActiveSiteId);
+            var activeSiteId = new Guid(TestDatabaseSeeder.Constants.ActiveSiteId);
             await _repository.DeleteAsync(activeSiteId);
 
             var entriesAfterDelete = await _repository.GetAll().CountAsync();

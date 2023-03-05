@@ -36,7 +36,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         public async Task CreateOrUpdateAsync_Test_UpdateExistingEntity()
         {
             var newSiteDescription = $"Site description modified by {nameof(CRURepositoryTests)}.";
-            var activeSite = await _repository.GetAsync(new Guid(TestDatabaseSeeder.SiteConstants.ActiveSiteId));
+            var activeSite = await _repository.GetAsync(new Guid(TestDatabaseSeeder.Constants.ActiveSiteId));
 
             activeSite.Description = newSiteDescription;
             var updatedActiveSite = await _repository.CreateOrUpdateAsync(activeSite);
@@ -74,7 +74,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [Test]
         public async Task CreateOrUpdateAsync_Test_CreateEntityWithDeletedId()
         {
-            _siteForAdding.Id = new Guid(TestDatabaseSeeder.SiteConstants.DeletedSiteId);
+            _siteForAdding.Id = new Guid(TestDatabaseSeeder.Constants.DeletedSiteId);
 
             var action = () => _repository.CreateOrUpdateAsync(_siteForAdding);
 

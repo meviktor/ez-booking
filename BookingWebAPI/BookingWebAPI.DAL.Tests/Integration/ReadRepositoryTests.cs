@@ -23,15 +23,15 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [Test]
         public async Task GetAsync_Test_CallWithExistingId()
         {
-            var activeSiteId = new Guid(TestDatabaseSeeder.SiteConstants.ActiveSiteId);
+            var activeSiteId = new Guid(TestDatabaseSeeder.Constants.ActiveSiteId);
 
             var retrievedSite = await _repository.GetAsync(activeSiteId);
 
             retrievedSite?.Id.Should().Be(activeSiteId);
         }
 
-        [TestCase(TestDatabaseSeeder.EmptyId)]
-        [TestCase(TestDatabaseSeeder.SiteConstants.DeletedSiteId)]
+        [TestCase(TestDatabaseSeeder.Constants.EmptyId)]
+        [TestCase(TestDatabaseSeeder.Constants.DeletedSiteId)]
         public async Task GetAsync_Test_CallWithNotExistingId(string idAsString)
         {
             var action = () => _repository.GetAsync(new Guid(idAsString));
@@ -42,13 +42,13 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [Test]
         public async Task ExistsAsync_Test_CallWithExistingId()
         {
-            var siteExists = await _repository.ExistsAsync(new Guid(TestDatabaseSeeder.SiteConstants.ActiveSiteId));
+            var siteExists = await _repository.ExistsAsync(new Guid(TestDatabaseSeeder.Constants.ActiveSiteId));
 
             siteExists.Should().BeTrue();
         }
 
-        [TestCase(TestDatabaseSeeder.EmptyId)]
-        [TestCase(TestDatabaseSeeder.SiteConstants.DeletedSiteId)]
+        [TestCase(TestDatabaseSeeder.Constants.EmptyId)]
+        [TestCase(TestDatabaseSeeder.Constants.DeletedSiteId)]
         public async Task ExistsAsync_Test_CallWithNotExistingId(string idAsString)
         {
             var siteExists = await _repository.ExistsAsync(new Guid(idAsString));

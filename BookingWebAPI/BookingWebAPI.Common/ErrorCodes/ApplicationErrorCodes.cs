@@ -19,5 +19,10 @@
         // BookingWebAPIUser
         public const string UserUserNameMustBeUnique = nameof(UserUserNameMustBeUnique);
         public const string UserEmailMustBeUnique = nameof(UserEmailMustBeUnique);
+        public const string UserEmailTooLong = nameof(UserEmailTooLong);
+        public const string UserEmailRequired = nameof(UserEmailRequired);
+        public const string UserEmailInvalidFormat = nameof(UserEmailInvalidFormat);
+        public const string UserUserNameTooLong = nameof(UserUserNameTooLong);
+        public const string UserUserNameRequired = nameof(UserUserNameRequired);
     }
 }

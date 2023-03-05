@@ -10,18 +10,16 @@ namespace BookingWebAPI.Common.Models
     public class BookingWebAPIUser : ModelBase
     {
         [Required]
-        [MaxLength(50)]
+        [MaxLength(ApplicationConstants.UserNameMaximumLength)]
         public string UserName { get; set; } = null!;
 
         [Required]
-        [MaxLength(320)]
-        [DataType(DataType.EmailAddress)]
+        [MaxLength(ApplicationConstants.EmailMaximumLength)]
         public string Email { get; set; } = null!;
 
         public bool EmailConfirmed { get; set; }
 
         [Required]
-        [StringLength(maximumLength: 60, MinimumLength = 60)]
         [Column(TypeName = DatabaseConstraintNames.User_PasswordHash_ColumnType)]
         public string PasswordHash { get; set; } = null!;
 

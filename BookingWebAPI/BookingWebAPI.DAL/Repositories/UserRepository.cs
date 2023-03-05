@@ -2,8 +2,10 @@
 using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
+using BookingWebAPI.DAL.Enums;
 using BookingWebAPI.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingWebAPI.DAL.Repositories
 {
@@ -19,15 +21,31 @@ namespace BookingWebAPI.DAL.Repositories
             {
                 return await base.CreateOrUpdateAsync(user);
             }
-            catch (SqlException e)
+            catch (DbUpdateException e) when (e.InnerException is SqlException sqlEx)
             {
-                if (e.Message.Contains(DatabaseConstraintNames.User_UserName_UQ))
+                if (sqlEx.Message.Contains(DatabaseConstraintNames.User_UserName_UQ))
                 {
                     throw new DALException(ApplicationErrorCodes.UserUserNameMustBeUnique);
                 }
-                else if (e.Message.Contains(DatabaseConstraintNames.User_Email_UQ))
+                else if (sqlEx.Message.Contains(DatabaseConstraintNames.User_Email_UQ))
                 {
                     throw new DALException(ApplicationErrorCodes.UserEmailMustBeUnique);
+                }
+                else if (sqlEx.Message.Contains(nameof(BookingWebAPIUser.Email)) && sqlEx.Number == (int)SqlServerErrorCode.CannotInsertNull)
+                {
+                    throw new DALException(ApplicationErrorCodes.UserEmailRequired);
+                }
+                else if (sqlEx.Message.Contains(nameof(BookingWebAPIUser.Email)) && sqlEx.Number == (int)SqlServerErrorCode.StringOrBinaryTruncated)
+                {
+                    throw new DALException(ApplicationErrorCodes.UserEmailTooLong);
+                }
+                else if (sqlEx.Message.Contains(nameof(BookingWebAPIUser.UserName)) && sqlEx.Number == (int)SqlServerErrorCode.CannotInsertNull)
+                {
+                    throw new DALException(ApplicationErrorCodes.UserUserNameRequired);
+                }
+                else if (sqlEx.Message.Contains(nameof(BookingWebAPIUser.UserName)) && sqlEx.Number == (int)SqlServerErrorCode.StringOrBinaryTruncated)
+                {
+                    throw new DALException(ApplicationErrorCodes.UserUserNameTooLong);
                 }
                 else throw e;
             }
