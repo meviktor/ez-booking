@@ -9,6 +9,21 @@
         // Sites
         public const string SiteStateOrCountryNeeded = nameof(SiteStateOrCountryNeeded);
         public const string SiteNameMustBeUnique = nameof(SiteNameMustBeUnique);
+        public const string SiteNameRequired = nameof(SiteNameRequired);
+        public const string SiteNameTooLong = nameof(SiteNameTooLong);
+        public const string SiteDescriptionTooLong = nameof(SiteDescriptionTooLong);
+        public const string SiteCountryRequired = nameof(SiteCountryRequired);
+        public const string SiteCountryTooLong = nameof(SiteCountryTooLong);
+        public const string SiteZipCodeRequired = nameof(SiteZipCodeRequired);
+        public const string SiteZipCodeTooLong = nameof(SiteZipCodeTooLong);
+        public const string SiteStateTooLong = nameof(SiteStateTooLong);
+        public const string SiteCountyTooLong = nameof(SiteCountyTooLong);
+        public const string SiteCityRequired = nameof(SiteCityRequired);
+        public const string SiteCityTooLong = nameof(SiteCityTooLong);
+        public const string SiteStreetRequired = nameof(SiteCityRequired);
+        public const string SiteStreetTooLong = nameof(SiteCityTooLong);
+        public const string SiteHouseOrFlatNumberRequired = nameof(SiteHouseOrFlatNumberRequired);
+        public const string SiteHouseOrFlatNumberTooLong = nameof(SiteHouseOrFlatNumberTooLong);
 
         // Resource
         public const string ResourceNameMustBeUnique = nameof(ResourceNameMustBeUnique);

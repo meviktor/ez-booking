@@ -1,11 +1,9 @@
 ﻿using BookingWebAPI.Common.Constants;
 using BookingWebAPI.Common.ErrorCodes;
-using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
 using BookingWebAPI.DAL.Enums;
+using BookingWebAPI.DAL.Infrastructure;
 using BookingWebAPI.DAL.Interfaces;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookingWebAPI.DAL.Repositories
 {
@@ -15,40 +13,14 @@ namespace BookingWebAPI.DAL.Repositories
             : base(dbContext)
         {}
 
-        public override async Task<BookingWebAPIUser> CreateOrUpdateAsync(BookingWebAPIUser user)
+        protected override IEnumerable<ErrorCodeAssosication> ErrorCodeAssosications => new ErrorCodeAssosication[]
         {
-            try
-            {
-                return await base.CreateOrUpdateAsync(user);
-            }
-            catch (DbUpdateException e) when (e.InnerException is SqlException sqlEx)
-            {
-                if (sqlEx.Message.Contains(DatabaseConstraintNames.User_UserName_UQ))
-                {
-                    throw new DALException(ApplicationErrorCodes.UserUserNameMustBeUnique);
-                }
-                else if (sqlEx.Message.Contains(DatabaseConstraintNames.User_Email_UQ))
-                {
-                    throw new DALException(ApplicationErrorCodes.UserEmailMustBeUnique);
-                }
-                else if (sqlEx.Message.Contains(nameof(BookingWebAPIUser.Email)) && sqlEx.Number == (int)SqlServerErrorCode.CannotInsertNull)
-                {
-                    throw new DALException(ApplicationErrorCodes.UserEmailRequired);
-                }
-                else if (sqlEx.Message.Contains(nameof(BookingWebAPIUser.Email)) && sqlEx.Number == (int)SqlServerErrorCode.StringOrBinaryTruncated)
-                {
-                    throw new DALException(ApplicationErrorCodes.UserEmailTooLong);
-                }
-                else if (sqlEx.Message.Contains(nameof(BookingWebAPIUser.UserName)) && sqlEx.Number == (int)SqlServerErrorCode.CannotInsertNull)
-                {
-                    throw new DALException(ApplicationErrorCodes.UserUserNameRequired);
-                }
-                else if (sqlEx.Message.Contains(nameof(BookingWebAPIUser.UserName)) && sqlEx.Number == (int)SqlServerErrorCode.StringOrBinaryTruncated)
-                {
-                    throw new DALException(ApplicationErrorCodes.UserUserNameTooLong);
-                }
-                else throw e;
-            }
-        }
+            new ErrorCodeAssosication(DatabaseConstraintNames.User_UserName_UQ, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.UserUserNameMustBeUnique),
+            new ErrorCodeAssosication(DatabaseConstraintNames.User_Email_UQ, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.UserEmailMustBeUnique),
+            new ErrorCodeAssosication(nameof(BookingWebAPIUser.Email), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.UserEmailRequired),
+            new ErrorCodeAssosication(nameof(BookingWebAPIUser.Email), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.UserEmailTooLong),
+            new ErrorCodeAssosication(nameof(BookingWebAPIUser.UserName), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.UserUserNameRequired),
+            new ErrorCodeAssosication(nameof(BookingWebAPIUser.UserName), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.UserUserNameTooLong)
+        };
     }
 }

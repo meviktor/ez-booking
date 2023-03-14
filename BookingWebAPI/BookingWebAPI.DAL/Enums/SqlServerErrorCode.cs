@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BookingWebAPI.DAL.Enums
+﻿namespace BookingWebAPI.DAL.Enums
 {
     internal enum SqlServerErrorCode
     {
+        CannotInsertDuplicate = 2601,
         CannotInsertNull = 515,
         StringOrBinaryTruncated = 2628
     }

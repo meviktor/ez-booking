@@ -9,8 +9,8 @@ namespace BookingWebAPI.Testing.Common
 
         public static readonly IEnumerable<Site> Sites = new Site[]
         {
-            new Site { Id = new Guid(Constants.ActiveSiteId), Name = "Szeged site", Country = "Hungary", State = null, County = "Csongrád-Csanád", City = "Szeged", Street = "Jokai", HouseOrFlatNumber = "1", ZipCode = "6720", Description = "", IsDeleted = false },
-            new Site { Id = new Guid(Constants.DeletedSiteId), Name = "Szeged site - Deleted", Country = "Hungary", State = null, County = "Csongrád-Csanád", City = "Szeged", Street = "Jokai", HouseOrFlatNumber = "2", ZipCode = "6720", Description = "", IsDeleted = true },
+            new Site { Id = new Guid(Constants.ActiveSiteId), Name = Constants.ActiveSiteName, Country = "Hungary", State = null, County = "Csongrád-Csanád", City = "Szeged", Street = "Jokai", HouseOrFlatNumber = "1", ZipCode = "6720", Description = "", IsDeleted = false },
+            new Site { Id = new Guid(Constants.DeletedSiteId), Name = Constants.DeletedSiteName, Country = "Hungary", State = null, County = "Csongrád-Csanád", City = "Szeged", Street = "Jokai", HouseOrFlatNumber = "2", ZipCode = "6720", Description = "", IsDeleted = true },
         };
 
         public static readonly IEnumerable<BookingWebAPIUser> Users = new BookingWebAPIUser[]
@@ -32,7 +32,11 @@ namespace BookingWebAPI.Testing.Common
 
             // Site
             public const string ActiveSiteId = "b492810f-9cc3-4586-bdfd-e994b94aeb1a";
+            public const string ActiveSiteName = "Szeged site";
             public const string DeletedSiteId = "07c3c477-3a23-4c2f-809a-eae8f26a90d5";
+            public const string DeletedSiteName = "Szeged site - Deleted";
+            public const string NotExistingSiteId = "75c98705-45e2-41ec-8a1c-6c5f46f3c10d";
+            public const string NotExistingSiteName = "New site experimenting";
 
             // BookingWebAPIUser
             public const string ActiveUserId = "81b09273-dbe3-4eec-9455-d6aad496b28d";

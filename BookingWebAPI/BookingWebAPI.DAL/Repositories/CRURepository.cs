@@ -1,7 +1,10 @@
 ﻿using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
+using BookingWebAPI.DAL.Infrastructure;
 using BookingWebAPI.DAL.Interfaces;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingWebAPI.DAL.Repositories
 {
@@ -9,6 +12,8 @@ namespace BookingWebAPI.DAL.Repositories
     {
         public CRURepository(BookingWebAPIDbContext dbContext) 
             : base(dbContext) {}
+
+        protected virtual IEnumerable<ErrorCodeAssosication> ErrorCodeAssosications => Enumerable.Empty<ErrorCodeAssosication>();
 
         // TODO: handling concurrency? Tested?
         public virtual async Task<TEntity> CreateOrUpdateAsync(TEntity entity)
@@ -28,7 +33,21 @@ namespace BookingWebAPI.DAL.Repositories
                 Set.Update(entity);
             }
 
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException e) when (e.InnerException is SqlException sqlEx)
+            {
+                var errorCode = ErrorCodeAssosications
+                    .SingleOrDefault(association => sqlEx.Message.Contains(association.DatabaseObject) && sqlEx.Number == (int)association.ErrorCode)?
+                    .ApplicationErrorCode;
+                if (errorCode != default)
+                {
+                    throw new DALException(errorCode);
+                }
+                else throw e;
+            }
 
             // If SaveChanges operation succeeds there must be an entity in the database having this specific id
             return await GetAsync(entity.Id);
