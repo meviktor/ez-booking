@@ -25,22 +25,37 @@ namespace BookingWebAPI.DAL
         /// <summary>
         /// Overrides the default SaveChanges() implementation with an additional step which converts empty strings or strings containing only whitespace characters to null.
         /// </summary>
-        /// <returns>The number ofn state entries written to the database.</returns>
+        /// <returns>The number of state entries written to the database.</returns>
         public override int SaveChanges()
+        {
+            ConvertWhiteSpaceToNull();
+            return base.SaveChanges();
+        }
+
+        /// <summary>
+        /// Overrides the default SaveChanges() implementation with an additional step which converts empty strings or strings containing only whitespace characters to null.
+        /// </summary>
+        /// <returns>The number of state entries written to the database.</returns>
+        public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ConvertWhiteSpaceToNull();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void ConvertWhiteSpaceToNull()
         {
             var entriesToSave = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
             foreach (var entry in entriesToSave)
             {
-                var stringFieldsOfEntry = entry.Members
-                    .Where(m => m.Metadata.FieldInfo != null && m.Metadata.FieldInfo.FieldType.Name == typeof(string).Name)
-                    .Select(m => m.Metadata.FieldInfo!.Name);
-                foreach(var stringField in stringFieldsOfEntry)
+                var stringFieldsOfEntry = entry.Properties
+                    .Where(m => m.Metadata.PropertyInfo != null && m.Metadata.PropertyInfo.PropertyType == typeof(string))
+                    .Select(m => m.Metadata.PropertyInfo!.Name);
+                foreach (var stringField in stringFieldsOfEntry)
                 {
                     var property = entry.Property(stringField);
                     property.CurrentValue = !string.IsNullOrWhiteSpace((string?)property.CurrentValue) ? property.CurrentValue : null;
                 }
             }
-            return base.SaveChanges();
         }
     }
 }

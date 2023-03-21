@@ -13,25 +13,25 @@ namespace BookingWebAPI.DAL.Repositories
             : base(dbContext)
         {}
 
-        protected override IEnumerable<ErrorCodeAssosication> ErrorCodeAssosications => new ErrorCodeAssosication[]
+        protected override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[]
         {
-            new ErrorCodeAssosication(DatabaseConstraintNames.Site_StateCountry_CK, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.SiteStateOrCountryNeeded),
-            new ErrorCodeAssosication(DatabaseConstraintNames.Site_Name_UQ, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.SiteNameMustBeUnique),
-            new ErrorCodeAssosication(nameof(Site.Name), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteNameRequired),
-            new ErrorCodeAssosication(nameof(Site.Name), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteNameTooLong),
-            new ErrorCodeAssosication(nameof(Site.Description), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteDescriptionTooLong),
-            new ErrorCodeAssosication(nameof(Site.Country), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteCountryRequired),
-            new ErrorCodeAssosication(nameof(Site.Country), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteCountryTooLong),
-            new ErrorCodeAssosication(nameof(Site.ZipCode), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteZipCodeRequired),
-            new ErrorCodeAssosication(nameof(Site.ZipCode), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteZipCodeTooLong),
-            new ErrorCodeAssosication(nameof(Site.State), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteNameMustBeUnique),
-            new ErrorCodeAssosication(nameof(Site.County), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteNameMustBeUnique),
-            new ErrorCodeAssosication(nameof(Site.City), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteCityRequired),
-            new ErrorCodeAssosication(nameof(Site.City), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteCityTooLong),
-            new ErrorCodeAssosication(nameof(Site.Street), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteNameMustBeUnique),
-            new ErrorCodeAssosication(nameof(Site.Street), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteNameMustBeUnique),
-            new ErrorCodeAssosication(nameof(Site.HouseOrFlatNumber), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteNameMustBeUnique),
-            new ErrorCodeAssosication(nameof(Site.HouseOrFlatNumber), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteNameMustBeUnique)
+            new ErrorCodeAssociation(DatabaseConstraintNames.Site_StateCountry_CK, SqlServerErrorCode.ConstraintViolated, ApplicationErrorCodes.SiteStateOrCountryNeeded),
+            new ErrorCodeAssociation(DatabaseConstraintNames.Site_Name_UQ, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.SiteNameMustBeUnique),
+            new ErrorCodeAssociation(nameof(Site.Name), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteNameRequired),
+            new ErrorCodeAssociation(nameof(Site.Name), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteNameTooLong),
+            new ErrorCodeAssociation(nameof(Site.Description), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteDescriptionTooLong),
+            new ErrorCodeAssociation(nameof(Site.Country), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteCountryRequired),
+            new ErrorCodeAssociation(nameof(Site.Country), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteCountryTooLong),
+            new ErrorCodeAssociation(nameof(Site.ZipCode), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteZipCodeRequired),
+            new ErrorCodeAssociation(nameof(Site.ZipCode), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteZipCodeTooLong),
+            new ErrorCodeAssociation(nameof(Site.State), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteStateTooLong),
+            new ErrorCodeAssociation(nameof(Site.County), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteCountyTooLong),
+            new ErrorCodeAssociation(nameof(Site.City), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteCityRequired),
+            new ErrorCodeAssociation(nameof(Site.City), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteCityTooLong),
+            new ErrorCodeAssociation(nameof(Site.Street), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteStreetRequired),
+            new ErrorCodeAssociation(nameof(Site.Street), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteStreetTooLong),
+            new ErrorCodeAssociation(nameof(Site.HouseOrFlatNumber), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.SiteHouseOrFlatNumberRequired),
+            new ErrorCodeAssociation(nameof(Site.HouseOrFlatNumber), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.SiteHouseOrFlatNumberTooLong)
         };
     }
 }

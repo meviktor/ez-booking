@@ -2,9 +2,9 @@
 
 namespace BookingWebAPI.DAL.Infrastructure
 {
-    internal class ErrorCodeAssosication
+    internal class ErrorCodeAssociation
     {
-        public ErrorCodeAssosication(string databaseObjectName, SqlServerErrorCode errorCode, string applicationErrorCode)
+        public ErrorCodeAssociation(string databaseObjectName, SqlServerErrorCode errorCode, string applicationErrorCode)
         {
             DatabaseObject = databaseObjectName;
             ErrorCode = errorCode;

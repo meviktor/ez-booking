@@ -10,7 +10,7 @@
         public const int UserNameMaximumLength = 50;
 
         public const int SiteNameMaximiumLength = 150;
-        public const int SiteDescriptionMaximiumLength = 150;
+        public const int SiteDescriptionMaximiumLength = 1000;
         public const int SiteCountryMaximiumLength = 150;
         public const int SiteZipCodeMaximiumLength = 25;
         public const int SiteStateMaximiumLength = 100;

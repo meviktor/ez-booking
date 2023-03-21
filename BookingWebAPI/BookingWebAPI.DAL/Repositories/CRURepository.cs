@@ -13,7 +13,7 @@ namespace BookingWebAPI.DAL.Repositories
         public CRURepository(BookingWebAPIDbContext dbContext) 
             : base(dbContext) {}
 
-        protected virtual IEnumerable<ErrorCodeAssosication> ErrorCodeAssosications => Enumerable.Empty<ErrorCodeAssosication>();
+        protected virtual IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => Enumerable.Empty<ErrorCodeAssociation>();
 
         // TODO: handling concurrency? Tested?
         public virtual async Task<TEntity> CreateOrUpdateAsync(TEntity entity)
