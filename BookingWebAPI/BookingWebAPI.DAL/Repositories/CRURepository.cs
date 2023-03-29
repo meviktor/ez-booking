@@ -50,7 +50,7 @@ namespace BookingWebAPI.DAL.Repositories
             }
 
             // If SaveChanges operation succeeds there must be an entity in the database having this specific id
-            return await GetAsync(entity.Id);
+            return (await GetAsync(entity.Id))!;
         }
     }
 }

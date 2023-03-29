@@ -34,9 +34,9 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(TestDatabaseSeeder.Constants.DeletedSiteId)]
         public async Task GetAsync_Test_CallWithNotExistingId(string idAsString)
         {
-            var action = () => _repository.GetAsync(new Guid(idAsString));
+            var action = async () => await _repository.GetAsync(new Guid(idAsString));
 
-            await action.Should().ThrowExactlyAsync<DALException>().Where(e => e.ErrorCode == ApplicationErrorCodes.EntityNotFound);
+            (await action()).Should().BeNull();
         }
 
         [Test]

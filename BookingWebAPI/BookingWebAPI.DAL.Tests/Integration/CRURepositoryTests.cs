@@ -38,10 +38,17 @@ namespace BookingWebAPI.DAL.Tests.Integration
             var newSiteDescription = $"Site description modified by {nameof(CRURepositoryTests)}.";
             var activeSite = await _repository.GetAsync(new Guid(TestDatabaseSeeder.Constants.ActiveSiteId));
 
-            activeSite.Description = newSiteDescription;
-            var updatedActiveSite = await _repository.CreateOrUpdateAsync(activeSite);
+            if(activeSite == null)
+            {
+                Assert.Fail("Existence of the active test site in the database is a prerequisite.");
+            }
+            else
+            {
+                activeSite.Description = newSiteDescription;
+                var updatedActiveSite = await _repository.CreateOrUpdateAsync(activeSite);
 
-            updatedActiveSite.Description.Should().Be(newSiteDescription);
+                updatedActiveSite.Description.Should().Be(newSiteDescription);
+            }
         }
 
         [Test]

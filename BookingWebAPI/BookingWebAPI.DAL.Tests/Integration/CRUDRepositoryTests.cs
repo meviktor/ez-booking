@@ -38,10 +38,10 @@ namespace BookingWebAPI.DAL.Tests.Integration
             await _repository.DeleteAsync(activeSiteId);
 
             var entriesAfterDelete = await _repository.GetAll().CountAsync();
-            var assertAction = () => _repository.GetAsync(activeSiteId);
+            var assertAction = async () => await _repository.GetAsync(activeSiteId);
 
             entriesAfterDelete.Should().Be(entriesBeforeDelete - 1);
-            await assertAction.Should().ThrowExactlyAsync<DALException>().Where(e => e.ErrorCode == ApplicationErrorCodes.EntityNotFound);
+            (await assertAction()).Should().BeNull();
         }
     }
 }

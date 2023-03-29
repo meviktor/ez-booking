@@ -4,7 +4,7 @@
     {
         IQueryable<TEntity> GetAll();
 
-        Task<TEntity> GetAsync(Guid id);
+        Task<TEntity?> GetAsync(Guid id);
 
         Task<bool> ExistsAsync(Guid id);
     }

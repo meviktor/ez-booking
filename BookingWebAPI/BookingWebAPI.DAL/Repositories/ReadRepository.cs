@@ -1,6 +1,4 @@
-﻿using BookingWebAPI.Common.ErrorCodes;
-using BookingWebAPI.Common.Exceptions;
-using BookingWebAPI.Common.Models;
+﻿using BookingWebAPI.Common.Models;
 using BookingWebAPI.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,15 +11,7 @@ namespace BookingWebAPI.DAL.Repositories
 
         public ReadRepository(BookingWebAPIDbContext dbContext) => _dbContext = dbContext;
 
-        public async Task<TEntity> GetAsync(Guid id)
-        {
-            var foundEntity = await Set.SingleOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
-            if (foundEntity == null)
-            {
-                throw new DALException(ApplicationErrorCodes.EntityNotFound);
-            }
-            return foundEntity;
-        }
+        public async Task<TEntity?> GetAsync(Guid id) => await Set.SingleOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
 
         public async Task<bool> ExistsAsync(Guid id) => await Set.AnyAsync(e => e.Id == id && !e.IsDeleted);
 
