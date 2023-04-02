@@ -20,8 +20,8 @@
         public const string SiteCountyTooLong = nameof(SiteCountyTooLong);
         public const string SiteCityRequired = nameof(SiteCityRequired);
         public const string SiteCityTooLong = nameof(SiteCityTooLong);
-        public const string SiteStreetRequired = nameof(SiteCityRequired);
-        public const string SiteStreetTooLong = nameof(SiteCityTooLong);
+        public const string SiteStreetRequired = nameof(SiteStreetRequired);
+        public const string SiteStreetTooLong = nameof(SiteStreetTooLong);
         public const string SiteHouseOrFlatNumberRequired = nameof(SiteHouseOrFlatNumberRequired);
         public const string SiteHouseOrFlatNumberTooLong = nameof(SiteHouseOrFlatNumberTooLong);
 
@@ -29,7 +29,7 @@
         public const string ResourceNameMustBeUnique = nameof(ResourceNameMustBeUnique);
 
         // ResourceCategory
-        public const string ResourceCategoryNameMustBeUnique = nameof(ResourceNameMustBeUnique);
+        public const string ResourceCategoryNameMustBeUnique = nameof(ResourceCategoryNameMustBeUnique);
 
         // BookingWebAPIUser
         public const string UserUserNameMustBeUnique = nameof(UserUserNameMustBeUnique);

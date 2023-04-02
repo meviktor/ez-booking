@@ -1,5 +1,6 @@
 using BookingWebAPI.DAL;
 using BookingWebAPI.Infrastructure;
+using BookingWebAPI.Middleware;
 using BookingWebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler(exceptionHandlerApp => exceptionHandlerApp.UseMiddleware<BookingWebAPIExceptionHandler>());
 
 app.UseHttpsRedirection();
 
