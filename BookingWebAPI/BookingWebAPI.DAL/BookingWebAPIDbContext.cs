@@ -2,6 +2,7 @@
 using BookingWebAPI.Common.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using BookingWebAPI.Common.Enums;
 
 namespace BookingWebAPI.DAL
 {
@@ -15,6 +16,7 @@ namespace BookingWebAPI.DAL
         public DbSet<ResourceCategory> ResourceCategories { get; set; } = null!;
         public DbSet<Site> Sites { get; set; } = null!;
         public DbSet<BookingWebAPIUser> Users { get; set; } = null!;
+        public DbSet<BookingWebAPISetting> Settings { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -51,6 +53,17 @@ namespace BookingWebAPI.DAL
 
                 ResourceCategories.AddRange(new[] { resourceCategoryRooms, resourceCategoryMeetingRooms });
                 Resources.Add(resource);
+            }
+
+            if(!Settings.Any())
+            {
+                Settings.AddRange(new[]
+                {
+                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicyMinLength, ValueType = SettingValueType.Integer, RawValue = "8" },
+                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicyMaxLength, ValueType = SettingValueType.Integer, RawValue = "500" },
+                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicyUppercaseLetter, ValueType = SettingValueType.Boolean, RawValue = "1" },
+                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicySpecialCharacters, ValueType = SettingValueType.Integer, RawValue = "1" }
+                });
             }
 
             SaveChanges();

@@ -25,5 +25,11 @@
 
         // TODO: delete this constant after settings will be implemented!
         public const int LoginMaxAttempts = 5;
+
+        // Settings: PasswordPolicy
+        public const string PasswordPolicyMinLength = nameof(PasswordPolicyMinLength);
+        public const string PasswordPolicyMaxLength = nameof(PasswordPolicyMaxLength);
+        public const string PasswordPolicyUppercaseLetter = nameof(PasswordPolicyUppercaseLetter);
+        public const string PasswordPolicySpecialCharacters = nameof(PasswordPolicySpecialCharacters);
     }
 }

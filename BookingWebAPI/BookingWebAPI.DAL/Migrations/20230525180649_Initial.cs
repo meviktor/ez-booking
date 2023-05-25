@@ -33,6 +33,23 @@ namespace BookingWebAPI.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Settings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    ValueType = table.Column<short>(type: "smallint", nullable: false),
+                    RawValue = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Category = table.Column<short>(type: "smallint", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Settings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sites",
                 columns: table => new
                 {
@@ -141,6 +158,12 @@ namespace BookingWebAPI.DAL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "UQ_Setting_NameCategory",
+                table: "Settings",
+                columns: new[] { "Name", "Category" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "UQ_Site_Name",
                 table: "Sites",
                 column: "Name",
@@ -169,6 +192,9 @@ namespace BookingWebAPI.DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Resources");
+
+            migrationBuilder.DropTable(
+                name: "Settings");
 
             migrationBuilder.DropTable(
                 name: "Users");

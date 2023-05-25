@@ -16,5 +16,8 @@
         public const string User_UserName_UQ = "UQ_User_UserName";
         public const string User_Email_UQ = "UQ_User_Email";
         public const string User_PasswordHash_ColumnType = "CHAR(60)";
+
+        // BookingWebAPISetting
+        public const string Setting_NameCategory_UQ = "UQ_Setting_NameCategory";
     }
 }
