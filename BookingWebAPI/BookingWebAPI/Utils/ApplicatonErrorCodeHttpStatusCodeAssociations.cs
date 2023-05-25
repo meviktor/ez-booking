@@ -13,6 +13,7 @@ namespace BookingWebAPI.Utils
             }, HttpStatusCode.InternalServerError),
             (new string[] {
                 ApplicationErrorCodes.EntityNotFound,
+                // Sites
                 ApplicationErrorCodes.SiteStateOrCountryNeeded,
                 ApplicationErrorCodes.SiteNameMustBeUnique,
                 ApplicationErrorCodes.SiteNameRequired,
@@ -30,16 +31,29 @@ namespace BookingWebAPI.Utils
                 ApplicationErrorCodes.SiteStreetTooLong,
                 ApplicationErrorCodes.SiteHouseOrFlatNumberRequired,
                 ApplicationErrorCodes.SiteHouseOrFlatNumberTooLong,
+                // Resource
                 ApplicationErrorCodes.ResourceNameMustBeUnique,
+                // ResourceCategory
                 ApplicationErrorCodes.ResourceCategoryNameMustBeUnique,
+                // BookingWebAPIUser
                 ApplicationErrorCodes.UserUserNameMustBeUnique,
                 ApplicationErrorCodes.UserEmailMustBeUnique,
                 ApplicationErrorCodes.UserEmailTooLong,
                 ApplicationErrorCodes.UserEmailRequired,
                 ApplicationErrorCodes.UserEmailInvalidFormat,
                 ApplicationErrorCodes.UserUserNameTooLong,
-                ApplicationErrorCodes.UserUserNameRequired
-            }, HttpStatusCode.BadRequest)
+                ApplicationErrorCodes.UserUserNameRequired,
+                ApplicationErrorCodes.UserSiteIdRequired,
+                ApplicationErrorCodes.UserFirstNameRequired,
+                ApplicationErrorCodes.UserLastNameRequired,
+                ApplicationErrorCodes.UserPasswordNotValidByPolicy
+            }, HttpStatusCode.BadRequest),
+            (new string[]{
+                ApplicationErrorCodes.UserLockedOut
+            }, HttpStatusCode.Forbidden),
+            (new string[]{
+                ApplicationErrorCodes.LoginInvalidUserNameOrPassword
+            }, HttpStatusCode.Unauthorized)
         };
 
         private static Dictionary<string, HttpStatusCode> _errorCodeStatusCodeMappings;

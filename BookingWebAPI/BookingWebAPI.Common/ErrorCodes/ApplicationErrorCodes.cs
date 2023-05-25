@@ -5,6 +5,7 @@
         // General
         public const string UnknownError = nameof(UnknownError);
         public const string EntityNotFound = nameof(EntityNotFound);
+        public const string CannotAuthenticate = nameof(CannotAuthenticate);
 
         // Sites
         public const string SiteStateOrCountryNeeded = nameof(SiteStateOrCountryNeeded);
@@ -39,5 +40,11 @@
         public const string UserEmailInvalidFormat = nameof(UserEmailInvalidFormat);
         public const string UserUserNameTooLong = nameof(UserUserNameTooLong);
         public const string UserUserNameRequired = nameof(UserUserNameRequired);
+        public const string LoginInvalidUserNameOrPassword = nameof(LoginInvalidUserNameOrPassword);
+        public const string UserLockedOut = nameof(UserLockedOut);
+        public const string UserFirstNameRequired = nameof(UserFirstNameRequired);
+        public const string UserLastNameRequired = nameof(UserLastNameRequired);
+        public const string UserSiteIdRequired = nameof(UserSiteIdRequired);
+        public const string UserPasswordNotValidByPolicy = nameof(UserPasswordNotValidByPolicy);
     }
 }

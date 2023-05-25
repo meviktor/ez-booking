@@ -11,6 +11,7 @@ namespace BookingWebAPI.Services
         public static IServiceCollection AddServicesRegistrations(this IServiceCollection services)
         {
             services.AddScoped<IResourceCategoryService, ResourceCategoryService>();
+            services.AddScoped<IUserService, UserService>();
             return services;
         }
     }

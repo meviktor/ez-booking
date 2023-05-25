@@ -52,25 +52,7 @@ namespace BookingWebAPI.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sites", x => x.Id);
-                    table.CheckConstraint("CK_Sites_StateCounty", "COALESCE(State, County) IS NOT NULL");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "CHAR(60)", maxLength: 60, nullable: false),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.CheckConstraint("CK_Site_StateCounty", "COALESCE(State, County) IS NOT NULL");
                 });
 
             migrationBuilder.CreateTable(
@@ -80,7 +62,8 @@ namespace BookingWebAPI.DAL.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    ResourceCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ResourceCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
@@ -91,7 +74,43 @@ namespace BookingWebAPI.DAL.Migrations
                         name: "FK_Resources_ResourceCategories_ResourceCategoryId",
                         column: x => x.ResourceCategoryId,
                         principalTable: "ResourceCategories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Resources_Sites_SiteId",
+                        column: x => x.SiteId,
+                        principalTable: "Sites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
+                    PasswordHash = table.Column<string>(type: "CHAR(60)", nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    Token = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkHoursWeekly = table.Column<int>(type: "int", nullable: true),
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Sites_SiteId",
+                        column: x => x.SiteId,
+                        principalTable: "Sites",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -111,6 +130,11 @@ namespace BookingWebAPI.DAL.Migrations
                 column: "ResourceCategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Resources_SiteId",
+                table: "Resources",
+                column: "SiteId");
+
+            migrationBuilder.CreateIndex(
                 name: "UQ_Resource_Name",
                 table: "Resources",
                 column: "Name",
@@ -121,6 +145,11 @@ namespace BookingWebAPI.DAL.Migrations
                 table: "Sites",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_SiteId",
+                table: "Users",
+                column: "SiteId");
 
             migrationBuilder.CreateIndex(
                 name: "UQ_User_Email",
@@ -142,13 +171,13 @@ namespace BookingWebAPI.DAL.Migrations
                 name: "Resources");
 
             migrationBuilder.DropTable(
-                name: "Sites");
-
-            migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
                 name: "ResourceCategories");
+
+            migrationBuilder.DropTable(
+                name: "Sites");
         }
     }
 }

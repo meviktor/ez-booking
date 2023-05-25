@@ -17,14 +17,25 @@ namespace BookingWebAPI.Common.Models
         [MaxLength(ApplicationConstants.EmailMaximumLength)]
         public string Email { get; set; } = null!;
 
+        [Column(TypeName = DatabaseConstraintNames.User_PasswordHash_ColumnType)]
+        public string? PasswordHash { get; set; } = null!;
+
         public bool EmailConfirmed { get; set; }
 
-        [Required]
-        [Column(TypeName = DatabaseConstraintNames.User_PasswordHash_ColumnType)]
-        public string PasswordHash { get; set; } = null!;
+        public Guid? Token { get; set; }
 
         public bool LockoutEnabled { get; set; }
 
         public int AccessFailedCount { get; set; }
+
+        public string FirstName { get; set; } = null!;
+
+        public string LastName { get; set; } = null!;
+
+        public int? WorkHoursWeekly { get; set; }
+
+        public Guid SiteId { get; set; }
+
+        public virtual Site Site { get; set; } = null!;
     }
 }

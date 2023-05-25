@@ -18,5 +18,12 @@
         public const int SiteCityMaximiumLength = 100;
         public const int SiteStreetMaximiumLength = 150;
         public const int SiteHouseOrFlatNumberMaximiumLength = 25;
+
+        public const string JwtClaimId = "id";
+        public const string JwtClaimEmail = "email";
+        public const string JwtClaimUserName = "username";
+
+        // TODO: delete this constant after settings will be implemented!
+        public const int LoginMaxAttempts = 5;
     }
 }

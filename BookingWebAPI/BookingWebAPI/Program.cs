@@ -20,6 +20,19 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    using (var scope = app.Services.CreateScope())
+    {
+        try
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<BookingWebAPIDbContext>();
+            dbContext.Seed();
+        }
+        catch (Exception e)
+        {
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            logger.LogError(e, "An error occurred during database seeding at startup.");
+        }
+    }
     app.UseSwagger();
     app.UseSwaggerUI();
 }

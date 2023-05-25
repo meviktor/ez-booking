@@ -7,5 +7,7 @@
         public BookingWebAPIException(string errorCode) : this(errorCode, null) { }
 
         public BookingWebAPIException(string errorCode, string? message) : base(message) => ErrorCode = errorCode;
+
+        public BookingWebAPIException(string errorCode, string? message, Exception? innerException) : base(message, innerException) => ErrorCode = errorCode;
     }
 }

@@ -14,8 +14,12 @@ namespace BookingWebAPI.Common.Models
         [MaxLength(1000)]
         public string? Description { get; set; }
 
-        public Guid? ResourceCategoryId { get; set; }
+        public Guid ResourceCategoryId { get; set; }
 
-        public virtual ResourceCategory? ResourceCategory { get; set; }
+        public virtual ResourceCategory ResourceCategory { get; set; } = null!;
+
+        public virtual Guid SiteId { get; set; }
+
+        public virtual Site Site { get; set; } = null!;
     }
 }

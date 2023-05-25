@@ -39,23 +39,40 @@ namespace BookingWebAPI.DAL.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(60)
                         .HasColumnType("CHAR(60)");
+
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("Token")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("WorkHoursWeekly")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SiteId");
 
                     b.HasIndex(new[] { "Email" }, "UQ_User_Email")
                         .IsUnique();
@@ -84,7 +101,7 @@ namespace BookingWebAPI.DAL.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<Guid?>("ResourceCategoryId")
+                    b.Property<Guid>("ResourceCategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<byte[]>("RowVersion")
@@ -93,9 +110,14 @@ namespace BookingWebAPI.DAL.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ResourceCategoryId");
+
+                    b.HasIndex("SiteId");
 
                     b.HasIndex(new[] { "Name" }, "UQ_Resource_Name")
                         .IsUnique();
@@ -204,17 +226,38 @@ namespace BookingWebAPI.DAL.Migrations
 
                     b.ToTable("Sites", t =>
                         {
-                            t.HasCheckConstraint("CK_Sites_StateCounty", "COALESCE(State, County) IS NOT NULL");
+                            t.HasCheckConstraint("CK_Site_StateCounty", "COALESCE(State, County) IS NOT NULL");
                         });
+                });
+
+            modelBuilder.Entity("BookingWebAPI.Common.Models.BookingWebAPIUser", b =>
+                {
+                    b.HasOne("BookingWebAPI.Common.Models.Site", "Site")
+                        .WithMany()
+                        .HasForeignKey("SiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Site");
                 });
 
             modelBuilder.Entity("BookingWebAPI.Common.Models.Resource", b =>
                 {
                     b.HasOne("BookingWebAPI.Common.Models.ResourceCategory", "ResourceCategory")
                         .WithMany("Resources")
-                        .HasForeignKey("ResourceCategoryId");
+                        .HasForeignKey("ResourceCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookingWebAPI.Common.Models.Site", "Site")
+                        .WithMany()
+                        .HasForeignKey("SiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ResourceCategory");
+
+                    b.Navigation("Site");
                 });
 
             modelBuilder.Entity("BookingWebAPI.Common.Models.ResourceCategory", b =>

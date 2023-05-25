@@ -23,6 +23,42 @@ namespace BookingWebAPI.DAL
         }
 
         /// <summary>
+        /// Its intended use is development, it is intended to be called only in development mode, at application startup. DO NOT use it in production scenarios.
+        /// </summary>
+        public void Seed()
+        {
+            using var transaction = Database.BeginTransaction();
+            if(!Sites.Any())
+            {
+                var site = new Site { Id = Guid.NewGuid(), City = "Szeged", Country = "Hungary", ZipCode = "6720", County = "Csongrad", Street = "Dugonics", HouseOrFlatNumber = "13", Name = "Szeged site", Description = "HQ" };
+                Sites.Add(site);
+
+                SaveChanges();
+            }
+
+            if(!Users.Any())
+            {
+                // admin@BookingWebAPI1
+                var user = new BookingWebAPIUser { Id = Guid.NewGuid(), Email = "admin@bookingwebapi.com", EmailConfirmed = true, FirstName = "Admin", LastName = "User", Site = Sites.First(), UserName = "superadmin", PasswordHash = "$2y$11$JCJPHetWFVCMSuxgq7FT2.3Oi1sdt60ydeDt87JiX/0981I/jYO86" };
+                Users.Add(user);
+            }
+
+            if (!ResourceCategories.Any())
+            {
+                var resourceCategoryRooms = new ResourceCategory { Id = Guid.NewGuid(), Name = "Rooms", Description = "Resource category containing all kinds of available rooms.", BaseCategory = null };
+                var resourceCategoryMeetingRooms = new ResourceCategory { Id = Guid.NewGuid(), Name = "Meeting rooms", Description = "Available rooms for planning meetings.", BaseCategory = resourceCategoryRooms };
+                var resource = new Resource { Id = Guid.NewGuid(), Name = "Meeting room 1st floor", Description = "Meeting room for short meetings.", ResourceCategory = resourceCategoryMeetingRooms, Site = Sites.First() };
+
+                ResourceCategories.AddRange(new[] { resourceCategoryRooms, resourceCategoryMeetingRooms });
+                Resources.Add(resource);
+            }
+
+            SaveChanges();
+            transaction.Commit();
+            // Exceptions will be caught in the application startup logic from where Seed() is called.
+        }
+
+        /// <summary>
         /// Overrides the default SaveChanges() implementation with an additional step which converts empty strings or strings containing only whitespace characters to null.
         /// </summary>
         /// <returns>The number of state entries written to the database.</returns>
