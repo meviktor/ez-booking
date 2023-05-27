@@ -12,6 +12,7 @@ namespace BookingWebAPI.Services
         {
             services.AddScoped<IResourceCategoryService, ResourceCategoryService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISettingService, SettingService>();
             return services;
         }
     }

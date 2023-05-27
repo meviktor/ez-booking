@@ -46,5 +46,9 @@
         public const string UserLastNameRequired = nameof(UserLastNameRequired);
         public const string UserSiteIdRequired = nameof(UserSiteIdRequired);
         public const string UserPasswordNotValidByPolicy = nameof(UserPasswordNotValidByPolicy);
+
+        // BookingWebAPISetting
+        public const string SettingWrongSettingType = nameof(SettingWrongSettingType);
+        public const string SettingNotKnownSettingType = nameof(SettingNotKnownSettingType);
     }
 }

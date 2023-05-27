@@ -17,6 +17,7 @@ namespace BookingWebAPI.DAL
             services.AddScoped<IResourceCategoryRepository, ResourceCategoryRepository>();
             services.AddScoped<IResourceRepository, ResourceRepository>();
             services.AddScoped<ISiteRepository, SiteRepository>();
+            services.AddScoped<ISettingRepository, SettingRepository>();
 
             if (connectionString is null)
             {

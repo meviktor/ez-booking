@@ -9,7 +9,9 @@ namespace BookingWebAPI.Utils
         private static List<(string[], HttpStatusCode)> _errorCodesByHttpStatusCode = new List<(string[], HttpStatusCode)>()
         {
             (new string[] { 
-                ApplicationErrorCodes.UnknownError
+                ApplicationErrorCodes.UnknownError,
+                ApplicationErrorCodes.SettingWrongSettingType,
+                ApplicationErrorCodes.SettingNotKnownSettingType
             }, HttpStatusCode.InternalServerError),
             (new string[] {
                 ApplicationErrorCodes.EntityNotFound,

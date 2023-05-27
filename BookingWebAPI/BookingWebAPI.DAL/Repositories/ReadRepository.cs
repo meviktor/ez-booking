@@ -4,12 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingWebAPI.DAL.Repositories
 {
-    internal class ReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : ModelBase
+    internal class ReadRepository<TEntity> : RepositoryBase<TEntity>, IReadRepository<TEntity> where TEntity : ModelBase
     {
-        protected readonly BookingWebAPIDbContext _dbContext;
-        protected DbSet<TEntity> Set => _dbContext.Set<TEntity>();
-
-        public ReadRepository(BookingWebAPIDbContext dbContext) => _dbContext = dbContext;
+        public ReadRepository(BookingWebAPIDbContext dbContext) : base(dbContext) 
+        {
+        }
 
         public async Task<TEntity?> GetAsync(Guid id) => await Set.SingleOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
 

@@ -13,6 +13,7 @@ namespace BookingWebAPI.DAL.Repositories
             : base(dbContext)
         {}
 
+        // TODO: revise this!
         public override async Task<Resource> CreateOrUpdateAsync(Resource resource)
         {
             try
