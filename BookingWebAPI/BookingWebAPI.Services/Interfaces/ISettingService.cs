@@ -7,6 +7,8 @@ namespace BookingWebAPI.Services.Interfaces
     {
         Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategory(SettingCategory category);
 
-        Task<T> GetValueForSetting<T>(string settingName);
+        Task<T> GetValueBySettingName<T>(string settingName);
+
+        T ExtractValueFromSetting<T>(BookingWebAPISetting setting);
     }
 }

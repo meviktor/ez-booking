@@ -31,5 +31,6 @@
         public const string PasswordPolicyMaxLength = nameof(PasswordPolicyMaxLength);
         public const string PasswordPolicyUppercaseLetter = nameof(PasswordPolicyUppercaseLetter);
         public const string PasswordPolicySpecialCharacters = nameof(PasswordPolicySpecialCharacters);
+        public const string PasswordPolicyDigits = nameof(PasswordPolicyDigits);
     }
 }

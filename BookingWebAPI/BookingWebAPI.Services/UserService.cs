@@ -1,4 +1,5 @@
 ﻿using BookingWebAPI.Common.Constants;
+using BookingWebAPI.Common.Enums;
 using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
@@ -10,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BookingWebAPI.Services
 {
@@ -17,11 +19,13 @@ namespace BookingWebAPI.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
+        private readonly ISettingService _settingService;
 
-        public UserService(IConfiguration configuration, IUserRepository userRepository)
+        public UserService(IConfiguration configuration, IUserRepository userRepository, ISettingService settingService)
         {
             _configuration = configuration;
             _userRepository = userRepository;
+            _settingService = settingService;
         }
 
         public async Task<BookingWebAPIUser> Register(string emailAddress, Guid siteId, string firstName, string lastName)
@@ -106,10 +110,19 @@ namespace BookingWebAPI.Services
             return (foundUser, GenerateJwtToken(foundUser.Id, foundUser.Email, foundUser.UserName));
         }
 
-        // TODO: implement password policy via settings pulled from the database (a table would be needed which stores the application settings).
-        private Task<bool> IsPasswordValidByPolicy(string password)
+        private async Task<bool> IsPasswordValidByPolicy(string password)
         {
-            return Task.FromResult(true);
+            var policySettings = await _settingService.GetSettingsForCategory(SettingCategory.PasswordPolicy);
+
+            var minLength = _settingService.ExtractValueFromSetting<int>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicyMinLength));
+            var maxLength = _settingService.ExtractValueFromSetting<int>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicyMaxLength));
+            var upperCaseLetters = _settingService.ExtractValueFromSetting<bool>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicyUppercaseLetter));
+            var specialCharacters = _settingService.ExtractValueFromSetting<bool>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicySpecialCharacters));
+            var digits = _settingService.ExtractValueFromSetting<bool>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicyDigits));
+
+            var passwordPolicyRegex = $"^(?=.*[a-z]){(upperCaseLetters ? "(?=.*[A-Z])" : string.Empty)}{(digits ? "(?=.*\\d)" : string.Empty)}{(specialCharacters ? "(?=.*[^\\w\\d\\s])" : string.Empty)}.{{{minLength},{maxLength}}}$";
+
+            return Regex.IsMatch(password, passwordPolicyRegex);
         }
 
         private async Task<string> ProposeUserName(string firstName, string lastName)

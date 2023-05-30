@@ -61,8 +61,9 @@ namespace BookingWebAPI.DAL
                 {
                     new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicyMinLength, ValueType = SettingValueType.Integer, RawValue = "8" },
                     new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicyMaxLength, ValueType = SettingValueType.Integer, RawValue = "500" },
-                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicyUppercaseLetter, ValueType = SettingValueType.Boolean, RawValue = "1" },
-                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicySpecialCharacters, ValueType = SettingValueType.Integer, RawValue = "1" }
+                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicyUppercaseLetter, ValueType = SettingValueType.Boolean, RawValue = "false" },
+                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicySpecialCharacters, ValueType = SettingValueType.Boolean, RawValue = "false" },
+                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicyDigits, ValueType = SettingValueType.Boolean, RawValue = "false" }
                 });
             }
 

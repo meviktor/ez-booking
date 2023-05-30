@@ -18,7 +18,7 @@ namespace BookingWebAPI.Services
 
         public async Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategory(SettingCategory category) => await _settingRepository.GetSettingsForCategory(category);
 
-        public async Task<T> GetValueForSetting<T>(string settingName)
+        public async Task<T> GetValueBySettingName<T>(string settingName)
         {
             var setting = await _settingRepository.GetSettingByName(settingName);
             if(setting == null)
@@ -26,10 +26,20 @@ namespace BookingWebAPI.Services
                 throw new BookingWebAPIException(ApplicationErrorCodes.EntityNotFound);
             }
 
+            return ExtractValueFromSetting<T>(setting);
+        }
+
+        public T ExtractValueFromSetting<T>(BookingWebAPISetting setting)
+        {
+            if(setting == null)
+            {
+                throw new ArgumentNullException(nameof(setting));
+            }
+
             switch (setting.ValueType)
             {
                 case SettingValueType.Boolean:
-                    if(typeof(T).Equals(typeof(bool)) && bool.TryParse(setting.RawValue, out bool boolResult))
+                    if (typeof(T).Equals(typeof(bool)) && bool.TryParse(setting.RawValue, out bool boolResult))
                     {
                         return (T)Convert.ChangeType(boolResult, typeof(T));
                     }
