@@ -120,7 +120,7 @@ namespace BookingWebAPI.Services
             var specialCharacters = _settingService.ExtractValueFromSetting<bool>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicySpecialCharacters));
             var digits = _settingService.ExtractValueFromSetting<bool>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicyDigits));
 
-            var passwordPolicyRegex = $"^(?=.*[a-z]){(upperCaseLetters ? "(?=.*[A-Z])" : string.Empty)}{(digits ? "(?=.*\\d)" : string.Empty)}{(specialCharacters ? "(?=.*[^\\w\\d\\s])" : string.Empty)}.{{{minLength},{maxLength}}}$";
+            var passwordPolicyRegex = $"^{(upperCaseLetters ? "(?=.*[A-Z])" : string.Empty)}{(digits ? "(?=.*\\d)" : string.Empty)}{(specialCharacters ? "(?=.*[^\\w\\s])" : string.Empty)}.{{{minLength},{maxLength}}}$";
 
             return Regex.IsMatch(password, passwordPolicyRegex);
         }
