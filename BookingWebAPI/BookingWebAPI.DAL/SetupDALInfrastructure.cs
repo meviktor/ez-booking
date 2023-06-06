@@ -1,4 +1,5 @@
-﻿using BookingWebAPI.DAL.Interfaces;
+﻿using BookingWebAPI.Common.Constants;
+using BookingWebAPI.DAL.Interfaces;
 using BookingWebAPI.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace BookingWebAPI.DAL
 
             if (connectionString is null)
             {
-                throw new ArgumentNullException(nameof(connectionString), "No connection string provided for database access. Check your configuration for missing connection string.");
+                throw new ArgumentNullException(nameof(connectionString), ApplicationConstants.AppStartupErrorNoConnectionString);
             }
             return services.AddDbContext<BookingWebAPIDbContext>(options => options.UseSqlServer(connectionString));
         }

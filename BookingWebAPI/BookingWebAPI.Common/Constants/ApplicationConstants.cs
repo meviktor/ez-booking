@@ -23,6 +23,8 @@
         public const string JwtClaimEmail = "email";
         public const string JwtClaimUserName = "username";
 
+        public const string AppStartupErrorNoConnectionString = "No connection string provided for database access. Check your configuration for missing connection string.";
+
         // TODO: delete this constant after settings will be implemented!
         public const int LoginMaxAttempts = 5;
 

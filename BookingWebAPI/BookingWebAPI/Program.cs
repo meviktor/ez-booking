@@ -2,11 +2,14 @@ using BookingWebAPI.DAL;
 using BookingWebAPI.Infrastructure;
 using BookingWebAPI.Middleware;
 using BookingWebAPI.Services;
+using BookingWebAPI.TaskManagement;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var apiConnectionString = builder.Configuration.GetConnectionString("DefaultDatabaseConnection");
 // Add services to the container.
-builder.Services.AddDALRegistrations(builder.Configuration.GetConnectionString("DefaultDatabaseConnection"));
+builder.Services.AddDALRegistrations(apiConnectionString);
 builder.Services.AddServicesRegistrations();
 builder.Services.AddInfrastructureRegistrations();
 builder.Services.AddControllers();
@@ -14,10 +17,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.ConfigureHangfire(apiConnectionString);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
@@ -25,6 +28,7 @@ if (app.Environment.IsDevelopment())
         try
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<BookingWebAPIDbContext>();
+            dbContext.Database.Migrate();
             dbContext.Seed();
         }
         catch (Exception e)
