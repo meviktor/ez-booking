@@ -1,3 +1,4 @@
+using BookingWebAPI.Common.Models.Config;
 using BookingWebAPI.DAL;
 using BookingWebAPI.Infrastructure;
 using BookingWebAPI.Middleware;
@@ -18,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureHangfire(apiConnectionString);
+builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfig"));
 
 var app = builder.Build();
 

@@ -41,8 +41,8 @@ namespace BookingWebAPI.DAL.Migrations
 
                     b.Property<string>("RawValue")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()

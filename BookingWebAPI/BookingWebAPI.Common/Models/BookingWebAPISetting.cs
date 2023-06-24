@@ -17,7 +17,7 @@ namespace BookingWebAPI.Common.Models
         public SettingValueType ValueType { get; set; }
 
         [Required]
-        [MaxLength(500)]
+        [MaxLength(2000)]
         public string RawValue { get; set; } = null!;
 
         [RequiredNotDefault]

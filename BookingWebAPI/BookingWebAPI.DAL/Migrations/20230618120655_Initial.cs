@@ -39,7 +39,7 @@ namespace BookingWebAPI.DAL.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     ValueType = table.Column<short>(type: "smallint", nullable: false),
-                    RawValue = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    RawValue = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     Category = table.Column<short>(type: "smallint", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)

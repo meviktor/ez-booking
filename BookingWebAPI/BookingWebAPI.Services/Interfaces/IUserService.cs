@@ -11,5 +11,7 @@ namespace BookingWebAPI.Services.Interfaces
         Task<BookingWebAPIUser> ConfirmRegistration(Guid userId, Guid token, string password);
 
         Task<BookingWebAPIUser> FindUserForEmailConfirmation(Guid token);
+
+        Task<BookingWebAPIUser?> GetAsync(Guid id);
     }
 }

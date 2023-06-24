@@ -5,6 +5,7 @@ using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
 using BookingWebAPI.DAL.Interfaces;
 using BookingWebAPI.Services.Interfaces;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +29,8 @@ namespace BookingWebAPI.Services
             _settingService = settingService;
         }
 
+        public async Task<BookingWebAPIUser?> GetAsync(Guid id) => await _userRepository.GetAsync(id);
+
         public async Task<BookingWebAPIUser> Register(string emailAddress, Guid siteId, string firstName, string lastName)
         {
             if(await _userRepository.ExistsByEmail(emailAddress))
@@ -46,7 +49,7 @@ namespace BookingWebAPI.Services
                 SiteId = siteId
             });
 
-            // TODO: send confirmation e-mail for the specified e-mail address!
+            BackgroundJob.Enqueue<IEmailService>(emailService => emailService.SendUserConfirmationEmail(registeredUser.Id));
 
             return registeredUser;
         }
