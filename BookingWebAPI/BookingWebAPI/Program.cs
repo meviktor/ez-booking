@@ -20,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureHangfire(apiConnectionString);
 builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfig"));
+builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("JwtConfig"));
 
 var app = builder.Build();
 
