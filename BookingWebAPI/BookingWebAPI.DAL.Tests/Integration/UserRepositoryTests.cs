@@ -52,7 +52,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
 
         [TestCase(nameof(BookingWebAPIUser.Email), null, false, ApplicationErrorCodes.UserEmailRequired)]
         [TestCase(nameof(BookingWebAPIUser.Email), "", false, ApplicationErrorCodes.UserEmailRequired)]
-        [TestCase(nameof(BookingWebAPIUser.UserName), Constants.NotExistingUserUserName, true, null)]
+        [TestCase(nameof(BookingWebAPIUser.UserName), Constants.NotRegisteredUserUserName, true, null)]
         [TestCase(nameof(BookingWebAPIUser.UserName), null, false, ApplicationErrorCodes.UserUserNameRequired)]
         [TestCase(nameof(BookingWebAPIUser.UserName), "", false, ApplicationErrorCodes.UserUserNameRequired)]
         public async Task CreateOrUpdate_Test_CreateWithRequiredField(string fieldName, object? value, bool operationShouldSucceed, string? expectedErrorCode)

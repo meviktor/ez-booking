@@ -45,8 +45,8 @@ namespace BookingWebAPI.Testing.Common
             public const string DeletedUserEmail = "deleted@emailProvider.com";
             public const string ActiveUserUserName = "activeUserName";
             public const string DeletedUserUserName = "deletedUserName";
-            public const string NotExistingUserEmail = "newUser@emailProvider.com";
-            public const string NotExistingUserUserName = "newUserName";
+            public const string NotRegisteredUserEmail = "newUser@emailProvider.com";
+            public const string NotRegisteredUserUserName = "newUserName";
         }
     }
 }

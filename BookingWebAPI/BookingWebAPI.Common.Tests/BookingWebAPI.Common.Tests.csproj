@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
-    <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
@@ -18,12 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Unit\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BookingWebAPI.Services\BookingWebAPI.Services.csproj" />
-    <ProjectReference Include="..\BookingWebAPI.Testing.Common\BookingWebAPI.Testing.Common.csproj" />
+    <ProjectReference Include="..\BookingWebAPI.Common\BookingWebAPI.Common.csproj" />
   </ItemGroup>
 
 </Project>
