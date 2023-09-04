@@ -22,12 +22,14 @@ namespace BookingWebAPI.Services
         private readonly IOptions<JwtConfiguration> _jwtConfiguration;
         private readonly IUserRepository _userRepository;
         private readonly ISettingService _settingService;
+        private readonly IBackgroundJobClient _jobClient;
 
-        public UserService(IOptions<JwtConfiguration> jwtConfiguration, IUserRepository userRepository, ISettingService settingService)
+        public UserService(IOptions<JwtConfiguration> jwtConfiguration, IUserRepository userRepository, ISettingService settingService, IBackgroundJobClient jobClient)
         {
             _jwtConfiguration = jwtConfiguration;
             _userRepository = userRepository;
             _settingService = settingService;
+            _jobClient = jobClient;
         }
 
         public async Task<BookingWebAPIUser?> GetAsync(Guid id) => await _userRepository.GetAsync(id);
@@ -41,7 +43,7 @@ namespace BookingWebAPI.Services
 
             var registeredUser = await _userRepository.CreateOrUpdateAsync(new BookingWebAPIUser
             {
-                Email = emailAddress,
+                Email = emailAddress.Trim(),
                 EmailConfirmed = false,
                 Token = Guid.NewGuid(),
                 UserName = await ProposeUserName(firstName.Trim(), lastName.Trim()),
@@ -50,7 +52,7 @@ namespace BookingWebAPI.Services
                 SiteId = siteId
             });
 
-            BackgroundJob.Enqueue<IEmailService>(emailService => emailService.SendUserConfirmationEmail(registeredUser.Id));
+            _jobClient.Enqueue<IEmailService>(emailService => emailService.SendUserConfirmationEmail(registeredUser.Id));
 
             return registeredUser;
         }

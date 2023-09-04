@@ -1,4 +1,5 @@
 ﻿using BookingWebAPI.Common.Constants;
+using BookingWebAPI.DAL.Interfaces;
 using Hangfire;
 
 namespace BookingWebAPI.TaskManagement
@@ -18,6 +19,7 @@ namespace BookingWebAPI.TaskManagement
                 .UseSqlServerStorage(connectionString));
 
             services.AddHangfireServer();
+            services.AddScoped<IBackgroundJobClient, BackgroundJobClient>();
         }
     }
 }

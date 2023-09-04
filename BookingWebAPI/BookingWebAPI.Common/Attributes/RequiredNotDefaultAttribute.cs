@@ -35,7 +35,7 @@ namespace BookingWebAPI.Common.Attributes
             }
             if (!defaultInstancesCache.TryGetValue(type.FullName!, out var defaultInstance))
             {
-                defaultInstance = Activator.CreateInstance(Nullable.GetUnderlyingType(type) ?? type);
+                defaultInstance = Activator.CreateInstance(type);
                 // type has to be some value type, so FullName should not return null
                 // as we handle only value types via this attribute, the actual default value cannot be null either 
                 defaultInstancesCache[type.FullName!] = defaultInstance!;
