@@ -21,7 +21,10 @@ namespace BookingWebAPI.DAL.Repositories
             new ErrorCodeAssociation(nameof(BookingWebAPIUser.Email), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.UserEmailRequired),
             new ErrorCodeAssociation(nameof(BookingWebAPIUser.Email), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.UserEmailTooLong),
             new ErrorCodeAssociation(nameof(BookingWebAPIUser.UserName), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.UserUserNameRequired),
-            new ErrorCodeAssociation(nameof(BookingWebAPIUser.UserName), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.UserUserNameTooLong)
+            new ErrorCodeAssociation(nameof(BookingWebAPIUser.UserName), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.UserUserNameTooLong),
+            new ErrorCodeAssociation(nameof(BookingWebAPIUser.FirstName), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.UserFirstNameRequired),
+            new ErrorCodeAssociation(nameof(BookingWebAPIUser.LastName), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.UserLastNameRequired),
+            new ErrorCodeAssociation("FK_Users_Sites_SiteId", SqlServerErrorCode.ConstraintViolated, ApplicationErrorCodes.UserSiteIdRequired)
         };
 
         public async Task<BookingWebAPIUser?> FindByUserEmail(string emailAddress) => await Set.SingleOrDefaultAsync(user => !user.IsDeleted && user.Email == emailAddress);

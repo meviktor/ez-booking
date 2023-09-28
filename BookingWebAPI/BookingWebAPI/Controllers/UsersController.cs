@@ -23,7 +23,6 @@ namespace BookingWebAPI.Controllers
         [HttpPost(nameof(Register))]
         public async Task<CreatedResult> Register(RegisterViewModel registerViewModel)
         {
-            // TODO: update DB schema with new user fields
             // users will be created by admin. usernames are auto calculated via format <lastname>.<firstname><# of users having the same first & last name>.
             return Created(nameof(Authenticate), _mapper.Map<BookingWebAPIUserViewModel>(await _userService.Register(registerViewModel.EmailAddress, registerViewModel.SiteId, registerViewModel.FirstName, registerViewModel.LastName)));
         }

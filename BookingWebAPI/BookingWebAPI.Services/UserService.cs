@@ -4,6 +4,7 @@ using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
 using BookingWebAPI.Common.Models.Config;
+using BookingWebAPI.Common.Utils;
 using BookingWebAPI.DAL.Interfaces;
 using BookingWebAPI.Services.Interfaces;
 using Hangfire;
@@ -36,6 +37,11 @@ namespace BookingWebAPI.Services
 
         public async Task<BookingWebAPIUser> Register(string emailAddress, Guid siteId, string firstName, string lastName)
         {
+            if (Utilities.IsValidEmail(emailAddress))
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.UserEmailInvalidFormat);
+            }
+
             if(await _userRepository.ExistsByEmail(emailAddress))
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.UserEmailMustBeUnique);
@@ -126,7 +132,7 @@ namespace BookingWebAPI.Services
             var specialCharacters = _settingService.ExtractValueFromSetting<bool>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicySpecialCharacters));
             var digits = _settingService.ExtractValueFromSetting<bool>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicyDigits));
 
-            var passwordPolicyRegex = $"^{(upperCaseLetters ? "(?=.*[A-Z])" : string.Empty)}{(digits ? "(?=.*\\d)" : string.Empty)}{(specialCharacters ? "(?=.*[^\\w\\s])" : string.Empty)}.{{{minLength},{maxLength}}}$";
+            var passwordPolicyRegex = $"^{(upperCaseLetters ? "(?=.*[A-Z])" : string.Empty)}{(digits ? "(?=.*\\d)" : string.Empty)}{(specialCharacters ? "(?=.*[^\\w\\s\\d])" : string.Empty)}.{{{minLength},{maxLength}}}$";
 
             return Regex.IsMatch(password, passwordPolicyRegex);
         }

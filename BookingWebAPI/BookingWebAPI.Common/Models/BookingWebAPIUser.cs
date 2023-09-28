@@ -1,4 +1,6 @@
-﻿using BookingWebAPI.Common.Constants;
+﻿using BookingWebAPI.Common.Attributes;
+using BookingWebAPI.Common.Constants;
+using BookingWebAPI.Common.ErrorCodes;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,7 +16,7 @@ namespace BookingWebAPI.Common.Models
         public string UserName { get; set; } = null!;
 
         [Required]
-        [MaxLength(ApplicationConstants.EmailMaximumLength)]
+        [BookingWebAPIEmailAddress(ErrorMessage = ApplicationErrorCodes.UserEmailInvalidFormat)]
         public string Email { get; set; } = null!;
 
         [Column(TypeName = DatabaseConstraintNames.User_PasswordHash_ColumnType)]

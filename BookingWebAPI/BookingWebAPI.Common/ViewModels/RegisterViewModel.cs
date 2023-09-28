@@ -7,6 +7,7 @@ namespace BookingWebAPI.Common.ViewModels
     public class RegisterViewModel
     {
         [Required(ErrorMessage = ApplicationErrorCodes.UserEmailRequired)]
+        [BookingWebAPIEmailAddress(ErrorMessage = ApplicationErrorCodes.UserEmailInvalidFormat)]
         public string EmailAddress { get; set; } = null!;
 
         [Required(ErrorMessage = ApplicationErrorCodes.UserFirstNameRequired)]
