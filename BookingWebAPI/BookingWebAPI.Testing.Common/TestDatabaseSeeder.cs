@@ -15,8 +15,8 @@ namespace BookingWebAPI.Testing.Common
 
         public static readonly IEnumerable<BookingWebAPIUser> Users = new BookingWebAPIUser[]
         {
-            new BookingWebAPIUser { Id = new Guid(Constants.ActiveUserId), Email = Constants.ActiveUserEmail, UserName = Constants.ActiveUserUserName, PasswordHash = DummyPasswordHash, EmailConfirmed = true, IsDeleted = false },
-            new BookingWebAPIUser { Id = new Guid(Constants.DeletedUserId), Email = Constants.DeletedUserEmail, UserName = Constants.DeletedUserUserName, PasswordHash = DummyPasswordHash, EmailConfirmed = true, IsDeleted = true }
+            new BookingWebAPIUser { Id = new Guid(Constants.ActiveUserId), Email = Constants.ActiveUserEmail, UserName = Constants.ActiveUserUserName, PasswordHash = DummyPasswordHash, EmailConfirmed = true, IsDeleted = false, SiteId = Guid.Parse(Constants.ActiveSiteId), FirstName = "Jane", LastName = "Doe" },
+            new BookingWebAPIUser { Id = new Guid(Constants.DeletedUserId), Email = Constants.DeletedUserEmail, UserName = Constants.DeletedUserUserName, PasswordHash = DummyPasswordHash, EmailConfirmed = true, IsDeleted = true, SiteId = Guid.Parse(Constants.DeletedSiteId), FirstName = "John", LastName = "Doe" }
         };
 
         internal static void SeedTestData(this BookingWebAPIDbContext dbContext)

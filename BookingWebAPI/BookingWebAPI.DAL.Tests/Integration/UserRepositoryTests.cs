@@ -22,7 +22,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
             _repository = new UserRepository(_dbContext);
         }
 
-        [TestCase(Constants.NotExistingUserEmail, true)]
+        [TestCase(Constants.NotRegisteredUserEmail, true)]
         [TestCase(Constants.ActiveUserEmail, false)]
         [TestCase(Constants.DeletedUserEmail, false)]
         public async Task CreateOrUpdate_Test_CreateWithEmailAddressUniqueConstraint(string emailAddress, bool operationShouldSucceed)
@@ -49,12 +49,17 @@ namespace BookingWebAPI.DAL.Tests.Integration
             await assertAction.Should().ThrowExactlyAsync<DALException>().Where(e => e.ErrorCode == expectedErrorCode);
         }
 
-
         [TestCase(nameof(BookingWebAPIUser.Email), null, false, ApplicationErrorCodes.UserEmailRequired)]
         [TestCase(nameof(BookingWebAPIUser.Email), "", false, ApplicationErrorCodes.UserEmailRequired)]
         [TestCase(nameof(BookingWebAPIUser.UserName), Constants.NotRegisteredUserUserName, true, null)]
         [TestCase(nameof(BookingWebAPIUser.UserName), null, false, ApplicationErrorCodes.UserUserNameRequired)]
         [TestCase(nameof(BookingWebAPIUser.UserName), "", false, ApplicationErrorCodes.UserUserNameRequired)]
+        [TestCase(nameof(BookingWebAPIUser.FirstName), "", false, ApplicationErrorCodes.UserFirstNameRequired)]
+        [TestCase(nameof(BookingWebAPIUser.FirstName), null, false, ApplicationErrorCodes.UserFirstNameRequired)]
+        [TestCase(nameof(BookingWebAPIUser.LastName), "", false, ApplicationErrorCodes.UserLastNameRequired)]
+        [TestCase(nameof(BookingWebAPIUser.LastName), null, false, ApplicationErrorCodes.UserLastNameRequired)]
+        [TestCase(nameof(BookingWebAPIUser.SiteId), "", false, ApplicationErrorCodes.UserSiteIdRequired)]
+        [TestCase(nameof(BookingWebAPIUser.SiteId), null, false, ApplicationErrorCodes.UserSiteIdRequired)]
         public async Task CreateOrUpdate_Test_CreateWithRequiredField(string fieldName, object? value, bool operationShouldSucceed, string? expectedErrorCode)
         {
             var countOfUsersBeforeSave = await _repository.GetAll().CountAsync();
@@ -78,6 +83,9 @@ namespace BookingWebAPI.DAL.Tests.Integration
             nameof(BookingWebAPIUser.PasswordHash) => CreateUser(passwordHash: (string?)value),
             nameof(BookingWebAPIUser.LockoutEnabled) => CreateUser(lockoutEnabled: (bool?)value ?? false),
             nameof(BookingWebAPIUser.AccessFailedCount) => CreateUser(accessFailedCount: (int?)value ?? 0),
+            nameof(BookingWebAPIUser.FirstName) => CreateUser(firstName: (string?)value),
+            nameof(BookingWebAPIUser.LastName) => CreateUser(lastName: (string?)value),
+            nameof(BookingWebAPIUser.SiteId) => CreateUser(siteId: (string?)value),
             _ => throw new ArgumentException($"Field '{fieldName}' is not known on type '{nameof(BookingWebAPIUser)}'.")
         };
 
@@ -86,8 +94,8 @@ namespace BookingWebAPI.DAL.Tests.Integration
         /// Creates a user with the configured properties. Pragma warning is used because cases with null property values are also tested regardless of the exact property type (nullable or not). 
         /// </summary>
         /// <returns>A <see cref="BookingWebAPIUser"/> with the configured properties.</returns>
-        private BookingWebAPIUser CreateUser(string? userName = Constants.NotExistingSiteName, string? email = Constants.NotExistingUserEmail, bool emailConfirmed = false, string? passwordHash = null, bool lockoutEnabled = true, int accessFailedCount = 0) =>
-            new BookingWebAPIUser { UserName = userName, Email = email, EmailConfirmed = emailConfirmed, PasswordHash = passwordHash ?? DummyPasswordHash, LockoutEnabled = lockoutEnabled, AccessFailedCount = accessFailedCount };
+        private BookingWebAPIUser CreateUser(string? userName = Constants.NotExistingSiteName, string? email = Constants.NotRegisteredUserEmail, bool emailConfirmed = false, string? passwordHash = null, bool lockoutEnabled = true, int accessFailedCount = 0, string? firstName = "Jane", string? lastName = "Doe", string? siteId = Constants.ActiveSiteId) =>
+            new BookingWebAPIUser { UserName = userName, Email = email, EmailConfirmed = emailConfirmed, PasswordHash = passwordHash ?? DummyPasswordHash, LockoutEnabled = lockoutEnabled, AccessFailedCount = accessFailedCount, FirstName = firstName, LastName = lastName, SiteId = !string.IsNullOrWhiteSpace(siteId) ? Guid.Parse(siteId) : Guid.Empty };
 #pragma warning restore CS8601
     }
 }
