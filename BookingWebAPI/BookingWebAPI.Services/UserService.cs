@@ -189,8 +189,8 @@ namespace BookingWebAPI.Services
                 throw new BookingWebAPIException(ApplicationErrorCodes.CannotAuthenticate, "No JWT secret found for authentication.");
             }
 
-            var jwtValidInDays = _jwtConfiguration.Value.ValidInDays;
-            if (jwtValidInDays == null || jwtValidInDays == 0)
+            var jwtValidInSeconds = _jwtConfiguration.Value.ValidInSeconds;
+            if (jwtValidInSeconds == null || jwtValidInSeconds == 0)
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.CannotAuthenticate, "No validity time period found for authentication.");
             }
@@ -204,7 +204,7 @@ namespace BookingWebAPI.Services
                     new Claim(ApplicationConstants.JwtClaimEmail, $"{userEmail}"),
                     new Claim(ApplicationConstants.JwtClaimUserName, $"{userName}")
                 }),
-                Expires = DateTime.UtcNow.AddDays(jwtValidInDays.Value),
+                Expires = DateTime.UtcNow.AddSeconds(jwtValidInSeconds.Value),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

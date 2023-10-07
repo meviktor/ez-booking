@@ -19,7 +19,7 @@ namespace BookingWebAPI.Testing.Common
 
         public UnitTestBase()
         {
-            _jwtMock.Setup(jwtConfig => jwtConfig.Value).Returns(new JwtConfiguration { Secret = "YA1o0Bo1FEH4Hedo", ValidInDays = 1});
+            _jwtMock.Setup(jwtConfig => jwtConfig.Value).Returns(new JwtConfiguration { Secret = "YA1o0Bo1FEH4Hedo", ValidInSeconds = 3600});
             SetupDbContextMockDbSets();
         }
 

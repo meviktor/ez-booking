@@ -4,6 +4,6 @@
     {
         public string Secret { get; set; } = null!;
 
-        public short? ValidInDays { get; set; }
+        public uint? ValidInSeconds { get; set; }
     }
 }
