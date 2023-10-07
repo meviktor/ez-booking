@@ -16,6 +16,7 @@ namespace BookingWebAPI.Common.Models
         public string UserName { get; set; } = null!;
 
         [Required]
+        [MaxLength(ApplicationConstants.EmailMaximumLength)]
         [BookingWebAPIEmailAddress(ErrorMessage = ApplicationErrorCodes.UserEmailInvalidFormat)]
         public string Email { get; set; } = null!;
 

@@ -6,6 +6,8 @@ namespace BookingWebAPI.Common.Utils
     public static class Utilities
     {
         public static bool IsValidEmail(string email) => 
-            new Regex(ApplicationConstants.EmailRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture).IsMatch(email) && email.Length <= ApplicationConstants.EmailMaximumLength;
+            email != null ? 
+                new Regex(ApplicationConstants.EmailRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture).IsMatch(email) && email.Length <= ApplicationConstants.EmailMaximumLength :
+                false;
     }
 }

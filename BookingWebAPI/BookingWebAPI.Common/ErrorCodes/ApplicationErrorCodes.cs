@@ -8,6 +8,7 @@
         public const string CannotAuthenticate = nameof(CannotAuthenticate);
 
         // Sites
+        public const string SiteDoesNotExist = nameof(SiteDoesNotExist);
         public const string SiteStateOrCountryNeeded = nameof(SiteStateOrCountryNeeded);
         public const string SiteNameMustBeUnique = nameof(SiteNameMustBeUnique);
         public const string SiteNameRequired = nameof(SiteNameRequired);
@@ -33,6 +34,7 @@
         public const string ResourceCategoryNameMustBeUnique = nameof(ResourceCategoryNameMustBeUnique);
 
         // BookingWebAPIUser
+        public const string UserDoesNotExist = nameof(UserDoesNotExist);
         public const string UserUserNameMustBeUnique = nameof(UserUserNameMustBeUnique);
         public const string UserEmailMustBeUnique = nameof(UserEmailMustBeUnique);
         public const string UserEmailTooLong = nameof(UserEmailTooLong);
@@ -41,6 +43,8 @@
         public const string UserUserNameTooLong = nameof(UserUserNameTooLong);
         public const string UserUserNameRequired = nameof(UserUserNameRequired);
         public const string LoginInvalidUserNameOrPassword = nameof(LoginInvalidUserNameOrPassword);
+        public const string LoginPasswordRequired = nameof(LoginPasswordRequired);
+        public const string LoginEmailNotConfirmed = nameof(LoginEmailNotConfirmed);
         public const string UserLockedOut = nameof(UserLockedOut);
         public const string UserFirstNameRequired = nameof(UserFirstNameRequired);
         public const string UserLastNameRequired = nameof(UserLastNameRequired);

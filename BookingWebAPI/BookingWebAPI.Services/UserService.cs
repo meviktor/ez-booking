@@ -24,20 +24,32 @@ namespace BookingWebAPI.Services
         private readonly IUserRepository _userRepository;
         private readonly ISettingService _settingService;
         private readonly IBackgroundJobClient _jobClient;
+        private readonly ISiteRepository _siteRepository;
 
-        public UserService(IOptions<JwtConfiguration> jwtConfiguration, IUserRepository userRepository, ISettingService settingService, IBackgroundJobClient jobClient)
+        public UserService(IOptions<JwtConfiguration> jwtConfiguration, IUserRepository userRepository, ISettingService settingService, IBackgroundJobClient jobClient, ISiteRepository siteRepository)
         {
             _jwtConfiguration = jwtConfiguration;
             _userRepository = userRepository;
             _settingService = settingService;
             _jobClient = jobClient;
+            _siteRepository = siteRepository;
         }
 
         public async Task<BookingWebAPIUser?> GetAsync(Guid id) => await _userRepository.GetAsync(id);
 
         public async Task<BookingWebAPIUser> Register(string emailAddress, Guid siteId, string firstName, string lastName)
         {
-            if (Utilities.IsValidEmail(emailAddress))
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.UserFirstNameRequired);
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.UserLastNameRequired);
+            }
+
+            if (!Utilities.IsValidEmail(emailAddress))
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.UserEmailInvalidFormat);
             }
@@ -47,9 +59,14 @@ namespace BookingWebAPI.Services
                 throw new BookingWebAPIException(ApplicationErrorCodes.UserEmailMustBeUnique);
             }
 
+            if(! await _siteRepository.ExistsAsync(siteId))
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.SiteDoesNotExist);
+            }
+
             var registeredUser = await _userRepository.CreateOrUpdateAsync(new BookingWebAPIUser
             {
-                Email = emailAddress.Trim(),
+                Email = emailAddress,
                 EmailConfirmed = false,
                 Token = Guid.NewGuid(),
                 UserName = await ProposeUserName(firstName.Trim(), lastName.Trim()),
@@ -68,7 +85,7 @@ namespace BookingWebAPI.Services
             var foundUser = await _userRepository.FindByEmailVerificationToken(token);
             if(foundUser == null)
             {
-                throw new BookingWebAPIException(ApplicationErrorCodes.EntityNotFound);
+                throw new BookingWebAPIException(ApplicationErrorCodes.UserDoesNotExist);
             }
             return foundUser;
         }
@@ -77,7 +94,7 @@ namespace BookingWebAPI.Services
         {
             if(!await _userRepository.ExistsAsync(userId) || !await _userRepository.ExistsByEmailVerificationToken(token))
             {
-                throw new BookingWebAPIException(ApplicationErrorCodes.EntityNotFound);
+                throw new BookingWebAPIException(ApplicationErrorCodes.UserDoesNotExist);
             }
 
             if (!await IsPasswordValidByPolicy(password))
@@ -96,11 +113,31 @@ namespace BookingWebAPI.Services
 
         public async Task<(BookingWebAPIUser, string)> Authenticate(string emailAddress, string password)
         {
+            if (string.IsNullOrWhiteSpace(emailAddress))
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.UserEmailRequired);
+            }
+
+            if (!Utilities.IsValidEmail(emailAddress)) 
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.UserEmailInvalidFormat);
+            }
+
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.LoginPasswordRequired);
+            }
+
             var foundUser = await _userRepository.FindByUserEmail(emailAddress);
 
             if(foundUser == null)
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.LoginInvalidUserNameOrPassword);
+            }
+
+            if(!foundUser.EmailConfirmed)
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.LoginEmailNotConfirmed);
             }
 
             if(foundUser.LockoutEnabled)
@@ -111,6 +148,7 @@ namespace BookingWebAPI.Services
             bool passwordValid = BCrypt.Net.BCrypt.Verify(password, foundUser.PasswordHash);
 
             foundUser.AccessFailedCount = passwordValid ? 0 : foundUser.AccessFailedCount + 1;
+            // TODO: if this value will be moved out to a setting, dont forget to modify the related test as well!
             foundUser.LockoutEnabled = foundUser.AccessFailedCount >= ApplicationConstants.LoginMaxAttempts;
             await _userRepository.CreateOrUpdateAsync(foundUser);
 
