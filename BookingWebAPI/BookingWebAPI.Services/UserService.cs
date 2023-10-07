@@ -10,10 +10,6 @@ using BookingWebAPI.Services.Interfaces;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BookingWebAPI.Services
@@ -190,25 +186,12 @@ namespace BookingWebAPI.Services
             }
 
             var jwtValidInSeconds = _jwtConfiguration.Value.ValidInSeconds;
-            if (jwtValidInSeconds == null || jwtValidInSeconds == 0)
+            if (jwtValidInSeconds == null || jwtValidInSeconds <= 0)
             {
-                throw new BookingWebAPIException(ApplicationErrorCodes.CannotAuthenticate, "No validity time period found for authentication.");
+                throw new BookingWebAPIException(ApplicationErrorCodes.CannotAuthenticate, "Validity time period has not been provided appropriately.");
             }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(jwtSecret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[] {
-                    new Claim(ApplicationConstants.JwtClaimId, $"{userId}"),
-                    new Claim(ApplicationConstants.JwtClaimEmail, $"{userEmail}"),
-                    new Claim(ApplicationConstants.JwtClaimUserName, $"{userName}")
-                }),
-                Expires = DateTime.UtcNow.AddSeconds(jwtValidInSeconds.Value),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return Utilities.CreateJwtToken(userId, userEmail, userName, jwtValidInSeconds.Value, jwtSecret);
         }
     }
 }
