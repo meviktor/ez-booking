@@ -75,6 +75,109 @@ namespace BookingWebAPI.DAL.Tests.Integration
             else await assertAction.Should().ThrowExactlyAsync<DALException>().Where(e => e.ErrorCode == expectedErrorCode);
         }
 
+        [TestCase(Constants.ActiveUserEmail, true)]
+        [TestCase(Constants.DeletedUserEmail, false)]
+        [TestCase("", false)]
+        [TestCase(null, false)]
+        public async Task FindByUserEmail_Test(string emailAddress, bool successExpected)
+        {
+            // no prepare - looking for a user who has been added by TestDatabaseSeeder...
+            // action
+            var userFound = await _repository.FindByUserEmail(emailAddress);
+
+            // assert
+            if (successExpected)
+            {
+                userFound.Should().NotBeNull();
+                userFound!.Email.Should().Be(emailAddress);
+            }
+            else userFound.Should().BeNull();
+        }
+
+        [TestCase(true, true, false)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, false)]
+        [TestCase(false, false, false)]
+        public async Task FindByEmailVerificationToken_Test(bool userActive, bool emailConfirmed, bool successExpected)
+        {
+            // prepare
+            var token = Guid.NewGuid();
+            await _repository.CreateOrUpdateAsync(CreateUser(email: Constants.NotRegisteredUserEmail, emailConfirmed: emailConfirmed, token: token, deleted: !userActive));
+
+            // action
+            var userFound = await _repository.FindByEmailVerificationToken(token);
+
+            // assert
+            if (successExpected)
+            {
+                userFound.Should().NotBeNull();
+                userFound!.Token.Should().Be(token);
+            }
+            else userFound.Should().BeNull();
+        }
+
+        [TestCase(true, true, false)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, false)]
+        [TestCase(false, false, false)]
+        public async Task ExistsByEmailVerificationToken_Test(bool userActive, bool emailConfirmed, bool successExpected)
+        {
+            // prepare
+            var token = Guid.NewGuid();
+            await _repository.CreateOrUpdateAsync(CreateUser(email: Constants.NotRegisteredUserEmail, emailConfirmed: emailConfirmed, token: token, deleted: !userActive));
+
+            // action
+            var userFound = await _repository.ExistsByEmailVerificationToken(token);
+
+            // assert
+            if (successExpected)
+            {
+                userFound.Should().BeTrue();
+            }
+            else userFound.Should().BeFalse();
+        }
+
+        [TestCase(Constants.ActiveUserEmail, true)]
+        [TestCase(Constants.NotRegisteredUserEmail, false)]
+        [TestCase("", false)]
+        [TestCase(null, false)]
+        public async Task ExistsByEmail_Test(string emailAddress, bool successExpected)
+        {
+            // action
+            var userFound = await _repository.ExistsByEmail(emailAddress);
+
+            // assert
+            if (successExpected)
+            {
+                userFound.Should().BeTrue();
+            }
+            else userFound.Should().BeFalse();
+        }
+
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task ExistsByUserName_Test(bool activeUser, bool successExpected)
+        {
+            // prepare
+            var targetEmail = activeUser ? Constants.ActiveUserEmail : Constants.DeletedUserEmail;
+            var targetUser = await _dbContext.Users.Where(user => user.Email == targetEmail).SingleOrDefaultAsync();
+
+            if (targetUser == null || targetUser.Email != targetEmail)
+            {
+                Assert.Fail($"{(activeUser ? "Active" : "Deleted")} target user could not be set.");
+            }
+
+            // action
+            var userFound = await _repository.ExistsByUserName(targetUser!.UserName);
+
+            // assert
+            if (successExpected)
+            {
+                userFound.Should().BeTrue();
+            }
+            else userFound.Should().BeFalse();
+        }
+
         private BookingWebAPIUser CreateUserByField(string fieldName, object? value) => fieldName switch
         {
             nameof(BookingWebAPIUser.UserName) => CreateUser(userName: (string?)value),
@@ -94,8 +197,8 @@ namespace BookingWebAPI.DAL.Tests.Integration
         /// Creates a user with the configured properties. Pragma warning is used because cases with null property values are also tested regardless of the exact property type (nullable or not). 
         /// </summary>
         /// <returns>A <see cref="BookingWebAPIUser"/> with the configured properties.</returns>
-        private BookingWebAPIUser CreateUser(string? userName = Constants.NotExistingSiteName, string? email = Constants.NotRegisteredUserEmail, bool emailConfirmed = false, string? passwordHash = null, bool lockoutEnabled = true, int accessFailedCount = 0, string? firstName = "Jane", string? lastName = "Doe", string? siteId = Constants.ActiveSiteId) =>
-            new BookingWebAPIUser { UserName = userName, Email = email, EmailConfirmed = emailConfirmed, PasswordHash = passwordHash ?? DummyPasswordHash, LockoutEnabled = lockoutEnabled, AccessFailedCount = accessFailedCount, FirstName = firstName, LastName = lastName, SiteId = !string.IsNullOrWhiteSpace(siteId) ? Guid.Parse(siteId) : Guid.Empty };
+        private BookingWebAPIUser CreateUser(string? userName = Constants.NotExistingSiteName, string? email = Constants.NotRegisteredUserEmail, bool emailConfirmed = false, string? passwordHash = null, bool lockoutEnabled = true, int accessFailedCount = 0, string? firstName = "Jane", string? lastName = "Doe", string? siteId = Constants.ActiveSiteId, Guid? token = null, bool deleted = false) =>
+            new BookingWebAPIUser { UserName = userName, Email = email, EmailConfirmed = emailConfirmed, PasswordHash = passwordHash ?? DummyPasswordHash, LockoutEnabled = lockoutEnabled, AccessFailedCount = accessFailedCount, FirstName = firstName, LastName = lastName, SiteId = !string.IsNullOrWhiteSpace(siteId) ? Guid.Parse(siteId) : Guid.Empty, Token = token, IsDeleted = deleted };
 #pragma warning restore CS8601
     }
 }
