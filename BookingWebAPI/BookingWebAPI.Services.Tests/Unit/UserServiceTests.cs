@@ -12,7 +12,6 @@ using Hangfire.Common;
 using Hangfire.States;
 using Moq;
 using NUnit.Framework;
-using System.ComponentModel.DataAnnotations;
 
 namespace BookingWebAPI.Services.Tests.Unit
 {
@@ -124,32 +123,22 @@ namespace BookingWebAPI.Services.Tests.Unit
 
             var siteId = Guid.NewGuid();
 
-            // action
-            var exceptionOccurred = false;
-            string? errorCode = null;
-            BookingWebAPIUser? registeredUser = null;
-            try
+            // action & assert 
+            var action = async () => await _userService.Register(emailAddress, siteId, firstName, lastName);
+            if (successExpected)
             {
-                registeredUser = await _userService.Register(emailAddress, siteId, firstName, lastName);
+                var registeredUser = await action.Should().NotThrowAsync();
+                registeredUser!.Which.Email.Should().Be(emailAddress.Trim());
+                registeredUser!.Which.EmailConfirmed.Should().BeFalse();
+                registeredUser!.Which.Token.Should().NotBeNull();
+                registeredUser!.Which.UserName.Should().NotBeNull();
+                registeredUser!.Which.FirstName.Should().Be(firstName.Trim());
+                registeredUser!.Which.LastName.Should().Be(lastName.Trim());
+                registeredUser!.Which.SiteId.Should().Be(siteId);
             }
-            catch (BookingWebAPIException ex)
+            else
             {
-                exceptionOccurred = true;
-                errorCode = ex.ErrorCode;
-            }
-
-            // assert
-            exceptionOccurred.Should().Be(!successExpected);
-            errorCode.Should().Be(errorCodeExpected);
-            if(successExpected)
-            {
-                registeredUser!.Email.Should().Be(emailAddress.Trim());
-                registeredUser!.EmailConfirmed.Should().BeFalse();
-                registeredUser!.Token.Should().NotBeNull();
-                registeredUser!.UserName.Should().NotBeNull();
-                registeredUser!.FirstName.Should().Be(firstName.Trim());
-                registeredUser!.LastName.Should().Be(lastName.Trim());
-                registeredUser!.SiteId.Should().Be(siteId);
+                (await action.Should().ThrowAsync<BookingWebAPIException>()).Which.ErrorCode.Should().Be(errorCodeExpected);
             }
         }
 
@@ -165,20 +154,17 @@ namespace BookingWebAPI.Services.Tests.Unit
             _siteRepositoryMock.Setup(sr => sr.ExistsAsync(It.IsAny<Guid>())).ReturnsAsync(true);
             _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object);
 
-            // action
-            var exceptionOccurred = false;
-            BookingWebAPIUser? registeredUser = null;
-            try
+            // action & assert
+            var action = async () => await _userService.Register("testuser@testmailprovider.com", Guid.NewGuid(), "Test", "User");
+            if (emailAlreadyRegistered)
             {
-                registeredUser = await _userService.Register("testuser@testmailprovider.com", Guid.NewGuid(), "Test", "User");
+                await action.Should().ThrowAsync<BookingWebAPIException>();
             }
-            catch (BookingWebAPIException)
+            else
             {
-                exceptionOccurred = true;
+                await action.Should().NotThrowAsync();
             }
 
-            // assert
-            exceptionOccurred.Should().Be(emailAlreadyRegistered);
             try
             {
                 if (emailAlreadyRegistered)
@@ -205,22 +191,15 @@ namespace BookingWebAPI.Services.Tests.Unit
             _userRepositoryMock.Setup(ur => ur.FindByEmailVerificationToken(userGuid)).ReturnsAsync(userExists ? new BookingWebAPIUser { Id = userGuid } : null);
             _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object);
 
-            // action
-            var exceptionOccurred = false;
-            BookingWebAPIUser? foundUser = null;
-            try
+            // action & assert
+            var action = async () => await _userService.FindUserForEmailConfirmation(userGuid);
+            if (userExists)
             {
-                foundUser = await _userService.FindUserForEmailConfirmation(userGuid);
+              (await action.Should().NotThrowAsync()).Which.Id.Should().Be(userGuid);
             }
-            catch (BookingWebAPIException)
+            else
             {
-                exceptionOccurred = true;
-            }
-
-            exceptionOccurred.Should().Be(!userExists);
-            if (!exceptionOccurred)
-            {
-                userGuid.Should().Be(foundUser!.Id);
+                await action.Should().ThrowAsync<BookingWebAPIException>();
             }
         }
 
@@ -256,30 +235,25 @@ namespace BookingWebAPI.Services.Tests.Unit
            
             _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object);
 
-            // action
-            var exceptionOccurred = false;
-            BookingWebAPIUser? foundUser = null;
-            try
-            {
-                foundUser = await _userService.ConfirmRegistration(testUser.Id, testUser.Token.Value, password);
-            }
-            catch (BookingWebAPIException)
-            {
-                exceptionOccurred = true;
-            }
+            // action & assert
+            var action = async () => await _userService.ConfirmRegistration(testUser.Id, testUser.Token.Value, password);
 
-            // assert
             var confirmRegistrationShouldFail = !userExists || !tokenValid || !PasswordCompliesToPolicy(password, minLength, maxLength, upperCase, specialChars, digits);
-            exceptionOccurred.Should().Be(confirmRegistrationShouldFail);
-            if (!exceptionOccurred)
+            if(confirmRegistrationShouldFail)
             {
-                var passwordCorrect = BCrypt.Net.BCrypt.Verify(password, foundUser?.PasswordHash);
+                await action.Should().ThrowAsync<BookingWebAPIException>();
+            }
+            else
+            {
+                var foundUser = await action.Should().NotThrowAsync();
 
-                foundUser.Should().NotBeNull();
-                foundUser?.Id.Should().Be(testUser.Id);
+                var passwordCorrect = BCrypt.Net.BCrypt.Verify(password, foundUser!.Which.PasswordHash);
                 passwordCorrect.Should().BeTrue();
-                foundUser?.EmailConfirmed.Should().BeTrue();
-                foundUser?.Token.Should().BeNull();
+
+                foundUser!.Which.Should().NotBeNull();
+                foundUser!.Which.Id.Should().Be(testUser.Id);
+                foundUser!.Which.EmailConfirmed.Should().BeTrue();
+                foundUser!.Which.Token.Should().BeNull();
             }
         }
 
@@ -314,28 +288,21 @@ namespace BookingWebAPI.Services.Tests.Unit
             _userRepositoryMock.Setup(ur => ur.FindByUserEmail(emailAddress)).ReturnsAsync(emailRegistered ? mockUser : null);
             _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object);
 
-            // action
-            var exceptionOccurred = false;
-            string? errorCode = null, jwtToken = null;
-            BookingWebAPIUser? foundUser = null;
-            try
-            {
-                (foundUser, jwtToken) = await _userService.Authenticate(emailAddress, password);
-            }
-            catch (BookingWebAPIException ex)
-            {
-                exceptionOccurred = true;
-                errorCode = ex.ErrorCode;
-            }
+            // action & assert
+            var action = async () => await _userService.Authenticate(emailAddress, password);
 
-            // assert
-            exceptionOccurred.Should().Be(!successExpected);
-            errorCode.Should().Be(errorCodeExpected);
             if (successExpected)
             {
-                foundUser!.Id.Should().Be(mockUserId);
-                foundUser!.Email.Should().Be(emailAddress);
-                jwtToken.Should().NotBeNull();
+                var userTokenTuple = await action.Should().NotThrowAsync();
+                // found user
+                userTokenTuple.Which.Item1.Id.Should().Be(mockUserId);
+                userTokenTuple.Which.Item1.Email.Should().Be(emailAddress);
+                // JWT
+                userTokenTuple.Which.Item2.Should().NotBeNull();
+            }
+            else
+            {
+                await action.Should().ThrowAsync<BookingWebAPIException>();
             }
         }
 

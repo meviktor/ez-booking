@@ -11,18 +11,15 @@ namespace BookingWebAPI.Common.Tests.Unit
         [TestCaseSource(nameof(IsValidTestCases))]
         public void IsValid_Test(bool expectedAsValid, bool expectedException, object? value)
         {
-            bool validationResult = false, exceptionOccurred = false;
-            try
-            {
-                validationResult = _attrInstance.IsValid(value);
-            }
-            catch (ArgumentException)
-            {
-                exceptionOccurred = true;
-            }
+            // prepare
+            var assertAction = () => _attrInstance.IsValid(value);
 
-            validationResult.Should().Be(expectedAsValid);
-            exceptionOccurred.Should().Be(expectedException);
+            // action & assert
+            if (!expectedException)
+            {
+                assertAction.Should().NotThrow().Which.Should().Be(expectedAsValid);
+            }
+            else assertAction.Should().Throw<ArgumentException>();
         }
 
         private static readonly object?[] IsValidTestCases =
