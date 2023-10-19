@@ -1,4 +1,5 @@
-﻿using BookingWebAPI.Common.Models;
+﻿using BookingWebAPI.Common.Enums;
+using BookingWebAPI.Common.Models;
 using BookingWebAPI.DAL;
 
 namespace BookingWebAPI.Testing.Common
@@ -19,10 +20,20 @@ namespace BookingWebAPI.Testing.Common
             new BookingWebAPIUser { Id = new Guid(Constants.DeletedUserId), Email = Constants.DeletedUserEmail, UserName = Constants.DeletedUserUserName, PasswordHash = DummyPasswordHash, EmailConfirmed = true, IsDeleted = true, SiteId = Guid.Parse(Constants.DeletedSiteId), FirstName = "John", LastName = "Doe" }
         };
 
+        public static readonly IEnumerable<BookingWebAPISetting> Settings = new BookingWebAPISetting[]
+        {
+            new BookingWebAPISetting { Id = new Guid(Constants.ActiveSettingId), Name = Constants.ActiveSettingName, ValueType = SettingValueType.String, RawValue = "rawValueActive", Category = Constants.SettingCategoryTesting, IsDeleted = false },
+            // Deleted setting from the same category as the active one
+            new BookingWebAPISetting { Id = Guid.NewGuid(), Name = $"{Constants.DeletedSettingName}_{Constants.SettingCategoryTesting}", ValueType = SettingValueType.String, RawValue = "rawValueDeleted", Category = Constants.SettingCategoryTesting, IsDeleted = true },
+            // Deleted setting from different category as the active one
+            new BookingWebAPISetting { Id = Guid.NewGuid(), Name = $"{Constants.DeletedSettingName}_{SettingCategory.PasswordPolicy}", ValueType = SettingValueType.String, RawValue = "rawValueDeleted", Category = SettingCategory.PasswordPolicy, IsDeleted = true }
+        };
+
         internal static void SeedTestData(this BookingWebAPIDbContext dbContext)
         {
             dbContext.Sites.AddRange(Sites);
             dbContext.Users.AddRange(Users);
+            dbContext.Settings.AddRange(Settings);
             dbContext.SaveChanges();
         }
 
@@ -47,6 +58,12 @@ namespace BookingWebAPI.Testing.Common
             public const string DeletedUserUserName = "deletedUserName";
             public const string NotRegisteredUserEmail = "newUser@emailProvider.com";
             public const string NotRegisteredUserUserName = "newUserName";
+
+            // BookingWebAPISetting
+            public const string ActiveSettingId = "3b670940-1ffa-47da-ae6e-91416b8e2372";
+            public const string ActiveSettingName = "testSettingActive";
+            public const string DeletedSettingName = "testSettingDeleted";
+            public const SettingCategory SettingCategoryTesting = SettingCategory.Email;
         }
     }
 }

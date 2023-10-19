@@ -8,7 +8,7 @@ namespace BookingWebAPI.Common.Tests.Unit
         private RequiredNotDefaultAttribute _attrInstance = new RequiredNotDefaultAttribute();
 
         [TestCaseSource(nameof(IsValidTestCases))]
-        public void TestIsValid<T>(bool expectedAsValid, bool expectedException, T? value)
+        public void IsValid_Test(bool expectedAsValid, bool expectedException, object? value)
         {
             bool validationResult = false, exceptionOccurred = false;
             try
