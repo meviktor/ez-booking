@@ -1,5 +1,6 @@
 using BookingWebAPI.Common.Attributes;
 using NUnit.Framework;
+using FluentAssertions;
 
 namespace BookingWebAPI.Common.Tests.Unit
 {
@@ -20,8 +21,8 @@ namespace BookingWebAPI.Common.Tests.Unit
                 exceptionOccurred = true;
             }
 
-            Assert.That(validationResult, Is.EqualTo(expectedAsValid));
-            Assert.That(exceptionOccurred, Is.EqualTo(expectedException));
+            validationResult.Should().Be(expectedAsValid);
+            exceptionOccurred.Should().Be(expectedException);
         }
 
         private static readonly object?[] IsValidTestCases =

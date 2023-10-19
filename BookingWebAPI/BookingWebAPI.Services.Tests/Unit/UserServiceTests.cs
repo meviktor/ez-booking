@@ -6,11 +6,13 @@ using BookingWebAPI.Common.Models;
 using BookingWebAPI.DAL.Interfaces;
 using BookingWebAPI.Services.Interfaces;
 using BookingWebAPI.Testing.Common;
+using FluentAssertions;
 using Hangfire;
 using Hangfire.Common;
 using Hangfire.States;
 using Moq;
 using NUnit.Framework;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookingWebAPI.Services.Tests.Unit
 {
@@ -137,17 +139,17 @@ namespace BookingWebAPI.Services.Tests.Unit
             }
 
             // assert
-            Assert.That(exceptionOccurred, Is.EqualTo(!successExpected));
-            Assert.That(errorCode, Is.EqualTo(errorCodeExpected));
+            exceptionOccurred.Should().Be(!successExpected);
+            errorCode.Should().Be(errorCodeExpected);
             if(successExpected)
             {
-                Assert.That(registeredUser!.Email, Is.EqualTo(emailAddress.Trim()));
-                Assert.That(registeredUser!.EmailConfirmed, Is.False);
-                Assert.That(registeredUser!.Token, Is.Not.Null);
-                Assert.That(registeredUser!.UserName, Is.Not.Null);
-                Assert.That(registeredUser!.FirstName, Is.EqualTo(firstName.Trim()));
-                Assert.That(registeredUser!.LastName, Is.EqualTo(lastName.Trim()));
-                Assert.That(registeredUser!.SiteId, Is.EqualTo(siteId));
+                registeredUser!.Email.Should().Be(emailAddress.Trim());
+                registeredUser!.EmailConfirmed.Should().BeFalse();
+                registeredUser!.Token.Should().NotBeNull();
+                registeredUser!.UserName.Should().NotBeNull();
+                registeredUser!.FirstName.Should().Be(firstName.Trim());
+                registeredUser!.LastName.Should().Be(lastName.Trim());
+                registeredUser!.SiteId.Should().Be(siteId);
             }
         }
 
@@ -176,7 +178,7 @@ namespace BookingWebAPI.Services.Tests.Unit
             }
 
             // assert
-            Assert.That(exceptionOccurred, Is.EqualTo(emailAlreadyRegistered));
+            exceptionOccurred.Should().Be(emailAlreadyRegistered);
             try
             {
                 if (emailAlreadyRegistered)
@@ -215,10 +217,10 @@ namespace BookingWebAPI.Services.Tests.Unit
                 exceptionOccurred = true;
             }
 
-            Assert.That(exceptionOccurred, Is.EqualTo(!userExists));
-            if(!exceptionOccurred)
+            exceptionOccurred.Should().Be(!userExists);
+            if (!exceptionOccurred)
             {
-                Assert.That(userGuid, Is.EqualTo(foundUser!.Id));
+                userGuid.Should().Be(foundUser!.Id);
             }
         }
 
@@ -267,14 +269,17 @@ namespace BookingWebAPI.Services.Tests.Unit
             }
 
             // assert
-            Assert.That(exceptionOccurred, Is.EqualTo(!userExists || !tokenValid || !PasswordCompliesToPolicy(password, minLength, maxLength, upperCase, specialChars, digits)));
+            var confirmRegistrationShouldFail = !userExists || !tokenValid || !PasswordCompliesToPolicy(password, minLength, maxLength, upperCase, specialChars, digits);
+            exceptionOccurred.Should().Be(confirmRegistrationShouldFail);
             if (!exceptionOccurred)
             {
-                Assert.That(foundUser, Is.Not.Null);
-                Assert.That(foundUser?.Id, Is.EqualTo(testUser.Id));
-                Assert.That(BCrypt.Net.BCrypt.Verify(password, foundUser?.PasswordHash));
-                Assert.That(foundUser?.EmailConfirmed, Is.True);
-                Assert.That(foundUser?.Token, Is.Null);
+                var passwordCorrect = BCrypt.Net.BCrypt.Verify(password, foundUser?.PasswordHash);
+
+                foundUser.Should().NotBeNull();
+                foundUser?.Id.Should().Be(testUser.Id);
+                passwordCorrect.Should().BeTrue();
+                foundUser?.EmailConfirmed.Should().BeTrue();
+                foundUser?.Token.Should().BeNull();
             }
         }
 
@@ -324,13 +329,13 @@ namespace BookingWebAPI.Services.Tests.Unit
             }
 
             // assert
-            Assert.That(exceptionOccurred, Is.EqualTo(!successExpected));
-            Assert.That(errorCode, Is.EqualTo(errorCodeExpected));
+            exceptionOccurred.Should().Be(!successExpected);
+            errorCode.Should().Be(errorCodeExpected);
             if (successExpected)
             {
-                Assert.That(foundUser!.Id, Is.EqualTo(mockUserId));
-                Assert.That(foundUser!.Email, Is.EqualTo(emailAddress));
-                Assert.That(jwtToken, Is.Not.Null);
+                foundUser!.Id.Should().Be(mockUserId);
+                foundUser!.Email.Should().Be(emailAddress);
+                jwtToken.Should().NotBeNull();
             }
         }
 
@@ -365,8 +370,8 @@ namespace BookingWebAPI.Services.Tests.Unit
             }
 
             // assert
-            Assert.That(errorCode, Is.EqualTo(ApplicationErrorCodes.LoginInvalidUserNameOrPassword));
-            Assert.That(mockUser.AccessFailedCount, Is.EqualTo(originalAccessFailedCount + 1));
+            errorCode.Should().Be(ApplicationErrorCodes.LoginInvalidUserNameOrPassword);
+            mockUser.AccessFailedCount.Should().Be(originalAccessFailedCount + 1);
         }
 
         private static bool PasswordCompliesToPolicy(string password, int minLength, int maxLength, bool upperCase, bool specialChar, bool digits)
