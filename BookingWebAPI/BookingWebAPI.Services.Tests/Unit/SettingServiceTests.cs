@@ -119,7 +119,7 @@ namespace BookingWebAPI.Services.Tests.Unit
 
         [TestCase(true)]
         [TestCase(false)]
-        public async Task GetValueBySettingName_Test(bool existingSettingName)
+        public async Task GetValueBySettingNameAsync_Test(bool existingSettingName)
         {
             // prepare
             var settingName = "TestSetting";
@@ -127,7 +127,7 @@ namespace BookingWebAPI.Services.Tests.Unit
             var settingValue = 75.386f;
             var settingToTest = new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.Email, Name = settingName, ValueType = settingValueType, RawValue = $"{settingValue}" };
 
-            _settingRepositoryMock.Setup(sr => sr.GetSettingByName(settingName)).ReturnsAsync(settingToTest);
+            _settingRepositoryMock.Setup(sr => sr.GetSettingByNameAsync(settingName)).ReturnsAsync(settingToTest);
             _settingService = new SettingService(_settingRepositoryMock.Object);
 
             // action
@@ -135,7 +135,7 @@ namespace BookingWebAPI.Services.Tests.Unit
             float? extractedValue = null;
             try
             {
-                extractedValue = await _settingService.GetValueBySettingName<float>($"{settingName}{(existingSettingName ? string.Empty : "Ruined")}");
+                extractedValue = await _settingService.GetValueBySettingNameAsync<float>($"{settingName}{(existingSettingName ? string.Empty : "Ruined")}");
             }
             catch (BookingWebAPIException e)
             {

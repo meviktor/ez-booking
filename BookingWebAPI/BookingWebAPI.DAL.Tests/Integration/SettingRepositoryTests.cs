@@ -21,10 +21,10 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase("", false)]
         [TestCase(TestDatabaseSeeder.Constants.ActiveSettingName, true)]
         [TestCase(TestDatabaseSeeder.Constants.DeletedSettingName, false)]
-        public async Task GetSettingByName_Test(string settingName, bool resultsExpected)
+        public async Task GetSettingByNameAsync_Test(string settingName, bool resultsExpected)
         {
             // action
-            var foundSetting = await _repository.GetSettingByName(settingName);
+            var foundSetting = await _repository.GetSettingByNameAsync(settingName);
 
             // assert
             if (resultsExpected)
@@ -39,10 +39,10 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase((SettingCategory)0, false)]
         [TestCase(TestDatabaseSeeder.Constants.SettingCategoryTesting, true)]
         [TestCase(SettingCategory.PasswordPolicy, false)]
-        public async Task GetSettingsForCategory_Test(SettingCategory settingCategory, bool resultsExpected)
+        public async Task GetSettingsForCategoryAsync_Test(SettingCategory settingCategory, bool resultsExpected)
         {
             // action
-            var foundSettings = await _repository.GetSettingsForCategory(settingCategory);
+            var foundSettings = await _repository.GetSettingsForCategoryAsync(settingCategory);
 
             // assert
             if (resultsExpected)

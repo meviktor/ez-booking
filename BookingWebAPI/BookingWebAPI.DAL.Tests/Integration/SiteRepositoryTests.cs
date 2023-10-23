@@ -25,7 +25,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(Constants.NotExistingSiteName, true, null)]
         [TestCase(Constants.ActiveSiteName, false, ApplicationErrorCodes.SiteNameMustBeUnique)]
         [TestCase(Constants.DeletedSiteName, false, ApplicationErrorCodes.SiteNameMustBeUnique)]
-        public async Task CreateOrUpdate_Test_CreateWithSiteNameUniqueConstraint(string name, bool operationShouldSucceed, string? expectedErrorCode)
+        public async Task CreateOrUpdateAsync_Test_CreateWithSiteNameUniqueConstraint(string name, bool operationShouldSucceed, string? expectedErrorCode)
         {
             var countOfSitesBeforeSave = await _repository.GetAll().CountAsync();
 
@@ -50,7 +50,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase("Idaho", null, true)]
         [TestCase(null, "Montgomery", true)]
         [TestCase("Mississippi", "Montgomery", true)]
-        public async Task CreateOrUpdate_Test_CreateWithStateCountyCheckContraint(string state, string county, bool operationShouldSucceed)
+        public async Task CreateOrUpdateAsync_Test_CreateWithStateCountyCheckContraint(string state, string county, bool operationShouldSucceed)
         {
             var countOfSitesBeforeSave = await _repository.GetAll().CountAsync();
 
@@ -90,7 +90,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(nameof(Site.HouseOrFlatNumber), "1/c", true, null)]
         [TestCase(nameof(Site.HouseOrFlatNumber), "", false, ApplicationErrorCodes.SiteHouseOrFlatNumberRequired)]
         [TestCase(nameof(Site.HouseOrFlatNumber), null, false, ApplicationErrorCodes.SiteHouseOrFlatNumberRequired)]
-        public async Task CreateOrUpdate_Test_CreateWithRequiredStringField(string fieldName, string value, bool operationShouldSucceed, string? expectedErrorCode)
+        public async Task CreateOrUpdateAsync_Test_CreateWithRequiredStringField(string fieldName, string value, bool operationShouldSucceed, string? expectedErrorCode)
         {
             var countOfSitesBeforeSave = await _repository.GetAll().CountAsync();
 
@@ -115,7 +115,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(nameof(Site.City), ApplicationConstants.SiteCityMaximiumLength, ApplicationErrorCodes.SiteCityTooLong)]
         [TestCase(nameof(Site.Street), ApplicationConstants.SiteStreetMaximiumLength, ApplicationErrorCodes.SiteStreetTooLong)]
         [TestCase(nameof(Site.HouseOrFlatNumber), ApplicationConstants.SiteHouseOrFlatNumberMaximiumLength, ApplicationErrorCodes.SiteHouseOrFlatNumberTooLong)]
-        public async Task CreateOrUpdate_Test_CreateWithMaxLengthStringField(string fieldName, int fieldMaximumLength, string? expectedErrorCode)
+        public async Task CreateOrUpdateAsync_Test_CreateWithMaxLengthStringField(string fieldName, int fieldMaximumLength, string? expectedErrorCode)
         {
             var assertAction = () => _repository.CreateOrUpdateAsync(CreateSiteByField(fieldName, new string('A', fieldMaximumLength + 1)));
 

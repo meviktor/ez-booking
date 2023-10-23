@@ -27,14 +27,14 @@ namespace BookingWebAPI.DAL.Repositories
             new ErrorCodeAssociation("FK_Users_Sites_SiteId", SqlServerErrorCode.ConstraintViolated, ApplicationErrorCodes.UserSiteIdRequired)
         };
 
-        public async Task<BookingWebAPIUser?> FindByUserEmail(string emailAddress) => await Set.SingleOrDefaultAsync(user => !user.IsDeleted && user.Email == emailAddress);
+        public async Task<BookingWebAPIUser?> FindByUserEmailAsync(string emailAddress) => await Set.SingleOrDefaultAsync(user => !user.IsDeleted && user.Email == emailAddress);
 
-        public async Task<BookingWebAPIUser?> FindByEmailVerificationToken(Guid token) => await Set.SingleOrDefaultAsync(user => !user.IsDeleted && !user.EmailConfirmed && user.Token == token);
+        public async Task<BookingWebAPIUser?> FindByEmailVerificationTokenAsync(Guid token) => await Set.SingleOrDefaultAsync(user => !user.IsDeleted && !user.EmailConfirmed && user.Token == token);
 
-        public async Task<bool> ExistsByEmailVerificationToken(Guid token) => await Set.AnyAsync(user => !user.IsDeleted && !user.EmailConfirmed && user.Token == token);
+        public async Task<bool> ExistsByEmailVerificationTokenAsync(Guid token) => await Set.AnyAsync(user => !user.IsDeleted && !user.EmailConfirmed && user.Token == token);
 
-        public async Task<bool> ExistsByUserName(string userName) => await Set.AnyAsync(user => !user.IsDeleted && user.UserName == userName);
+        public async Task<bool> ExistsByUserNameAsync(string userName) => await Set.AnyAsync(user => !user.IsDeleted && user.UserName == userName);
 
-        public async Task<bool> ExistsByEmail(string emailAddress) => await Set.AnyAsync(user => !user.IsDeleted && user.Email == emailAddress);
+        public async Task<bool> ExistsByEmailAsync(string emailAddress) => await Set.AnyAsync(user => !user.IsDeleted && user.Email == emailAddress);
     }
 }

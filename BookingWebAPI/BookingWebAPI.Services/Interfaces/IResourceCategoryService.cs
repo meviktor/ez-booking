@@ -4,6 +4,6 @@ namespace BookingWebAPI.Services.Interfaces
 {
     public interface IResourceCategoryService
     {
-        Task<ResourceCategory?> GetResourceCategory(Guid id);
+        Task<ResourceCategory?> GetResourceCategoryAsync(Guid id);
     }
 }

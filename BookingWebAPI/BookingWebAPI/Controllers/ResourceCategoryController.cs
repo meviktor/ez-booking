@@ -21,7 +21,7 @@ namespace BookingWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ResourceCategoryViewModel>> GetResourceCategory(Guid id)
         {
-            var foundCategory = await _resourceCategoryService.GetResourceCategory(id);
+            var foundCategory = await _resourceCategoryService.GetResourceCategoryAsync(id);
             if (foundCategory == null)
             {
                 return NotFound(new { message = $"There is no item with the id {id}" });

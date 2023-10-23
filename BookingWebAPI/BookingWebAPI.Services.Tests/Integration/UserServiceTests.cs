@@ -52,7 +52,7 @@ namespace BookingWebAPI.Services.Tests.Integration
             });
 
             // action & assert
-            var action = () => _userService.Authenticate(emailToAuthenticate, passwordToAuthenticate);
+            var action = () => _userService.AuthenticateAsync(emailToAuthenticate, passwordToAuthenticate);
             await action.Should().ThrowExactlyAsync<BookingWebAPIException>().Where(e => e.ErrorCode == ApplicationErrorCodes.LoginInvalidUserNameOrPassword);
             // number of max login attempts reached... user has been locked out
             await action.Should().ThrowExactlyAsync<BookingWebAPIException>().Where(e => e.ErrorCode == ApplicationErrorCodes.UserLockedOut);

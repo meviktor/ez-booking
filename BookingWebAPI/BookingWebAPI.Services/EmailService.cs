@@ -21,15 +21,15 @@ namespace BookingWebAPI.Services
             _userService = userService;
         }
 
-        public async Task SendUserConfirmationEmail(Guid userId)
+        public async Task SendUserConfirmationEmailAsync(Guid userId)
         {
             var newUser = await _userService.GetAsync(userId);
             if (newUser == null)
             {
                 throw new ArgumentException($"The following userId does not exist: {userId}.", nameof(userId));
             }
-            var emailSubject = await _settingService.GetValueBySettingName<string>(ApplicationConstants.UserRegistrationConfirmationEmailSubject);
-            var emailContent = await _settingService.GetValueBySettingName<string>(ApplicationConstants.UserRegistrationConfirmationEmailContent);
+            var emailSubject = await _settingService.GetValueBySettingNameAsync<string>(ApplicationConstants.UserRegistrationConfirmationEmailSubject);
+            var emailContent = await _settingService.GetValueBySettingNameAsync<string>(ApplicationConstants.UserRegistrationConfirmationEmailContent);
 
             var confirmationEmail = new MimeMessage
             {

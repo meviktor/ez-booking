@@ -13,6 +13,6 @@ namespace BookingWebAPI.Services
             _repository = repository;
         }
 
-        public async Task<ResourceCategory?> GetResourceCategory(Guid id) => await _repository.GetAsync(id);   
+        public async Task<ResourceCategory?> GetResourceCategoryAsync(Guid id) => await _repository.GetAsync(id);   
     }
 }

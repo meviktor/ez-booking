@@ -5,9 +5,9 @@ namespace BookingWebAPI.Services.Interfaces
 {
     public interface ISettingService
     {
-        Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategory(SettingCategory category);
+        Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategoryAsync(SettingCategory category);
 
-        Task<T> GetValueBySettingName<T>(string settingName);
+        Task<T> GetValueBySettingNameAsync<T>(string settingName);
 
         T ExtractValueFromSetting<T>(BookingWebAPISetting setting);
     }

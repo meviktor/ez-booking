@@ -11,8 +11,8 @@ namespace BookingWebAPI.DAL.Repositories
         {
         }
 
-        public async Task<BookingWebAPISetting?> GetSettingByName(string settingName) => await Set.SingleOrDefaultAsync(s => !s.IsDeleted && s.Name == settingName);
+        public async Task<BookingWebAPISetting?> GetSettingByNameAsync(string settingName) => await Set.SingleOrDefaultAsync(s => !s.IsDeleted && s.Name == settingName);
 
-        public async Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategory(SettingCategory category) => await Set.Where(s => !s.IsDeleted && s.Category == category).ToListAsync();
+        public async Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategoryAsync(SettingCategory category) => await Set.Where(s => !s.IsDeleted && s.Category == category).ToListAsync();
     }
 }

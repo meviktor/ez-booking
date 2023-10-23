@@ -16,11 +16,11 @@ namespace BookingWebAPI.Services
             _settingRepository = settingRepository;
         }
 
-        public async Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategory(SettingCategory category) => await _settingRepository.GetSettingsForCategory(category);
+        public async Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategoryAsync(SettingCategory category) => await _settingRepository.GetSettingsForCategoryAsync(category);
 
-        public async Task<T> GetValueBySettingName<T>(string settingName)
+        public async Task<T> GetValueBySettingNameAsync<T>(string settingName)
         {
-            var setting = await _settingRepository.GetSettingByName(settingName);
+            var setting = await _settingRepository.GetSettingByNameAsync(settingName);
             if(setting == null)
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.EntityNotFound);

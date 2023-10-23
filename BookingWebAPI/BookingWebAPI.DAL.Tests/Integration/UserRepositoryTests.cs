@@ -25,7 +25,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(Constants.NotRegisteredUserEmail, true)]
         [TestCase(Constants.ActiveUserEmail, false)]
         [TestCase(Constants.DeletedUserEmail, false)]
-        public async Task CreateOrUpdate_Test_CreateWithEmailAddressUniqueConstraint(string emailAddress, bool operationShouldSucceed)
+        public async Task CreateOrUpdateAsync_Test_CreateWithEmailAddressUniqueConstraint(string emailAddress, bool operationShouldSucceed)
         {
             var countOfUsersBeforeSave = await _repository.GetAll().CountAsync();
             var assertAction = () => _repository.CreateOrUpdateAsync(CreateUserByField(nameof(BookingWebAPIUser.Email), emailAddress));
@@ -42,7 +42,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
 
         [TestCase(nameof(BookingWebAPIUser.UserName), ApplicationConstants.UserNameMaximumLength, ApplicationErrorCodes.UserUserNameTooLong)]
         [TestCase(nameof(BookingWebAPIUser.Email), ApplicationConstants.EmailMaximumLength, ApplicationErrorCodes.UserEmailTooLong)]
-        public async Task CreateOrUpdate_Test_CreateWithMaxLengthField(string fieldName, int fieldMaximumLength, string? expectedErrorCode)
+        public async Task CreateOrUpdateAsync_Test_CreateWithMaxLengthField(string fieldName, int fieldMaximumLength, string? expectedErrorCode)
         {
             var assertAction = () => _repository.CreateOrUpdateAsync(CreateUserByField(fieldName, new string('A', fieldMaximumLength + 1)));
 
@@ -60,7 +60,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(nameof(BookingWebAPIUser.LastName), null, false, ApplicationErrorCodes.UserLastNameRequired)]
         [TestCase(nameof(BookingWebAPIUser.SiteId), "", false, ApplicationErrorCodes.UserSiteIdRequired)]
         [TestCase(nameof(BookingWebAPIUser.SiteId), null, false, ApplicationErrorCodes.UserSiteIdRequired)]
-        public async Task CreateOrUpdate_Test_CreateWithRequiredField(string fieldName, object? value, bool operationShouldSucceed, string? expectedErrorCode)
+        public async Task CreateOrUpdateAsync_Test_CreateWithRequiredField(string fieldName, object? value, bool operationShouldSucceed, string? expectedErrorCode)
         {
             var countOfUsersBeforeSave = await _repository.GetAll().CountAsync();
             var assertAction = () => _repository.CreateOrUpdateAsync(CreateUserByField(fieldName, value));
@@ -79,11 +79,11 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(Constants.DeletedUserEmail, false)]
         [TestCase("", false)]
         [TestCase(null, false)]
-        public async Task FindByUserEmail_Test(string emailAddress, bool successExpected)
+        public async Task FindByUserEmailAsync_Test(string emailAddress, bool successExpected)
         {
             // no prepare - looking for a user who has been added by TestDatabaseSeeder...
             // action
-            var userFound = await _repository.FindByUserEmail(emailAddress);
+            var userFound = await _repository.FindByUserEmailAsync(emailAddress);
 
             // assert
             if (successExpected)
@@ -98,14 +98,14 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(true, false, true)]
         [TestCase(false, true, false)]
         [TestCase(false, false, false)]
-        public async Task FindByEmailVerificationToken_Test(bool userActive, bool emailConfirmed, bool successExpected)
+        public async Task FindByEmailVerificationTokenAsync_Test(bool userActive, bool emailConfirmed, bool successExpected)
         {
             // prepare
             var token = Guid.NewGuid();
             await _repository.CreateOrUpdateAsync(CreateUser(email: Constants.NotRegisteredUserEmail, emailConfirmed: emailConfirmed, token: token, deleted: !userActive));
 
             // action
-            var userFound = await _repository.FindByEmailVerificationToken(token);
+            var userFound = await _repository.FindByEmailVerificationTokenAsync(token);
 
             // assert
             if (successExpected)
@@ -120,14 +120,14 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(true, false, true)]
         [TestCase(false, true, false)]
         [TestCase(false, false, false)]
-        public async Task ExistsByEmailVerificationToken_Test(bool userActive, bool emailConfirmed, bool successExpected)
+        public async Task ExistsByEmailVerificationTokenAsync_Test(bool userActive, bool emailConfirmed, bool successExpected)
         {
             // prepare
             var token = Guid.NewGuid();
             await _repository.CreateOrUpdateAsync(CreateUser(email: Constants.NotRegisteredUserEmail, emailConfirmed: emailConfirmed, token: token, deleted: !userActive));
 
             // action
-            var userFound = await _repository.ExistsByEmailVerificationToken(token);
+            var userFound = await _repository.ExistsByEmailVerificationTokenAsync(token);
 
             // assert
             if (successExpected)
@@ -141,10 +141,10 @@ namespace BookingWebAPI.DAL.Tests.Integration
         [TestCase(Constants.NotRegisteredUserEmail, false)]
         [TestCase("", false)]
         [TestCase(null, false)]
-        public async Task ExistsByEmail_Test(string emailAddress, bool successExpected)
+        public async Task ExistsByEmailAsync_Test(string emailAddress, bool successExpected)
         {
             // action
-            var userFound = await _repository.ExistsByEmail(emailAddress);
+            var userFound = await _repository.ExistsByEmailAsync(emailAddress);
 
             // assert
             if (successExpected)
@@ -156,7 +156,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
 
         [TestCase(true, true)]
         [TestCase(false, false)]
-        public async Task ExistsByUserName_Test(bool activeUser, bool successExpected)
+        public async Task ExistsByUserNameAsync_Test(bool activeUser, bool successExpected)
         {
             // prepare
             var targetEmail = activeUser ? Constants.ActiveUserEmail : Constants.DeletedUserEmail;
@@ -168,7 +168,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
             }
 
             // action
-            var userFound = await _repository.ExistsByUserName(targetUser!.UserName);
+            var userFound = await _repository.ExistsByUserNameAsync(targetUser!.UserName);
 
             // assert
             if (successExpected)
@@ -197,7 +197,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         /// Creates a user with the configured properties. Pragma warning is used because cases with null property values are also tested regardless of the exact property type (nullable or not). 
         /// </summary>
         /// <returns>A <see cref="BookingWebAPIUser"/> with the configured properties.</returns>
-        private BookingWebAPIUser CreateUser(string? userName = Constants.NotExistingSiteName, string? email = Constants.NotRegisteredUserEmail, bool emailConfirmed = false, string? passwordHash = null, bool lockoutEnabled = true, int accessFailedCount = 0, string? firstName = "Jane", string? lastName = "Doe", string? siteId = Constants.ActiveSiteId, Guid? token = null, bool deleted = false) =>
+        private static BookingWebAPIUser CreateUser(string? userName = Constants.NotExistingSiteName, string? email = Constants.NotRegisteredUserEmail, bool emailConfirmed = false, string? passwordHash = null, bool lockoutEnabled = true, int accessFailedCount = 0, string? firstName = "Jane", string? lastName = "Doe", string? siteId = Constants.ActiveSiteId, Guid? token = null, bool deleted = false) =>
             new BookingWebAPIUser { UserName = userName, Email = email, EmailConfirmed = emailConfirmed, PasswordHash = passwordHash ?? DummyPasswordHash, LockoutEnabled = lockoutEnabled, AccessFailedCount = accessFailedCount, FirstName = firstName, LastName = lastName, SiteId = !string.IsNullOrWhiteSpace(siteId) ? Guid.Parse(siteId) : Guid.Empty, Token = token, IsDeleted = deleted };
 #pragma warning restore CS8601
     }

@@ -5,8 +5,8 @@ namespace BookingWebAPI.DAL.Interfaces
 {
     public interface ISettingRepository
     {
-        Task<BookingWebAPISetting?> GetSettingByName(string settingName);
+        Task<BookingWebAPISetting?> GetSettingByNameAsync(string settingName);
 
-        Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategory(SettingCategory category);
+        Task<IEnumerable<BookingWebAPISetting>> GetSettingsForCategoryAsync(SettingCategory category);
     }
 }

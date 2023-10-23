@@ -111,10 +111,10 @@ namespace BookingWebAPI.Services.Tests.Unit
         [TestCase("withoutat.domain", false, false, "", null, false, ApplicationErrorCodes.UserFirstNameRequired)]
         [TestCase(_emailAddressLongerThan320Chars, false, false, null, "", false, ApplicationErrorCodes.UserFirstNameRequired)]
         #endregion
-        public async Task Register_Test(string emailAddress, bool emailAlreadyRegistered, bool siteExists, string firstName, string lastName, bool successExpected, string errorCodeExpected)
+        public async Task RegisterAsync_Test(string emailAddress, bool emailAlreadyRegistered, bool siteExists, string firstName, string lastName, bool successExpected, string errorCodeExpected)
         {
             // prepare
-            _userRepositoryMock.Setup(ur => ur.ExistsByEmail(It.IsAny<string>())).ReturnsAsync(emailAlreadyRegistered);
+            _userRepositoryMock.Setup(ur => ur.ExistsByEmailAsync(It.IsAny<string>())).ReturnsAsync(emailAlreadyRegistered);
             _userRepositoryMock.Setup(ur => ur.GetAll()).Returns(
                 (IQueryable<BookingWebAPIUser>)Enumerable.Empty<BookingWebAPIUser>().AsEnumerableMockWithAsyncQueryableSetup().Object
             );
@@ -124,7 +124,7 @@ namespace BookingWebAPI.Services.Tests.Unit
             var siteId = Guid.NewGuid();
 
             // action & assert 
-            var action = async () => await _userService.Register(emailAddress, siteId, firstName, lastName);
+            var action = async () => await _userService.RegisterAsync(emailAddress, siteId, firstName, lastName);
             if (successExpected)
             {
                 var registeredUser = await action.Should().NotThrowAsync();
@@ -144,10 +144,10 @@ namespace BookingWebAPI.Services.Tests.Unit
 
         [TestCase(true)]
         [TestCase(false)]
-        public async Task Register_Test_EmailEnqueued(bool emailAlreadyRegistered)
+        public async Task RegisterAsync_Test_EmailEnqueued(bool emailAlreadyRegistered)
         {
             // prepare
-            _userRepositoryMock.Setup(ur => ur.ExistsByEmail(It.IsAny<string>())).ReturnsAsync(emailAlreadyRegistered);
+            _userRepositoryMock.Setup(ur => ur.ExistsByEmailAsync(It.IsAny<string>())).ReturnsAsync(emailAlreadyRegistered);
             _userRepositoryMock.Setup(ur => ur.GetAll()).Returns(
                 (IQueryable<BookingWebAPIUser>)Enumerable.Empty<BookingWebAPIUser>().AsEnumerableMockWithAsyncQueryableSetup().Object
             );
@@ -155,7 +155,7 @@ namespace BookingWebAPI.Services.Tests.Unit
             _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object);
 
             // action & assert
-            var action = async () => await _userService.Register("testuser@testmailprovider.com", Guid.NewGuid(), "Test", "User");
+            var action = async () => await _userService.RegisterAsync("testuser@testmailprovider.com", Guid.NewGuid(), "Test", "User");
             if (emailAlreadyRegistered)
             {
                 await action.Should().ThrowAsync<BookingWebAPIException>();
@@ -173,7 +173,7 @@ namespace BookingWebAPI.Services.Tests.Unit
                 }
                 else
                 {
-                    _jobClientMock.Verify(jc => jc.Create(It.Is<Job>(job => job.Method.Name == "SendUserConfirmationEmail"), It.IsAny<IState>()), Times.Once());
+                    _jobClientMock.Verify(jc => jc.Create(It.Is<Job>(job => job.Method.Name == "SendUserConfirmationEmailAsync"), It.IsAny<IState>()), Times.Once());
                 }
             }
             catch (MockException)
@@ -184,15 +184,15 @@ namespace BookingWebAPI.Services.Tests.Unit
 
         [TestCase(true)]
         [TestCase(false)]
-        public async Task FindUserForEmailConfirmation_Test(bool userExists)
+        public async Task FindUserForEmailConfirmationAsync_Test(bool userExists)
         {
             // prepare
             var userGuid = Guid.NewGuid();
-            _userRepositoryMock.Setup(ur => ur.FindByEmailVerificationToken(userGuid)).ReturnsAsync(userExists ? new BookingWebAPIUser { Id = userGuid } : null);
+            _userRepositoryMock.Setup(ur => ur.FindByEmailVerificationTokenAsync(userGuid)).ReturnsAsync(userExists ? new BookingWebAPIUser { Id = userGuid } : null);
             _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object);
 
             // action & assert
-            var action = async () => await _userService.FindUserForEmailConfirmation(userGuid);
+            var action = async () => await _userService.FindUserForEmailConfirmationAsync(userGuid);
             if (userExists)
             {
               (await action.Should().NotThrowAsync()).Which.Id.Should().Be(userGuid);
@@ -211,7 +211,7 @@ namespace BookingWebAPI.Services.Tests.Unit
         [TestCase(false, true, "")]
         [TestCase(false, false, "Alma1234")]
         [TestCase(false, false, "")]
-        public async Task ConfirmRegistration_Test(bool userExists, bool tokenValid, string password)
+        public async Task ConfirmRegistrationAsync_Test(bool userExists, bool tokenValid, string password)
         {
             // prepare
             var testUser = new BookingWebAPIUser
@@ -222,9 +222,9 @@ namespace BookingWebAPI.Services.Tests.Unit
             int minLength = 8, maxLength = 16;
             bool upperCase = true, specialChars = false, digits = true;
             _userRepositoryMock.Setup(ur => ur.ExistsAsync(testUser.Id)).ReturnsAsync(userExists);
-            _userRepositoryMock.Setup(ur => ur.ExistsByEmailVerificationToken(testUser.Token.Value)).ReturnsAsync(tokenValid);
+            _userRepositoryMock.Setup(ur => ur.ExistsByEmailVerificationTokenAsync(testUser.Token.Value)).ReturnsAsync(tokenValid);
             _userRepositoryMock.Setup(ur => ur.GetAsync(testUser.Id)).ReturnsAsync(testUser);
-            _settingServiceMock.Setup(ss => ss.GetSettingsForCategory(SettingCategory.PasswordPolicy)).ReturnsAsync(new BookingWebAPISetting[]
+            _settingServiceMock.Setup(ss => ss.GetSettingsForCategoryAsync(SettingCategory.PasswordPolicy)).ReturnsAsync(new BookingWebAPISetting[]
             {
                 new BookingWebAPISetting { Name = ApplicationConstants.PasswordPolicyMinLength, Category = SettingCategory.PasswordPolicy, RawValue = $"{minLength}", ValueType = SettingValueType.Integer },
                 new BookingWebAPISetting { Name = ApplicationConstants.PasswordPolicyMaxLength, Category = SettingCategory.PasswordPolicy, RawValue = $"{maxLength}", ValueType = SettingValueType.Integer },
@@ -236,7 +236,7 @@ namespace BookingWebAPI.Services.Tests.Unit
             _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object);
 
             // action & assert
-            var action = async () => await _userService.ConfirmRegistration(testUser.Id, testUser.Token.Value, password);
+            var action = async () => await _userService.ConfirmRegistrationAsync(testUser.Id, testUser.Token.Value, password);
 
             var confirmRegistrationShouldFail = !userExists || !tokenValid || !PasswordCompliesToPolicy(password, minLength, maxLength, upperCase, specialChars, digits);
             if(confirmRegistrationShouldFail)
@@ -270,7 +270,7 @@ namespace BookingWebAPI.Services.Tests.Unit
         [TestCase("goodmail@mailprovider.com", true, true, "matchingPassword!", true, true, false, ApplicationErrorCodes.UserLockedOut)]
         [TestCase("goodmail@mailprovider.com", true, true, "notMatchingPassword!", false, true, false, ApplicationErrorCodes.UserLockedOut)]
         [TestCase("goodmail@mailprovider.com", true, false, "matchingPassword!", true, true, true, null)]
-        public async Task Authenticate_Test(string emailAddress, bool emailRegistered, bool emailLockedOut, string password, bool passwordMatch, bool emailConfirmed, bool successExpected, string? errorCodeExpected)
+        public async Task AuthenticateAsync_Test(string emailAddress, bool emailRegistered, bool emailLockedOut, string password, bool passwordMatch, bool emailConfirmed, bool successExpected, string? errorCodeExpected)
         {
             // prepare
             var mockUserId = Guid.NewGuid();
@@ -285,11 +285,11 @@ namespace BookingWebAPI.Services.Tests.Unit
                     (passwordMatch ? BCrypt.Net.BCrypt.HashPassword(password) : BCrypt.Net.BCrypt.HashPassword($"{password}ruinPassword")) :
                     null
             };
-            _userRepositoryMock.Setup(ur => ur.FindByUserEmail(emailAddress)).ReturnsAsync(emailRegistered ? mockUser : null);
+            _userRepositoryMock.Setup(ur => ur.FindByUserEmailAsync(emailAddress)).ReturnsAsync(emailRegistered ? mockUser : null);
             _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object);
 
             // action & assert
-            var action = async () => await _userService.Authenticate(emailAddress, password);
+            var action = async () => await _userService.AuthenticateAsync(emailAddress, password);
 
             if (successExpected)
             {
@@ -302,12 +302,12 @@ namespace BookingWebAPI.Services.Tests.Unit
             }
             else
             {
-                await action.Should().ThrowAsync<BookingWebAPIException>();
+                (await action.Should().ThrowAsync<BookingWebAPIException>()).Which.ErrorCode.Should().Be(errorCodeExpected);
             }
         }
 
         [Test]
-        public async Task Authenticate_Test_AccessFailedCount_Increment()
+        public async Task AuthenticateAsync_Test_AccessFailedCount_Increment()
         {
             // prepare
             var emailAddress = "test@test.com";
@@ -322,14 +322,14 @@ namespace BookingWebAPI.Services.Tests.Unit
                 EmailConfirmed = true,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword($"{password}ruinPassword")
             };
-            _userRepositoryMock.Setup(ur => ur.FindByUserEmail(emailAddress)).ReturnsAsync(mockUser);
+            _userRepositoryMock.Setup(ur => ur.FindByUserEmailAsync(emailAddress)).ReturnsAsync(mockUser);
             _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object);
 
             // action
             string? errorCode = null;
             try
             {
-                (_, _) = await _userService.Authenticate(emailAddress, password);
+                (_, _) = await _userService.AuthenticateAsync(emailAddress, password);
             }
             catch (BookingWebAPIException ex)
             {

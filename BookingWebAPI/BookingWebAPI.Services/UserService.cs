@@ -33,7 +33,7 @@ namespace BookingWebAPI.Services
 
         public async Task<BookingWebAPIUser?> GetAsync(Guid id) => await _userRepository.GetAsync(id);
 
-        public async Task<BookingWebAPIUser> Register(string emailAddress, Guid siteId, string firstName, string lastName)
+        public async Task<BookingWebAPIUser> RegisterAsync(string emailAddress, Guid siteId, string firstName, string lastName)
         {
             if (string.IsNullOrWhiteSpace(firstName))
             {
@@ -50,7 +50,7 @@ namespace BookingWebAPI.Services
                 throw new BookingWebAPIException(ApplicationErrorCodes.UserEmailInvalidFormat);
             }
 
-            if(await _userRepository.ExistsByEmail(emailAddress))
+            if(await _userRepository.ExistsByEmailAsync(emailAddress))
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.UserEmailMustBeUnique);
             }
@@ -65,20 +65,20 @@ namespace BookingWebAPI.Services
                 Email = emailAddress,
                 EmailConfirmed = false,
                 Token = Guid.NewGuid(),
-                UserName = await ProposeUserName(firstName.Trim(), lastName.Trim()),
+                UserName = await ProposeUserNameAsync(firstName.Trim(), lastName.Trim()),
                 FirstName = firstName.Trim(),
                 LastName = lastName.Trim(),
                 SiteId = siteId
             });
 
-            _jobClient.Enqueue<IEmailService>(emailService => emailService.SendUserConfirmationEmail(registeredUser.Id));
+            _jobClient.Enqueue<IEmailService>(emailService => emailService.SendUserConfirmationEmailAsync(registeredUser.Id));
 
             return registeredUser;
         }
 
-        public async Task<BookingWebAPIUser> FindUserForEmailConfirmation(Guid token)
+        public async Task<BookingWebAPIUser> FindUserForEmailConfirmationAsync(Guid token)
         {
-            var foundUser = await _userRepository.FindByEmailVerificationToken(token);
+            var foundUser = await _userRepository.FindByEmailVerificationTokenAsync(token);
             if(foundUser == null)
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.UserDoesNotExist);
@@ -86,14 +86,14 @@ namespace BookingWebAPI.Services
             return foundUser;
         }
 
-        public async Task<BookingWebAPIUser> ConfirmRegistration(Guid userId, Guid token, string password)
+        public async Task<BookingWebAPIUser> ConfirmRegistrationAsync(Guid userId, Guid token, string password)
         {
-            if(!await _userRepository.ExistsAsync(userId) || !await _userRepository.ExistsByEmailVerificationToken(token))
+            if(!await _userRepository.ExistsAsync(userId) || !await _userRepository.ExistsByEmailVerificationTokenAsync(token))
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.UserDoesNotExist);
             }
 
-            if (!await IsPasswordValidByPolicy(password))
+            if (!await IsPasswordValidByPolicyAsync(password))
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.UserPasswordNotValidByPolicy);
             }
@@ -107,7 +107,7 @@ namespace BookingWebAPI.Services
             return await _userRepository.CreateOrUpdateAsync(confirmedUser);
         }
 
-        public async Task<(BookingWebAPIUser, string)> Authenticate(string emailAddress, string password)
+        public async Task<(BookingWebAPIUser, string)> AuthenticateAsync(string emailAddress, string password)
         {
             if (string.IsNullOrWhiteSpace(emailAddress))
             {
@@ -124,7 +124,7 @@ namespace BookingWebAPI.Services
                 throw new BookingWebAPIException(ApplicationErrorCodes.LoginPasswordRequired);
             }
 
-            var foundUser = await _userRepository.FindByUserEmail(emailAddress);
+            var foundUser = await _userRepository.FindByUserEmailAsync(emailAddress);
 
             if(foundUser == null)
             {
@@ -156,9 +156,9 @@ namespace BookingWebAPI.Services
             return (foundUser, GenerateJwtToken(foundUser.Id, foundUser.Email, foundUser.UserName));
         }
 
-        private async Task<bool> IsPasswordValidByPolicy(string password)
+        private async Task<bool> IsPasswordValidByPolicyAsync(string password)
         {
-            var policySettings = await _settingService.GetSettingsForCategory(SettingCategory.PasswordPolicy);
+            var policySettings = await _settingService.GetSettingsForCategoryAsync(SettingCategory.PasswordPolicy);
 
             var minLength = _settingService.ExtractValueFromSetting<int>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicyMinLength));
             var maxLength = _settingService.ExtractValueFromSetting<int>(policySettings.Single(s => s.Name == ApplicationConstants.PasswordPolicyMaxLength));
@@ -171,7 +171,7 @@ namespace BookingWebAPI.Services
             return Regex.IsMatch(password, passwordPolicyRegex);
         }
 
-        private async Task<string> ProposeUserName(string firstName, string lastName)
+        private async Task<string> ProposeUserNameAsync(string firstName, string lastName)
         {
             var usersWithSameName = await _userRepository.GetAll().CountAsync(user => user.FirstName == firstName && user.LastName == lastName);
             return $"{firstName.ToLower()}.{lastName.ToLower()}{(usersWithSameName > 0 ? usersWithSameName : string.Empty)}";

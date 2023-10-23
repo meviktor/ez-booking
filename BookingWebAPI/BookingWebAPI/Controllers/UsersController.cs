@@ -24,26 +24,26 @@ namespace BookingWebAPI.Controllers
         public async Task<CreatedResult> Register(RegisterViewModel registerViewModel)
         {
             // users will be created by admin. usernames are auto calculated via format <lastname>.<firstname><# of users having the same first & last name>.
-            return Created(nameof(Authenticate), _mapper.Map<BookingWebAPIUserViewModel>(await _userService.Register(registerViewModel.EmailAddress, registerViewModel.SiteId, registerViewModel.FirstName, registerViewModel.LastName)));
+            return Created(nameof(Authenticate), _mapper.Map<BookingWebAPIUserViewModel>(await _userService.RegisterAsync(registerViewModel.EmailAddress, registerViewModel.SiteId, registerViewModel.FirstName, registerViewModel.LastName)));
         }
 
         [HttpGet(nameof(ConfirmUser))]
         public async Task<BookingWebAPIUserViewModel> ConfirmUser([FromQuery] Guid token)
         {
-            return _mapper.Map<BookingWebAPIUserViewModel>(await _userService.FindUserForEmailConfirmation(token));
+            return _mapper.Map<BookingWebAPIUserViewModel>(await _userService.FindUserForEmailConfirmationAsync(token));
         }
 
         [HttpPost("ConfirmUser")]
         public async Task<BookingWebAPIUserViewModel> ConfirmUserPost(ConfirmRegistrationViewModel confirmRegistrationViewModel)
         {
-            return _mapper.Map<BookingWebAPIUserViewModel>(await _userService.ConfirmRegistration(confirmRegistrationViewModel.UserId, confirmRegistrationViewModel.Token, confirmRegistrationViewModel.Password));
+            return _mapper.Map<BookingWebAPIUserViewModel>(await _userService.ConfirmRegistrationAsync(confirmRegistrationViewModel.UserId, confirmRegistrationViewModel.Token, confirmRegistrationViewModel.Password));
         }
 
         [AllowAnonymous]
         [HttpPost(nameof(Authenticate))]
         public async Task<BookingWebAPIAuthenticationViewModel> Authenticate(LoginViewModel loginViewModel)
         {
-            return _mapper.Map<BookingWebAPIAuthenticationViewModel>(await _userService.Authenticate(loginViewModel.Email, loginViewModel.Password));
+            return _mapper.Map<BookingWebAPIAuthenticationViewModel>(await _userService.AuthenticateAsync(loginViewModel.Email, loginViewModel.Password));
         }
     }
 }
