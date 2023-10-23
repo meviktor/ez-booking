@@ -33,11 +33,13 @@ namespace BookingWebAPI.Utils
                 ApplicationErrorCodes.SiteStreetTooLong,
                 ApplicationErrorCodes.SiteHouseOrFlatNumberRequired,
                 ApplicationErrorCodes.SiteHouseOrFlatNumberTooLong,
+                ApplicationErrorCodes.SiteDoesNotExist,
                 // Resource
                 ApplicationErrorCodes.ResourceNameMustBeUnique,
                 // ResourceCategory
                 ApplicationErrorCodes.ResourceCategoryNameMustBeUnique,
                 // BookingWebAPIUser
+                ApplicationErrorCodes.UserDoesNotExist,
                 ApplicationErrorCodes.UserUserNameMustBeUnique,
                 ApplicationErrorCodes.UserEmailMustBeUnique,
                 ApplicationErrorCodes.UserEmailTooLong,
@@ -48,13 +50,17 @@ namespace BookingWebAPI.Utils
                 ApplicationErrorCodes.UserSiteIdRequired,
                 ApplicationErrorCodes.UserFirstNameRequired,
                 ApplicationErrorCodes.UserLastNameRequired,
-                ApplicationErrorCodes.UserPasswordNotValidByPolicy
+                ApplicationErrorCodes.UserPasswordNotValidByPolicy,
+                ApplicationErrorCodes.LoginPasswordRequired
             }, HttpStatusCode.BadRequest),
             (new string[]{
                 ApplicationErrorCodes.UserLockedOut
             }, HttpStatusCode.Forbidden),
             (new string[]{
-                ApplicationErrorCodes.LoginInvalidUserNameOrPassword
+                ApplicationErrorCodes.LoginInvalidUserNameOrPassword,
+                ApplicationErrorCodes.CannotAuthenticate,
+                ApplicationErrorCodes.LoginInvalidUserNameOrPassword,
+                ApplicationErrorCodes.LoginEmailNotConfirmed,
             }, HttpStatusCode.Unauthorized)
         };
 
