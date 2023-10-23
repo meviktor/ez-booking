@@ -1,5 +1,4 @@
 ﻿using BookingWebAPI.Common.Constants;
-using BookingWebAPI.DAL.Interfaces;
 using Hangfire;
 
 namespace BookingWebAPI.TaskManagement
