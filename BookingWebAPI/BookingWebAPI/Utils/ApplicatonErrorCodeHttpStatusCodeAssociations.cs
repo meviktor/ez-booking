@@ -59,7 +59,6 @@ namespace BookingWebAPI.Utils
             (new string[]{
                 ApplicationErrorCodes.LoginInvalidUserNameOrPassword,
                 ApplicationErrorCodes.CannotAuthenticate,
-                ApplicationErrorCodes.LoginInvalidUserNameOrPassword,
                 ApplicationErrorCodes.LoginEmailNotConfirmed,
             }, HttpStatusCode.Unauthorized)
         };
