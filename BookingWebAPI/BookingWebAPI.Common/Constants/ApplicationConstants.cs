@@ -25,8 +25,8 @@
 
         public const string AppStartupErrorNoConnectionString = "No connection string provided for database access. Check your configuration for missing connection string.";
 
-        // TODO: delete this constant after settings will be implemented!
-        public const int LoginMaxAttempts = 5;
+        // Settings: login
+        public const string LoginMaxAttempts = nameof(LoginMaxAttempts);
 
         // Settings: PasswordPolicy
         public const string PasswordPolicyMinLength = nameof(PasswordPolicyMinLength);

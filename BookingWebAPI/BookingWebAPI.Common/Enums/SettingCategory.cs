@@ -3,6 +3,7 @@
     public enum SettingCategory : short
     {
         PasswordPolicy = 1,
-        Email = 2
+        Email = 2,
+        Login = 3
     }
 }

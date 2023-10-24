@@ -66,10 +66,7 @@ namespace BookingWebAPI.DAL
                     new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.PasswordPolicy, Name = ApplicationConstants.PasswordPolicyDigits, ValueType = SettingValueType.Boolean, RawValue = "false" },
                     new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.Email, Name = ApplicationConstants.UserRegistrationConfirmationEmailSubject, ValueType = SettingValueType.String, RawValue = ApplicationConstants.UserRegistrationConfirmationEmailDefaultSubject },
                     new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.Email, Name = ApplicationConstants.UserRegistrationConfirmationEmailContent, ValueType = SettingValueType.String, RawValue = ApplicationConstants.UserRegistrationConfirmationEmailDefaultContent },
-                    // Email settings: provide the e-mail settings here for development/testing purpose
-                    //new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.Email, Name = ApplicationConstants.EmailSmtpServer, ValueType = SettingValueType.String, RawValue = string.Empty },
-                    //new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.Email, Name = ApplicationConstants.EmailSmtpPort, ValueType = SettingValueType.Integer, RawValue = "0" },
-                    //new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.Email, Name = ApplicationConstants.EmailSenderEmailAddress, ValueType = SettingValueType.String, RawValue = string.Empty }
+                    new BookingWebAPISetting { Id = Guid.NewGuid(), Category = SettingCategory.Login, Name = ApplicationConstants.LoginMaxAttempts, ValueType = SettingValueType.Integer, RawValue = "5" }
                 });
             }
 

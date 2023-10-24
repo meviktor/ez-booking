@@ -143,10 +143,15 @@ namespace BookingWebAPI.Services
 
             bool passwordValid = BCrypt.Net.BCrypt.Verify(password, foundUser.PasswordHash);
 
-            foundUser.AccessFailedCount = passwordValid ? 0 : foundUser.AccessFailedCount + 1;
-            // TODO: if this value will be moved out to a setting, dont forget to modify the related test as well!
-            foundUser.LockoutEnabled = foundUser.AccessFailedCount >= ApplicationConstants.LoginMaxAttempts;
-            await _userRepository.CreateOrUpdateAsync(foundUser);
+            if(!passwordValid)
+            {
+                int maxLoginAttempts = await _settingService.GetValueBySettingNameAsync<int>(ApplicationConstants.LoginMaxAttempts);
+
+                foundUser.AccessFailedCount++;
+                foundUser.LockoutEnabled = foundUser.AccessFailedCount >= maxLoginAttempts;
+
+                await _userRepository.CreateOrUpdateAsync(foundUser);
+            }
 
             if (!passwordValid)
             {

@@ -19,6 +19,7 @@ namespace BookingWebAPI.Services.Tests.Integration
     {
         private IUserService _userService;
         private IUserRepository _userRepository;
+        private ISettingService _settingService;
 
         [SetUp]
         public override void SetUp()
@@ -28,14 +29,15 @@ namespace BookingWebAPI.Services.Tests.Integration
             // We do not intend testing Hangfire dependent functionality (yet)
             var hangfireMock = new Mock<IBackgroundJobClient>();
             _userRepository = new UserRepository(_dbContext);
-            _userService = new UserService(jwtOptions, _userRepository, new SettingService(new SettingRepository(_dbContext)), hangfireMock.Object, new SiteRepository(_dbContext));
+            _settingService = new SettingService(new SettingRepository(_dbContext));
+            _userService = new UserService(jwtOptions, _userRepository, _settingService, hangfireMock.Object, new SiteRepository(_dbContext));
         }
 
         [Test]
         public async Task Authenticate_Test_AccessFailedCount_Increment()
         {
             // prepare
-            var lockoutTreshold = ApplicationConstants.LoginMaxAttempts; // TODO: should be come from a setting later...
+            var lockoutTreshold = await _settingService.GetValueBySettingNameAsync<int>(ApplicationConstants.LoginMaxAttempts);
             var emailToAuthenticate = "testing@mymail.com";
             var passwordToAuthenticate = "authPwd!";
             var testUser = await _userRepository.CreateOrUpdateAsync(new BookingWebAPIUser

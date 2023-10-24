@@ -1,4 +1,5 @@
-﻿using BookingWebAPI.Common.Enums;
+﻿using BookingWebAPI.Common.Constants;
+using BookingWebAPI.Common.Enums;
 using BookingWebAPI.Common.Models;
 using BookingWebAPI.DAL;
 
@@ -26,7 +27,8 @@ namespace BookingWebAPI.Testing.Common
             // Deleted setting from the same category as the active one
             new BookingWebAPISetting { Id = Guid.NewGuid(), Name = $"{Constants.DeletedSettingName}_{Constants.SettingCategoryTesting}", ValueType = SettingValueType.String, RawValue = "rawValueDeleted", Category = Constants.SettingCategoryTesting, IsDeleted = true },
             // Deleted setting from different category as the active one
-            new BookingWebAPISetting { Id = Guid.NewGuid(), Name = $"{Constants.DeletedSettingName}_{SettingCategory.PasswordPolicy}", ValueType = SettingValueType.String, RawValue = "rawValueDeleted", Category = SettingCategory.PasswordPolicy, IsDeleted = true }
+            new BookingWebAPISetting { Id = Guid.NewGuid(), Name = $"{Constants.DeletedSettingName}_{SettingCategory.PasswordPolicy}", ValueType = SettingValueType.String, RawValue = "rawValueDeleted", Category = SettingCategory.PasswordPolicy, IsDeleted = true },
+            new BookingWebAPISetting { Id = Guid.NewGuid(), Name = ApplicationConstants.LoginMaxAttempts, ValueType = SettingValueType.Integer, RawValue = "5", Category = SettingCategory.Login }
         };
 
         internal static void SeedTestData(this BookingWebAPIDbContext dbContext)
