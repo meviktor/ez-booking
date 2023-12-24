@@ -1,0 +1,10 @@
+<div style="text-align: center;">
+    <b>{{welcomeMessage}}</b><br>
+    <div *ngIf="resourceCategory">
+        <b>Name: </b>{{resourceCategory.name}}<br>
+        <b>Description: </b>{{resourceCategory.description}}<br>
+    </div>
+    <div *ngIf="!resourceCategory">
+        Loading...
+    </div>
+</div>

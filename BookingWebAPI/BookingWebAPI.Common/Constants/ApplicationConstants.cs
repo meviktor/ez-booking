@@ -83,5 +83,9 @@
               </div>
             </body>
           </html>";
+
+        // Authorization
+        public const string JwtToken = nameof(JwtToken);
+        public const string Authorization = nameof(Authorization);
     }
 }

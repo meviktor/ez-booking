@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using BookingWebAPI.Attributes;
+using BookingWebAPI.Common.Constants;
 using BookingWebAPI.Common.ViewModels;
 using BookingWebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +10,7 @@ namespace BookingWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorized]
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -41,9 +44,26 @@ namespace BookingWebAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost(nameof(Authenticate))]
-        public async Task<BookingWebAPIAuthenticationViewModel> Authenticate(LoginViewModel loginViewModel)
+        public async Task<BookingWebAPIAuthenticationViewModel> Authenticate([FromBody] LoginViewModel loginViewModel)
         {
-            return _mapper.Map<BookingWebAPIAuthenticationViewModel>(await _userService.AuthenticateAsync(loginViewModel.Email, loginViewModel.Password));
+            var authModel = _mapper.Map<BookingWebAPIAuthenticationViewModel>(await _userService.AuthenticateAsync(loginViewModel.Email, loginViewModel.Password));
+            HttpContext.Response.Cookies.Append(ApplicationConstants.JwtToken, authModel.Token, new CookieOptions { Domain = "ezbooking.com", Secure = true, HttpOnly = true, SameSite = SameSiteMode.None, Expires = DateTime.Now.AddDays(1), Path = "/" });
+            return authModel;
+        }
+
+        [HttpGet(nameof(LoggedInUser))]
+        public async Task<BookingWebAPIUserViewModel> LoggedInUser()
+        {
+            var userIdClaim = HttpContext.User.Claims.Single(claim => claim.Type.Equals(ApplicationConstants.JwtClaimId));
+            var loggedInUser = await _userService.GetAsync(Guid.Parse(userIdClaim.Value));
+            return _mapper.Map<BookingWebAPIUserViewModel>(loggedInUser);
+        }
+
+        [HttpPost(nameof(Logout))]
+        public IActionResult Logout()
+        {
+            HttpContext.Response.Cookies.Delete(ApplicationConstants.JwtToken, new CookieOptions { Domain = "ezbooking.com", Secure = true, HttpOnly = true, SameSite = SameSiteMode.None, Path = "/" });
+            return Ok();
         }
     }
 }

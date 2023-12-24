@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookingWebAPI.Attributes;
 using BookingWebAPI.Infrastructure.ViewModels;
 using BookingWebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ namespace BookingWebAPI.Controllers
             _resourceCategoryService = resourceCategoryService;
         }
 
+        [Authorized]
         [HttpGet("{id}")]
         public async Task<ActionResult<ResourceCategoryViewModel>> GetResourceCategory(Guid id)
         {

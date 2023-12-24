@@ -12,7 +12,10 @@
 
 
 export interface BookingWebAPIUserViewModel { 
+    id?: string;
     userName?: string | null;
     email?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
 }
 

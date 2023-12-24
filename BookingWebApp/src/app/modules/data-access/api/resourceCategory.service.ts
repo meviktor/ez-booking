@@ -32,7 +32,7 @@ import { Configuration }                                     from '../configurat
 })
 export class ResourceCategoryService {
 
-    protected basePath = 'http://localhost';
+    protected basePath = 'https://api.ezbooking.com:8000';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;

@@ -2,6 +2,7 @@
 README.md
 api.module.ts
 api/api.ts
+api/ping.service.ts
 api/resourceCategory.service.ts
 api/users.service.ts
 configuration.ts

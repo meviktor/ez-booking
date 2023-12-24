@@ -1,0 +1,53 @@
+<nav *ngIf="loggedInUser" class="navbar navbar-expand bg-body-tertiary">
+    <div class="container-fluid">
+        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#sideMenuBar" aria-controls="sideMenuBar" aria-expanded="false">
+            <i class="bi bi-list"></i>
+        </button>
+        <a class="navbar-brand" href="#">Navbar</a>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-fill"></i>
+                    {{loggedInUser.lastName}}, {{loggedInUser.firstName}}
+                </a>
+                <ul id="userMenu" class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" (click)="logout()">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div id="menuAndContent">
+    <div *ngIf="loggedInUser" id="sideMenuBar" class="collapse collapse-horizontal flex-column flex-shrink-0 p-3 bg-body-tertiary">
+        <div style="width: 250px">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-calendar-check"></i>
+                        Resources
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-gear-fill"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="pageContent">
+        <router-outlet></router-outlet>
+    </div>
+</div>

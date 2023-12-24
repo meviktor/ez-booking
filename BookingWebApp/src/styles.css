@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+    --top-navbar-height: 56px;
+}
+
+.validationError {
+    color: red;
+}
+
+input.ng-invalid.ng-touched {
+    border: red 1px solid;
+}

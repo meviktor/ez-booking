@@ -21,6 +21,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureHangfire(apiConnectionString);
 builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfig"));
 builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("JwtConfig"));
+// TODO: this should come from some configuration file!
+builder.Services.AddCors(options => options.AddDefaultPolicy(builder => {
+    builder.WithOrigins("http://app.ezbooking.com:4200", "https://api.ezbooking.com:8000")
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials();
+}));
 
 var app = builder.Build();
 
@@ -47,6 +54,10 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler(exceptionHandlerApp => exceptionHandlerApp.UseMiddleware<BookingWebAPIExceptionHandler>());
 
 app.UseHttpsRedirection();
+
+app.UseCors();
+
+app.UseMiddleware<JwtAuthMiddleware>();
 
 app.UseAuthorization();
 

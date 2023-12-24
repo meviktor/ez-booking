@@ -1,0 +1,40 @@
+#loginContent {
+    display: flex;
+    height: 100vh;
+}
+
+#loginSlideshow {
+    background-color: blue;
+    width: 40%;
+}
+
+#loginFormWindow {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-group {
+    margin-bottom: 1em;
+}
+
+label {
+    margin-bottom: .5em;
+}
+
+#loginFormBox {
+    width: 250px;
+}
+
+#loginLogo {
+    font-family: arial, sans-serif;
+    font-size: 46px;
+    color: #FF0000;
+    font-style: normal;
+    font-weight: bold;
+    font-variant: normal;
+    text-align: center;
+}
+  
