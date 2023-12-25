@@ -149,13 +149,14 @@ namespace BookingWebAPI.Services
 
                 foundUser.AccessFailedCount++;
                 foundUser.LockoutEnabled = foundUser.AccessFailedCount >= maxLoginAttempts;
-
                 await _userRepository.CreateOrUpdateAsync(foundUser);
-            }
 
-            if (!passwordValid)
-            {
                 throw new BookingWebAPIException(ApplicationErrorCodes.LoginInvalidUserNameOrPassword);
+            }
+            else if(foundUser.AccessFailedCount > 0)
+            {
+                foundUser.AccessFailedCount = 0;
+                await _userRepository.CreateOrUpdateAsync(foundUser);
             }
 
             return (foundUser, GenerateJwtToken(foundUser.Id, foundUser.Email, foundUser.UserName));
