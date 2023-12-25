@@ -1,0 +1,24 @@
+{
+    "CORE": {
+        "BRANDNAME": "ez-booking",
+        "DESCRIPTION": "Leírás",
+        "EMAIL": "E-mail",
+        "LOADING": "Betöltés...",
+        "LOGIN": "Bejelentkezés",
+        "MENUITEMS": {
+            "LOGOUT": "Kijelentkezés",
+            "DASHBOARD": "Irányítópult",
+            "RESOURCES": "Erőforrások",
+            "SETTINGS": "Beállítások"
+        },
+        "NAME": "Név",
+        "PASSWORD": "Jelszó"
+    },
+    "LOGINCOMPONENT": {
+        "ERRORS": {
+            "EMAILREQUIRED": "Az e-mail cím megadása kötelező.",
+            "NOTVALIDEMAIL": "A megadott e-mail cím érvénytelen.",
+            "PASSWORDREQUIRED": "A jelszó megadása kötelező."
+        }
+    }
+}

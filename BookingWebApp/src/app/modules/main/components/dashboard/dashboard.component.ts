@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ResourceCategoryViewModel } from 'src/app/modules/data-access/';
 import { ResourceService } from 'src/app/modules/data-access/services';
@@ -15,7 +16,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public welcomeMessage?: string;
   public resourceCategory?: ResourceCategoryViewModel;
 
-  constructor(private resourceService: ResourceService) {}
+  constructor(private resourceService: ResourceService,  private translateService: TranslateService) {}
 
   public ngOnDestroy(): void {
     this.resourceCategorySubscription?.unsubscribe();

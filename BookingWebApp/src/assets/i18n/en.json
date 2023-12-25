@@ -1,0 +1,24 @@
+{
+    "CORE": {
+        "BRANDNAME": "ez-booking",
+        "DESCRIPTION": "Description",
+        "EMAIL": "E-mail",
+        "LOADING": "Loading...",
+        "LOGIN": "Login",
+        "MENUITEMS": {
+            "LOGOUT": "Logout",
+            "DASHBOARD": "Dashboard",
+            "RESOURCES": "Resources",
+            "SETTINGS": "Settings"
+        },
+        "NAME": "Name",
+        "PASSWORD": "Password"
+    },
+    "LOGINCOMPONENT": {
+        "ERRORS": {
+            "EMAILREQUIRED": "E-mail address is required.",
+            "NOTVALIDEMAIL": "This is not a valid e-mail address.",
+            "PASSWORDREQUIRED": "Password is required."
+        }
+    }
+}

@@ -3,7 +3,7 @@
         <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#sideMenuBar" aria-controls="sideMenuBar" aria-expanded="false">
             <i class="bi bi-list"></i>
         </button>
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">{{'CORE.BRANDNAME' | translate }}</a>
         <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -14,7 +14,7 @@
                     <li>
                         <a class="dropdown-item" (click)="logout()">
                             <i class="bi bi-box-arrow-right"></i>
-                            Logout
+                            {{'CORE.MENUITEMS.LOGOUT' | translate }}
                         </a>
                     </li>
                 </ul>
@@ -29,19 +29,19 @@
                 <li>
                     <a href="#" class="nav-link">
                         <i class="bi bi-speedometer2"></i>
-                        Dashboard
+                        {{'CORE.MENUITEMS.DASHBOARD' | translate }}
                     </a>
                 </li>
                 <li>
                     <a href="#" class="nav-link">
                         <i class="bi bi-calendar-check"></i>
-                        Resources
+                        {{'CORE.MENUITEMS.RESOURCES' | translate }}
                     </a>
                 </li>
                 <li>
                     <a href="#" class="nav-link">
                         <i class="bi bi-gear-fill"></i>
-                        Settings
+                        {{'CORE.MENUITEMS.SETTINGS' | translate }}
                     </a>
                 </li>
             </ul>

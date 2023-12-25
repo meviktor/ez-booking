@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AuthService } from '../../services/authentication/auth.service';
 import { Router } from '@angular/router';
 import { take } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent {
   public loginForm: FormGroup<LoginFormControls>;
   public loginFormSubmitted: boolean;
   
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private translateService: TranslateService, private router: Router) {
     this.loginForm = this.buildLoginForm();
     this.loginFormSubmitted = false;
   }

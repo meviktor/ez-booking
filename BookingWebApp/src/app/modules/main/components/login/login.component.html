@@ -2,24 +2,24 @@
     <div id="loginSlideshow"><!--pictures--></div>
     <div id="loginFormWindow">
         <div id="loginFormBox">
-            <div id="loginLogo">ez-booking</div>
+            <div id="loginLogo">{{ 'CORE.BRANDNAME' | translate }}</div>
             <form [formGroup]="loginForm" (ngSubmit)="onLoginFormSubmit()">
                 <div class="form-group">
-                    <label for="email">Email:</label>
+                    <label for="email">{{'CORE.EMAIL' | translate }}:</label>
                     <input id="email" type="email" formControlName="email" class="form-control">
                     <div *ngIf="loginForm.controls.email.invalid && (loginForm.controls.email.dirty || loginForm.controls.email.touched || loginFormSubmitted)" class="validationError">
-                        <div *ngIf="loginForm.controls.email.errors?.['required']">Email address is required.</div>
-                        <div *ngIf="loginForm.controls.email.errors?.['email']">This is not a valid email address.</div>
+                        <div *ngIf="loginForm.controls.email.errors?.['required']">{{ 'LOGINCOMPONENT.ERRORS.EMAILREQUIRED' | translate }}</div>
+                        <div *ngIf="loginForm.controls.email.errors?.['email']">{{ 'LOGINCOMPONENT.ERRORS.NOTVALIDEMAIL' | translate }}</div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password:</label>
+                    <label for="password">{{ 'CORE.PASSWORD' | translate }}:</label>
                     <input id="password" type="password" formControlName="password" class="form-control">
                     <div *ngIf="loginForm.controls.password.invalid && (loginForm.controls.password.dirty || loginForm.controls.password.touched || loginFormSubmitted)" class="validationError">
-                        <div *ngIf="loginForm.controls.password.errors?.['required']">Password is required.</div>
+                        <div *ngIf="loginForm.controls.password.errors?.['required']">{{ 'LOGINCOMPONENT.ERRORS.PASSWORDREQUIRED' | translate }}</div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">{{ 'CORE.LOGIN' | translate }}</button>
             </form>
         </div>
     </div>
