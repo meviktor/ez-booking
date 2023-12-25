@@ -16,9 +16,12 @@
     },
     "LOGINCOMPONENT": {
         "ERRORS": {
-            "EMAILREQUIRED": "Az e-mail cím megadása kötelező.",
-            "NOTVALIDEMAIL": "A megadott e-mail cím érvénytelen.",
-            "PASSWORDREQUIRED": "A jelszó megadása kötelező."
+            "USEREMAILREQUIRED": "Az e-mail cím megadása kötelező.",
+            "USEREMAILINVALIDFORMAT": "A megadott e-mail cím érvénytelen.",
+            "LOGINPASSWORDREQUIRED": "A jelszó megadása kötelező.",
+            "USERLOCKEDOUT": "A felhasználói fiók zárolva lett.",
+            "LOGINEMAILNOTCONFIRMED": "Az e-mail cím még nem lett megerősítve.",
+            "LOGININVALIDUSERNAMEORPASSWORD": "A megadott e-mail cím és/vagy jelszó helytelen."
         }
     }
 }

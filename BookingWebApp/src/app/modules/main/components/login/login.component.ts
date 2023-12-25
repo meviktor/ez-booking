@@ -26,20 +26,22 @@ export class LoginComponent {
 
   public onLoginFormSubmit = (): void => {
     this.loginFormSubmitted = true;
+    // clearing root level (not bound to any of the controls) errors before submit attempt
+    this.loginForm.setErrors(null);
+
     if(this.loginForm.valid){
       this.authService.tryLogin({email: this.loginForm.value.email!, password: this.loginForm.value.password!}).pipe(take(1))
         .subscribe(authResult => {
-            if(authResult.success){
-              this.router.navigate(['/']);
-            }
-            else {
-              // TODO: else inform about unsuccessful login attempt, using authResult.error
-              console.log(authResult);
-            }
+          if(authResult.success){
+            this.router.navigate(['/']);
           }
-        );
+          else if(authResult.error){
+            // setting the error from the backend on root level
+            this.loginForm.setErrors({errorAfterSubmit: authResult.error.errorCode});
+          }
+        }
+      );
     }
-    console.log(this.loginForm.value);
   };
 }
 

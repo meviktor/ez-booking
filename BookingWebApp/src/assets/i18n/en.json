@@ -16,9 +16,12 @@
     },
     "LOGINCOMPONENT": {
         "ERRORS": {
-            "EMAILREQUIRED": "E-mail address is required.",
-            "NOTVALIDEMAIL": "This is not a valid e-mail address.",
-            "PASSWORDREQUIRED": "Password is required."
+            "USEREMAILREQUIRED": "E-mail address is required.",
+            "USEREMAILINVALIDFORMAT": "This is not a valid e-mail address.",
+            "LOGINPASSWORDREQUIRED": "Password is required.",
+            "USERLOCKEDOUT": "User has been locked out due to unsuccessful login attempts.",
+            "LOGINEMAILNOTCONFIRMED": "This email address has not been confirmed yet.",
+            "LOGININVALIDUSERNAMEORPASSWORD": "The provided credentials are not valid."
         }
     }
 }
