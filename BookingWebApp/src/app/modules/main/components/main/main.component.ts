@@ -17,7 +17,6 @@ export class MainComponent implements OnDestroy {
   private userSelectedLocale: LocaleCode = LocaleCode.Hungarian;
   private updateUserSubscription: Subscription;
 
-  public appBrandName: string = "ez-booking";
   public loggedInUser: BookingWebAPIUserViewModel | null;
 
   constructor(private authService: AuthService, private translateService: TranslateService, private router: Router) {
