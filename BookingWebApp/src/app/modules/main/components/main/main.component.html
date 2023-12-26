@@ -1,12 +1,12 @@
-<nav *ngIf="loggedInUser" class="navbar navbar-expand bg-body-tertiary">
+<nav *ngIf="loggedInUser" class="navbar navbar-expand brand-backgrond">
     <div class="container-fluid">
-        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#sideMenuBar" aria-controls="sideMenuBar" aria-expanded="false">
+        <button class="btn brand-logo-color" type="button" data-bs-toggle="collapse" data-bs-target="#sideMenuBar" aria-controls="sideMenuBar" aria-expanded="false">
             <i class="bi bi-list"></i>
         </button>
-        <a class="navbar-brand" href="#">{{'CORE.BRANDNAME' | translate }}</a>
+        <a class="navbar-brand brand-logo-color" href="#">{{'CORE.BRANDNAME' | translate }}</a>
         <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="brand-logo-color nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-person-fill"></i>
                     {{loggedInUser.lastName}}, {{loggedInUser.firstName}}
                 </a>
@@ -23,23 +23,23 @@
     </div>
 </nav>
 <div id="menuAndContent">
-    <div *ngIf="loggedInUser" id="sideMenuBar" class="collapse collapse-horizontal flex-column flex-shrink-0 p-3 bg-body-tertiary">
+    <div *ngIf="loggedInUser" id="sideMenuBar" class="collapse collapse-horizontal flex-column flex-shrink-0 p-3 brand-backgrond">
         <div style="width: 250px">
             <ul class="nav nav-pills flex-column mb-auto">
                 <li>
-                    <a href="#" class="nav-link">
+                    <a href="#" class="brand-logo-color nav-link">
                         <i class="bi bi-speedometer2"></i>
                         {{'CORE.MENUITEMS.DASHBOARD' | translate }}
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link">
+                    <a href="#" class="brand-logo-color nav-link">
                         <i class="bi bi-calendar-check"></i>
                         {{'CORE.MENUITEMS.RESOURCES' | translate }}
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link">
+                    <a href="#" class="brand-logo-color nav-link">
                         <i class="bi bi-gear-fill"></i>
                         {{'CORE.MENUITEMS.SETTINGS' | translate }}
                     </a>

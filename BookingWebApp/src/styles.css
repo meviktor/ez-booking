@@ -10,3 +10,11 @@
 input.ng-invalid.ng-touched {
     border: red 1px solid;
 }
+
+.brand-logo-color {
+    color: #174dba !important;
+}
+
+.brand-backgrond {
+    background-color: #c4e3ff;
+}

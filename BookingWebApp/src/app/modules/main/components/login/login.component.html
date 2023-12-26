@@ -1,8 +1,8 @@
 <div id="loginContent">
     <div id="loginSlideshow"><app-login-slideshow></app-login-slideshow></div>
-    <div id="loginFormWindow">
+    <div id="loginFormWindow" class="brand-backgrond">
         <div id="loginFormBox">
-            <div id="loginLogo">{{ 'CORE.BRANDNAME' | translate }}</div>
+            <div id="loginLogo" class="brand-logo-color">{{ 'CORE.BRANDNAME' | translate }}</div>
             <form [formGroup]="loginForm" (ngSubmit)="onLoginFormSubmit()">
                 <div class="form-group">
                     <label for="email">{{'CORE.EMAIL' | translate }}:</label>
