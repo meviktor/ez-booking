@@ -16,7 +16,7 @@
                     <label for="password">{{ 'CORE.PASSWORD' | translate }}:</label>
                     <input id="password" type="password" formControlName="password" class="form-control">
                     <div *ngIf="loginForm.controls.password.invalid && (loginForm.controls.password.dirty || loginForm.controls.password.touched || loginFormSubmitted)" class="validationError">
-                        <div *ngIf="loginForm.controls.password.errors?.['required']">{{ 'LOGINCOMPONENT.ERRORS.PASSWORDREQUIRED' | translate }}</div>
+                        <div *ngIf="loginForm.controls.password.errors?.['required']">{{ 'LOGINCOMPONENT.ERRORS.LOGINPASSWORDREQUIRED' | translate }}</div>
                     </div>
                 </div>
                 <div *ngIf="loginForm.errors?.['errorAfterSubmit']">
