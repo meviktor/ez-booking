@@ -4,8 +4,8 @@
 }
 
 #loginSlideshow {
-    background-color: blue;
-    width: 40%;
+    width: 60%;
+    overflow: hidden;
 }
 
 #loginFormWindow {

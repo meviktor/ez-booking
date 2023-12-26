@@ -5,12 +5,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MainRoutingModule } from './main-routing.module';
 import { MainComponent } from './components/main/main.component';
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CookieHttpInterceptor } from './interceptors/cookieinterceptor';
+import { LoginSlideShowComponent } from './components/login/loginslideshow.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../assets/i18n/', '.json');
@@ -20,10 +22,12 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     MainComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    LoginSlideShowComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     MainRoutingModule,
     NgbModule,
     FormsModule,
