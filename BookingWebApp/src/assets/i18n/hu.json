@@ -1,8 +1,11 @@
 {
     "CORE": {
         "BRANDNAME": "ez-booking",
+        "CONFIRMPASSWORD": "Jelszó megerősítése",
+        "CONFIRMUSERACCOUNT": "Fiók megerősítése",
         "DESCRIPTION": "Leírás",
         "EMAIL": "E-mail",
+        "GOTOLOGIN": "Vissza a bejelentkezéshez",
         "LOADING": "Betöltés...",
         "LOGIN": "Bejelentkezés",
         "MENUITEMS": {
@@ -14,13 +17,30 @@
         "NAME": "Név",
         "PASSWORD": "Jelszó"
     },
+    "CONFIRMUSERCOMPONENT": {
+        "ERRORS":{
+            "CONFIRMPASSWORDREQUIRED": "A jelszó megerősítése kötelező.",
+            "CONFIRMUSERFAILURE": "Probléma lépett fel a felhasználói fiók megerősítése közben. Próbálj újra.",
+            "PASSWORDREQUIRED": "A jelszó megadása kötelező.",
+            "USERDOESNOTEXIST": "A felhasználói fiók azonosítása sikertelen.",
+            "USERPASSWORDNOTVALIDBYPOLICY": "A megadott jeszó nem felel meg a feltételeknek. Próbálkozzon újra egy érvényes jelszóval.",
+            "PASSWORDANDCONFIRMPASSWORDNOTMATCH": "A két jelszó nem egyezik meg."
+        },
+        "PASSWORDPOLICYDIGITS": "Tartalmaznia kell legalább egy számjegyet.",
+        "PASSWORDPOLICYSPECIALCHARACTERS": "Tartalmaznia kell legalabb egy nem alfanumerikus karaktert.",
+        "PASSWORDPOLICYLENGTH": "A hosszának {{min}} és {{max}} karakter közt kell lennie.",
+        "PASSWORDPOLICYUPPERCASELETTER": "Tartalmaznia kell nagybetűt.",
+        "SUCCESS": "Sikeresen aktivalta fiókját! Kérjük, kattintson a lenti gombra, ha be kíván jelentkezni fiókjába.",
+        "TOKENEXPIRED": "Az aktiválási linkje lejárt. Kérjük vagye fel a kapcsolatot a támogatással, hogy új aktiváló linket kapjon.",
+        "WELCOME": "Kedves {{firstName}}! A fiókod aktiválásához meg kell adnod egy általad választott jelszót, mely megfelel az alábbi feltételeknek:"
+    },
     "LOGINCOMPONENT": {
         "ERRORS": {
             "USEREMAILREQUIRED": "Az e-mail cím megadása kötelező.",
             "USEREMAILINVALIDFORMAT": "A megadott e-mail cím érvénytelen.",
             "LOGINPASSWORDREQUIRED": "A jelszó megadása kötelező.",
             "USERLOCKEDOUT": "A felhasználói fiók zárolva lett.",
-            "LOGINEMAILNOTCONFIRMED": "Az e-mail cím még nem lett megerősítve.",
+            "LOGINEMAILNOTCONFIRMED": "Az fiókhoz tartozó e-mail cím nincs megerősítve.",
             "LOGININVALIDUSERNAMEORPASSWORD": "A megadott e-mail cím és/vagy jelszó helytelen."
         }
     }

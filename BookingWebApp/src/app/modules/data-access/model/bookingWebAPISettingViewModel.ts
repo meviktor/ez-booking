@@ -9,14 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SettingCategory } from './settingCategory';
+import { SettingValueType } from './settingValueType';
 
 
-export interface BookingWebAPIUserViewModel { 
-    id?: string;
-    userName?: string | null;
-    email?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    emailConfirmed?: boolean;
+export interface BookingWebAPISettingViewModel { 
+    category?: SettingCategory;
+    name?: string | null;
+    valueType?: SettingValueType;
+    rawValue?: string | null;
 }
+export namespace BookingWebAPISettingViewModel {
+}
+
 

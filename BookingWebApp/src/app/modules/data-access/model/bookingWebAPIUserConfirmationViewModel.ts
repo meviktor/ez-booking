@@ -9,14 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { BookingWebAPIUserViewModel } from './bookingWebAPIUserViewModel';
+import { BookingWebAPISettingViewModel } from './bookingWebAPISettingViewModel';
 
 
-export interface BookingWebAPIUserViewModel { 
-    id?: string;
-    userName?: string | null;
-    email?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    emailConfirmed?: boolean;
+export interface BookingWebAPIUserConfirmationViewModel { 
+    user?: BookingWebAPIUserViewModel;
+    passwordSettings?: Array<BookingWebAPISettingViewModel> | null;
 }
 

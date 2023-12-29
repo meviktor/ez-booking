@@ -115,17 +115,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/BookingWebAPIUserViewModel"
+                  "$ref": "#/components/schemas/BookingWebAPIUserConfirmationViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BookingWebAPIUserViewModel"
+                  "$ref": "#/components/schemas/BookingWebAPIUserConfirmationViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BookingWebAPIUserViewModel"
+                  "$ref": "#/components/schemas/BookingWebAPIUserConfirmationViewModel"
                 }
               }
             }
@@ -284,6 +284,42 @@
         },
         "additionalProperties": false
       },
+      "BookingWebAPISettingViewModel": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/SettingCategory"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "valueType": {
+            "$ref": "#/components/schemas/SettingValueType"
+          },
+          "rawValue": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BookingWebAPIUserConfirmationViewModel": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/BookingWebAPIUserViewModel"
+          },
+          "passwordSettings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookingWebAPISettingViewModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "BookingWebAPIUserViewModel": {
         "type": "object",
         "properties": {
@@ -306,6 +342,9 @@
           "lastName": {
             "type": "string",
             "nullable": true
+          },
+          "emailConfirmed": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -389,6 +428,36 @@
           }
         },
         "additionalProperties": false
+      },
+      "SettingCategory": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "x-enum-varnames": [
+          "PasswordPolicy",
+          "Email",
+          "Login"
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "SettingValueType": {
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "x-enum-varnames": [
+          "Integer",
+          "Float",
+          "String",
+          "Boolean"
+        ],
+        "type": "integer",
+        "format": "int32"
       }
     }
   }

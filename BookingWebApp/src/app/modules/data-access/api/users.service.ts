@@ -21,6 +21,8 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { BookingWebAPIAuthenticationViewModel } from '../model/bookingWebAPIAuthenticationViewModel';
 // @ts-ignore
+import { BookingWebAPIUserConfirmationViewModel } from '../model/bookingWebAPIUserConfirmationViewModel';
+// @ts-ignore
 import { BookingWebAPIUserViewModel } from '../model/bookingWebAPIUserViewModel';
 // @ts-ignore
 import { ConfirmRegistrationViewModel } from '../model/confirmRegistrationViewModel';
@@ -172,9 +174,9 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiUsersConfirmUserGet(token?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<BookingWebAPIUserViewModel>;
-    public apiUsersConfirmUserGet(token?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<BookingWebAPIUserViewModel>>;
-    public apiUsersConfirmUserGet(token?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<BookingWebAPIUserViewModel>>;
+    public apiUsersConfirmUserGet(token?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<BookingWebAPIUserConfirmationViewModel>;
+    public apiUsersConfirmUserGet(token?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<BookingWebAPIUserConfirmationViewModel>>;
+    public apiUsersConfirmUserGet(token?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<BookingWebAPIUserConfirmationViewModel>>;
     public apiUsersConfirmUserGet(token?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -217,7 +219,7 @@ export class UsersService {
         }
 
         let localVarPath = `/api/Users/ConfirmUser`;
-        return this.httpClient.request<BookingWebAPIUserViewModel>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<BookingWebAPIUserConfirmationViewModel>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

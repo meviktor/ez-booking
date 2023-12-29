@@ -13,6 +13,7 @@ import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CookieHttpInterceptor } from './interceptors/cookieinterceptor';
 import { LoginSlideShowComponent } from './components/login/loginslideshow.component';
+import { ConfirmUserComponent } from './components/confirmuser/confirmuser.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../assets/i18n/', '.json');
@@ -23,7 +24,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MainComponent,
     LoginComponent,
     DashboardComponent,
-    LoginSlideShowComponent
+    LoginSlideShowComponent,
+    ConfirmUserComponent
   ],
   imports: [
     BrowserModule,

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using BookingWebAPI.Attributes;
 using BookingWebAPI.Common.Constants;
+using BookingWebAPI.Common.Enums;
 using BookingWebAPI.Common.ViewModels;
 using BookingWebAPI.Services.Interfaces;
+using BookingWebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +16,13 @@ namespace BookingWebAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly ISettingService _settingService;
         private readonly IUserService _userService;
 
-        public UsersController(IMapper mapper, IUserService userService)
+        public UsersController(IMapper mapper, IUserService userService, ISettingService settingService)
         {
             _mapper = mapper;
+            _settingService = settingService;
             _userService = userService;
         }
 
@@ -30,12 +34,16 @@ namespace BookingWebAPI.Controllers
             return Created(nameof(Authenticate), _mapper.Map<BookingWebAPIUserViewModel>(await _userService.RegisterAsync(registerViewModel.EmailAddress, registerViewModel.SiteId, registerViewModel.FirstName, registerViewModel.LastName)));
         }
 
+        [AllowAnonymous]
         [HttpGet(nameof(ConfirmUser))]
-        public async Task<BookingWebAPIUserViewModel> ConfirmUser([FromQuery] Guid token)
+        public async Task<BookingWebAPIUserConfirmationViewModel> ConfirmUser([FromQuery] Guid token)
         {
-            return _mapper.Map<BookingWebAPIUserViewModel>(await _userService.FindUserForEmailConfirmationAsync(token));
+            var foundUser = _mapper.Map<BookingWebAPIUserViewModel>(await _userService.FindUserForEmailConfirmationAsync(token));
+            var passwordSettings = await _settingService.GetSettingsForCategoryAsync(SettingCategory.PasswordPolicy);
+            return _mapper.Map<BookingWebAPIUserConfirmationViewModel>(foundUser, passwordSettings);
         }
 
+        [AllowAnonymous]
         [HttpPost("ConfirmUser")]
         public async Task<BookingWebAPIUserViewModel> ConfirmUserPost(ConfirmRegistrationViewModel confirmRegistrationViewModel)
         {

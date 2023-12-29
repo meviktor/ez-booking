@@ -11,12 +11,12 @@
  */
 
 
-export interface BookingWebAPIUserViewModel { 
-    id?: string;
-    userName?: string | null;
-    email?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    emailConfirmed?: boolean;
-}
+export type SettingValueType = 1 | 2 | 3 | 4;
+
+export const SettingValueType = {
+    Integer: 1 as SettingValueType,
+    Float: 2 as SettingValueType,
+    String: 3 as SettingValueType,
+    Boolean: 4 as SettingValueType
+};
 

@@ -4,7 +4,6 @@ using BookingWebAPI.Services.Interfaces;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using MimeKit.Text;
 
 namespace BookingWebAPI.Services
 {
@@ -29,7 +28,10 @@ namespace BookingWebAPI.Services
                 throw new ArgumentException($"The following userId does not exist: {userId}.", nameof(userId));
             }
             var emailSubject = await _settingService.GetValueBySettingNameAsync<string>(ApplicationConstants.UserRegistrationConfirmationEmailSubject);
-            var emailContent = await _settingService.GetValueBySettingNameAsync<string>(ApplicationConstants.UserRegistrationConfirmationEmailContent);
+            var emailContent = (await _settingService.GetValueBySettingNameAsync<string>(ApplicationConstants.UserRegistrationConfirmationEmailContent))
+                // TODO: web app URL should come from a configuration file!
+                .Replace(ApplicationConstants.UserRegistrationConfirmationEmailLinkPlaceholder, $"http://app.ezbooking.com:4200/confirmuseraccount/{newUser.Token}")
+                .Replace(ApplicationConstants.UserRegistrationConfirmationEmailFirstNamePlaceholder, newUser.FirstName);
 
             var confirmationEmail = new MimeMessage
             {

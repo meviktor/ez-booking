@@ -1,0 +1,53 @@
+<div id="confirmUserContent">
+    <div id="confirmUserWindow">
+        <div class="center brand-logo">{{ 'CORE.BRANDNAME' | translate }}</div>
+        <h3>{{ 'CORE.CONFIRMPASSWORD' | translate }}</h3>
+        <div *ngIf="userTokenExpired && !confirmUserFinished" class="d-grid gap-4">
+            <div class="pb-3">{{ 'CONFIRMUSERCOMPONENT.TOKENEXPIRED' | translate }}</div>
+            <div class="pb-3 center"><a routerLink="/login"><button class="btn btn-primary">{{ 'CORE.GOTOLOGIN' | translate }}</button></a></div>
+        </div>
+        <div *ngIf="!userTokenExpired && !confirmUserFinished" class="d-grid gap-3">
+            <div class="pb-1">{{ 'CONFIRMUSERCOMPONENT.WELCOME' | translate:{firstName: userToConfirm?.firstName} }}</div>
+            <ul class="pb-1">
+                <li *ngIf="passwordPolicy?.['PasswordPolicyDigits']?.rawValue == 'true'">{{ 'CONFIRMUSERCOMPONENT.PASSWORDPOLICYDIGITS' | translate }}</li>
+                <li *ngIf="passwordPolicy?.['PasswordPolicySpecialCharacters']?.rawValue == 'true'">{{ 'CONFIRMUSERCOMPONENT.PASSWORDPOLICYSPECIALCHARACTERS' | translate }}</li>
+                <li *ngIf="passwordPolicy?.['PasswordPolicyUppercaseLetter']?.rawValue == 'true'">{{ 'CONFIRMUSERCOMPONENT.PASSWORDPOLICYUPPERCASELETTER' | translate }}</li>
+                <li>{{ 'CONFIRMUSERCOMPONENT.PASSWORDPOLICYLENGTH' | translate:{min: passwordPolicy?.['PasswordPolicyMinLength']?.rawValue, max: passwordPolicy?.['PasswordPolicyMaxLength']?.rawValue } }}</li>
+            </ul>
+            <div class="p-1">
+                <form id="confirmUserForm" [formGroup]="confirmUserForm" (ngSubmit)="submitUserConfirmation()" class="d-grid gap-3">
+                    <div class="form-group pb-2">
+                        <label for="email">{{'CORE.EMAIL' | translate }}:</label>
+                        <input id="email" [value]="confirmUserForm.controls.email.value" class="form-control" disabled>
+                    </div>
+                    <div class="form-group pb-1">
+                        <label for="password">{{ 'CORE.PASSWORD' | translate }}:</label>
+                         <input id="password" type="password" formControlName="password" class="form-control">
+                            <div *ngIf="confirmUserForm.controls.password.invalid && (confirmUserForm.controls.password.dirty || confirmUserForm.controls.password.touched || confirmUserFormSubmitted)" class="validationError">
+                            <div *ngIf="confirmUserForm.controls.password.errors?.['required']">{{ 'CONFIRMUSERCOMPONENT.ERRORS.PASSWORDREQUIRED' | translate }}</div>
+                        </div>
+                    </div>
+                    <div class="form-group pb-1">
+                        <label for="confirmPassword">{{ 'CORE.CONFIRMPASSWORD' | translate }}:</label>
+                        <input id="confirmPassword" type="password" formControlName="confirmPassword" class="form-control">
+                        <div *ngIf="confirmUserForm.controls.confirmPassword.invalid && (confirmUserForm.controls.confirmPassword.dirty || confirmUserForm.controls.confirmPassword.touched || confirmUserFormSubmitted)" class="validationError">
+                            <div *ngIf="confirmUserForm.controls.confirmPassword.errors?.['required']">{{ 'CONFIRMUSERCOMPONENT.ERRORS.CONFIRMPASSWORDREQUIRED' | translate }}</div>
+                            <div *ngIf="confirmUserForm.controls.confirmPassword.errors?.['passwordConfirmPasswordDoNotMatch']">{{ 'CONFIRMUSERCOMPONENT.ERRORS.PASSWORDANDCONFIRMPASSWORDNOTMATCH' | translate }}</div>
+                        </div>
+                    </div>
+                    <div *ngIf="confirmUserForm.errors?.['errorAfterSubmit']">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ 'CONFIRMUSERCOMPONENT.ERRORS.' + confirmUserForm.errors?.['errorAfterSubmit'] | uppercase | translate }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{ 'CORE.CONFIRMUSERACCOUNT' | translate }}</button>
+                </form>
+            </div>
+        </div>
+        <div class="d-grid gap-4" *ngIf="!userTokenExpired && confirmUserFinished">
+            <div class="pb-2">{{ 'CONFIRMUSERCOMPONENT.SUCCESS' | translate }}</div>
+            <div class="pb-2 center"><a routerLink="/login"><button class="btn btn-primary">{{ 'CORE.GOTOLOGIN' | translate }}</button></a></div>
+        </div>
+    </div>
+</div>

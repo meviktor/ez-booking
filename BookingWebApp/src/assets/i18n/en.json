@@ -1,8 +1,11 @@
 {
     "CORE": {
         "BRANDNAME": "ez-booking",
+        "CONFIRMPASSWORD": "Confirm password",
+        "CONFIRMUSERACCOUNT": "Confirm account",
         "DESCRIPTION": "Description",
         "EMAIL": "E-mail",
+        "GOTOLOGIN": "Go back to login page",
         "LOADING": "Loading...",
         "LOGIN": "Login",
         "MENUITEMS": {
@@ -14,13 +17,30 @@
         "NAME": "Name",
         "PASSWORD": "Password"
     },
+    "CONFIRMUSERCOMPONENT": {
+        "ERRORS":{
+            "CONFIRMPASSWORDREQUIRED": "Password confirmation is required.",
+            "CONFIRMUSERFAILURE": "Something went wrong during user account confirmation. Please try again.",
+            "PASSWORDREQUIRED": "Password is required.",
+            "USERDOESNOTEXIST": "User account could not be identified for verification.",
+            "USERPASSWORDNOTVALIDBYPOLICY": "The provided password does not comply the password policy. Choose a valid password.",
+            "PASSWORDANDCONFIRMPASSWORDNOTMATCH": "The two passwords do not match."
+        },
+        "PASSWORDPOLICYDIGITS": "It must contain at least one digit.",
+        "PASSWORDPOLICYSPECIALCHARACTERS": "It must contain at least one non-alphanumeric character.",
+        "PASSWORDPOLICYLENGTH": "Its length must be between {{min}} and {{max}} characters.",
+        "PASSWORDPOLICYUPPERCASELETTER": "It must contain at least one uppercase letter.",
+        "SUCCESS": "You have successfully activated your account! Plese click the below button if you wish to log in.",
+        "TOKENEXPIRED": "Your activation link has expired. Please contact support for recieving a new user account confirmation link.",
+        "WELCOME": "Dear {{firstName}}! To active your user account you have to provide a password which complies the password policy consists of the below rules:"
+    },
     "LOGINCOMPONENT": {
         "ERRORS": {
             "USEREMAILREQUIRED": "E-mail address is required.",
             "USEREMAILINVALIDFORMAT": "This is not a valid e-mail address.",
             "LOGINPASSWORDREQUIRED": "Password is required.",
             "USERLOCKEDOUT": "User has been locked out due to unsuccessful login attempts.",
-            "LOGINEMAILNOTCONFIRMED": "This email address has not been confirmed yet.",
+            "LOGINEMAILNOTCONFIRMED": "The email address of the user account is not confirmed.",
             "LOGININVALIDUSERNAMEORPASSWORD": "The provided credentials are not valid."
         }
     }

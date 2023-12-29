@@ -10,11 +10,15 @@ encoder.ts
 git_push.sh
 index.ts
 model/bookingWebAPIAuthenticationViewModel.ts
+model/bookingWebAPISettingViewModel.ts
+model/bookingWebAPIUserConfirmationViewModel.ts
 model/bookingWebAPIUserViewModel.ts
 model/confirmRegistrationViewModel.ts
 model/loginViewModel.ts
 model/models.ts
 model/registerViewModel.ts
 model/resourceCategoryViewModel.ts
+model/settingCategory.ts
+model/settingValueType.ts
 param.ts
 variables.ts

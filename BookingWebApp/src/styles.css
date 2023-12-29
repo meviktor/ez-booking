@@ -18,3 +18,21 @@ input.ng-invalid.ng-touched {
 .brand-backgrond {
     background-color: #c4e3ff;
 }
+
+.brand-logo {
+    font-family: arial, sans-serif;
+    font-size: 46px;
+    font-style: normal;
+    font-weight: bold;
+    font-variant: normal;
+    color: #174dba !important;
+}
+
+label {
+    margin-bottom: .5em;
+}
+
+.center {
+    align-items: center;
+    text-align: center;
+}
