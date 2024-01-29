@@ -110,7 +110,6 @@ namespace BookingWebAPI.DAL.Migrations
                     Email = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
                     PasswordHash = table.Column<string>(type: "CHAR(60)", nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    Token = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "int", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -129,6 +128,32 @@ namespace BookingWebAPI.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "EmailConfirmationAttempts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Status = table.Column<short>(type: "smallint", nullable: false),
+                    FailReason = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailConfirmationAttempts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmailConfirmationAttempts_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailConfirmationAttempts_UserId",
+                table: "EmailConfirmationAttempts",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ResourceCategories_BaseCategoryId",
@@ -190,6 +215,9 @@ namespace BookingWebAPI.DAL.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "EmailConfirmationAttempts");
+
             migrationBuilder.DropTable(
                 name: "Resources");
 

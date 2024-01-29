@@ -98,9 +98,6 @@ namespace BookingWebAPI.DAL.Migrations
                     b.Property<Guid>("SiteId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("Token")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -120,6 +117,31 @@ namespace BookingWebAPI.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BookingWebAPI.Common.Models.EmailConfirmationAttempt", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("FailReason")
+                        .HasColumnType("int");
+
+                    b.Property<short>("Status")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EmailConfirmationAttempts");
                 });
 
             modelBuilder.Entity("BookingWebAPI.Common.Models.Resource", b =>
@@ -280,6 +302,17 @@ namespace BookingWebAPI.DAL.Migrations
                     b.Navigation("Site");
                 });
 
+            modelBuilder.Entity("BookingWebAPI.Common.Models.EmailConfirmationAttempt", b =>
+                {
+                    b.HasOne("BookingWebAPI.Common.Models.BookingWebAPIUser", "User")
+                        .WithMany("EmailConfirmationAttempts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BookingWebAPI.Common.Models.Resource", b =>
                 {
                     b.HasOne("BookingWebAPI.Common.Models.ResourceCategory", "ResourceCategory")
@@ -306,6 +339,11 @@ namespace BookingWebAPI.DAL.Migrations
                         .HasForeignKey("BaseCategoryId");
 
                     b.Navigation("BaseCategory");
+                });
+
+            modelBuilder.Entity("BookingWebAPI.Common.Models.BookingWebAPIUser", b =>
+                {
+                    b.Navigation("EmailConfirmationAttempts");
                 });
 
             modelBuilder.Entity("BookingWebAPI.Common.Models.ResourceCategory", b =>

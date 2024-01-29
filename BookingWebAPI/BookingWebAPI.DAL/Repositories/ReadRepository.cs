@@ -10,10 +10,10 @@ namespace BookingWebAPI.DAL.Repositories
         {
         }
 
-        public async Task<TEntity?> GetAsync(Guid id) => await Set.SingleOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+        public override async Task<TEntity?> GetAsync(Guid id) => await Set.SingleOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
 
-        public async Task<bool> ExistsAsync(Guid id) => await Set.AnyAsync(e => e.Id == id && !e.IsDeleted);
+        public override async Task<bool> ExistsAsync(Guid id) => await Set.AnyAsync(e => e.Id == id && !e.IsDeleted);
 
-        public IQueryable<TEntity> GetAll() => Set.Where(e => !e.IsDeleted).AsQueryable();
+        public override IQueryable<TEntity> GetAll() => Set.Where(e => !e.IsDeleted).AsQueryable();
     }
 }

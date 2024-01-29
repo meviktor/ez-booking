@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using BookingWebAPI.Attributes;
 using BookingWebAPI.Common.Constants;
-using BookingWebAPI.Common.Enums;
+using BookingWebAPI.Common.Models.Config;
 using BookingWebAPI.Common.ViewModels;
 using BookingWebAPI.Services.Interfaces;
-using BookingWebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace BookingWebAPI.Controllers
 {
@@ -17,13 +17,17 @@ namespace BookingWebAPI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ISettingService _settingService;
+        private readonly IEmailConfirmationAttemptService _emailConfirmationService;
         private readonly IUserService _userService;
+        private readonly IOptions<FrontEndConfiguration> _frontEndOptions;
 
-        public UsersController(IMapper mapper, IUserService userService, ISettingService settingService)
+        public UsersController(IMapper mapper, IUserService userService, ISettingService settingService, IEmailConfirmationAttemptService emailConfirmationAttemptService, IOptions<FrontEndConfiguration> frontEndOptions)
         {
             _mapper = mapper;
             _settingService = settingService;
             _userService = userService;
+            _emailConfirmationService = emailConfirmationAttemptService;
+            _frontEndOptions = frontEndOptions;
         }
 
         // TODO: restrict access to this methods only to users with admin privileges!
@@ -35,19 +39,11 @@ namespace BookingWebAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet(nameof(ConfirmUser))]
-        public async Task<BookingWebAPIUserConfirmationViewModel> ConfirmUser([FromQuery] Guid token)
+        [HttpPost(nameof(ConfirmEmailAddress))]
+        public async Task<IActionResult> ConfirmEmailAddress(Guid confirmationAttemptId)
         {
-            var foundUser = _mapper.Map<BookingWebAPIUserViewModel>(await _userService.FindUserForEmailConfirmationAsync(token));
-            var passwordSettings = await _settingService.GetSettingsForCategoryAsync(SettingCategory.PasswordPolicy);
-            return _mapper.Map<BookingWebAPIUserConfirmationViewModel>(foundUser, passwordSettings);
-        }
-
-        [AllowAnonymous]
-        [HttpPost("ConfirmUser")]
-        public async Task<BookingWebAPIUserViewModel> ConfirmUserPost(ConfirmRegistrationViewModel confirmRegistrationViewModel)
-        {
-            return _mapper.Map<BookingWebAPIUserViewModel>(await _userService.ConfirmRegistrationAsync(confirmRegistrationViewModel.UserId, confirmRegistrationViewModel.Token, confirmRegistrationViewModel.Password));
+            var confirmedUserId = await _userService.ConfirmEmailRegistrationAsync(confirmationAttemptId);
+            return Redirect($"{_frontEndOptions.Value.Address}/{string.Format(_frontEndOptions.Value.PathEmailAddressConfirmed, confirmedUserId)}");
         }
 
         [AllowAnonymous]
@@ -55,7 +51,7 @@ namespace BookingWebAPI.Controllers
         public async Task<BookingWebAPIAuthenticationViewModel> Authenticate([FromBody] LoginViewModel loginViewModel)
         {
             var authModel = _mapper.Map<BookingWebAPIAuthenticationViewModel>(await _userService.AuthenticateAsync(loginViewModel.Email, loginViewModel.Password));
-            HttpContext.Response.Cookies.Append(ApplicationConstants.JwtToken, authModel.Token, new CookieOptions { Domain = "ezbooking.com", Secure = true, HttpOnly = true, SameSite = SameSiteMode.None, Expires = DateTime.Now.AddDays(1), Path = "/" });
+            HttpContext.Response.Cookies.Append(ApplicationConstants.JwtToken, authModel.Token, new CookieOptions { Domain = "ezbooking.com", Secure = true, HttpOnly = true, SameSite = SameSiteMode.None, Expires = DateTimeOffset.Now.AddDays(1), Path = "/" });
             return authModel;
         }
 

@@ -41,6 +41,8 @@
         public const string UserRegistrationConfirmationEmailContent = nameof(UserRegistrationConfirmationEmailContent);
         public const string UserRegistrationConfirmationEmailFirstNamePlaceholder = "##userFirstName##";
         public const string UserRegistrationConfirmationEmailLinkPlaceholder = "##confrimUserLink##";
+        public const string UserRegistrationConfirmationEmailTemporaryKeyPlaceholder = "##temporaryKey##";
+
         // TODO: this e-mail content should come from an html file!
         public const string UserRegistrationConfirmationEmailDefaultContent = @"
             <!DOCTYPE html>
@@ -76,7 +78,8 @@
                  <p><b>Hi ##userFirstName##!</b></p>
                  <p>A new ez-booking account has been created for this e-mail address. You have to activate it first in order to get an access. To do this, you have to click on the link below:</p>
                  <p>##confrimUserLink##</p>
-                 <p>After clicking on the above link, you will have to specify a password for your account. Please consider the displayed policy when choosing an appropriate password.</p>
+                 <p>After the activation succeeded, you will be able to log in. Your default password is the following: <b>##temporaryKey##</b><br> For your safety, please change your password after the first successful login.</p>
+                 <p>Please consider the displayed policy when choosing an appropriate password.</p>
                  <p>If you were not expecting to get an access to ez-booking and so this confirmation e-mail, please ignore this message.</p>
                  <p>Best wishes,<br>The ez-booking team</p>
                </div>
@@ -85,6 +88,8 @@
                </div>
               </body>
             </html>";
+        // TOODO: this should come from a configuration file!
+        public const int ActivationLinkExpirationHours = 48;
 
         // Authorization
         public const string JwtToken = nameof(JwtToken);

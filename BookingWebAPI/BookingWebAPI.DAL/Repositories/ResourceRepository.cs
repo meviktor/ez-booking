@@ -24,7 +24,7 @@ namespace BookingWebAPI.DAL.Repositories
             {
                 if (e.Message.Contains(DatabaseConstraintNames.Resource_Name_UQ))
                 {
-                    throw new DALException(ApplicationErrorCodes.SiteStateOrCountryNeeded);
+                    throw new DALException(ApplicationErrorCodes.ResourceNameMustBeUnique);
                 }
                 else throw e;
             }

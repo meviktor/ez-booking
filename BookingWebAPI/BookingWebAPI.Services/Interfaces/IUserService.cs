@@ -8,9 +8,7 @@ namespace BookingWebAPI.Services.Interfaces
 
         Task<BookingWebAPIUser> RegisterAsync(string emailAddress, Guid siteId, string firstName, string lastName);
 
-        Task<BookingWebAPIUser> ConfirmRegistrationAsync(Guid userId, Guid token, string password);
-
-        Task<BookingWebAPIUser> FindUserForEmailConfirmationAsync(Guid token);
+        Task<Guid> ConfirmEmailRegistrationAsync(Guid attemptId);
 
         Task<BookingWebAPIUser?> GetAsync(Guid id);
     }

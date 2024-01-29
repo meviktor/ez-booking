@@ -1,5 +1,7 @@
 ﻿using BookingWebAPI.Common.Constants;
 using Microsoft.IdentityModel.Tokens;
+using RandomDataGenerator.FieldOptions;
+using RandomDataGenerator.Randomizers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -30,6 +32,13 @@ namespace BookingWebAPI.Common.Utils
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public static string RandomString(int length, bool hasUppercaseLetter, bool hasDigits, bool hasSpecialCharacters)
+        {
+            var stringRegex = $"^{(hasUppercaseLetter ? "(?=.*[A-Z])" : string.Empty)}{(hasDigits ? "(?=.*\\d)" : string.Empty)}{(hasSpecialCharacters ? "(?=.*[^\\w\\s\\d])" : string.Empty)}.{{{length}}}$";
+            var randomizerTextRegex = RandomizerFactory.GetRandomizer(new FieldOptionsTextRegex { Pattern = stringRegex });
+            return randomizerTextRegex.Generate();
         }
     }
 }

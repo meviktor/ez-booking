@@ -1,4 +1,5 @@
-﻿using BookingWebAPI.Services.Interfaces;
+﻿using BookingWebAPI.DAL.Interfaces;
+using BookingWebAPI.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookingWebAPI.Services
@@ -14,6 +15,7 @@ namespace BookingWebAPI.Services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEmailConfirmationAttemptService, EmailConfirmationAttemptService>();
             return services;
         }
     }

@@ -18,6 +18,7 @@ namespace BookingWebAPI.Infrastructure.ViewModels.Mapping
                 .ForMember(cvm => cvm.User, o => o.MapFrom(uvm => uvm));
             CreateMap<IEnumerable<BookingWebAPISetting>, BookingWebAPIUserConfirmationViewModel>()
                 .ForMember(cvm => cvm.PasswordSettings, o => o.MapFrom(s => s));
+            CreateMap<EmailConfirmationAttempt, BookingWebAPIUserConfirmationViewModel>();
             CreateMap<BookingWebAPISetting, BookingWebAPISettingViewModel>();
         }
     }

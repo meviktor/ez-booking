@@ -25,8 +25,6 @@ namespace BookingWebAPI.Common.Models
 
         public bool EmailConfirmed { get; set; }
 
-        public Guid? Token { get; set; }
-
         public bool LockoutEnabled { get; set; }
 
         public int AccessFailedCount { get; set; }
@@ -40,5 +38,7 @@ namespace BookingWebAPI.Common.Models
         public Guid SiteId { get; set; }
 
         public virtual Site Site { get; set; } = null!;
+
+        public virtual ICollection<EmailConfirmationAttempt> EmailConfirmationAttempts { get; set; } = new List<EmailConfirmationAttempt>();
     }
 }

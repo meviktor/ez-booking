@@ -50,9 +50,14 @@
         public const string UserLastNameRequired = nameof(UserLastNameRequired);
         public const string UserSiteIdRequired = nameof(UserSiteIdRequired);
         public const string UserPasswordNotValidByPolicy = nameof(UserPasswordNotValidByPolicy);
+        public const string UserEmailAlreadyConfirmed = nameof(UserEmailAlreadyConfirmed);
 
         // BookingWebAPISetting
         public const string SettingWrongSettingType = nameof(SettingWrongSettingType);
         public const string SettingNotKnownSettingType = nameof(SettingNotKnownSettingType);
+
+        //EmailConfirmationAttempt
+        public const string EmailConfirmationInvalidAttempt = nameof(EmailConfirmationInvalidAttempt);
+        public const string EmailConfirmationLinkExpired = nameof(EmailConfirmationLinkExpired);
     }
 }

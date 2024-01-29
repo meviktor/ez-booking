@@ -2,6 +2,6 @@
 {
     public interface IEmailService
     {
-        Task SendUserConfirmationEmailAsync(Guid userId);
+        Task SendUserConfirmationEmailAsync(Guid userId, string tempKey);
     }
 }

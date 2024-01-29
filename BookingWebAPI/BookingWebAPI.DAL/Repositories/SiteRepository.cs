@@ -13,7 +13,7 @@ namespace BookingWebAPI.DAL.Repositories
             : base(dbContext)
         {}
 
-        protected override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[]
+        public override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[]
         {
             new ErrorCodeAssociation(DatabaseConstraintNames.Site_StateCountry_CK, SqlServerErrorCode.ConstraintViolated, ApplicationErrorCodes.SiteStateOrCountryNeeded),
             new ErrorCodeAssociation(DatabaseConstraintNames.Site_Name_UQ, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.SiteNameMustBeUnique),

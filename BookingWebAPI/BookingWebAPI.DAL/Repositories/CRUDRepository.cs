@@ -22,7 +22,7 @@ namespace BookingWebAPI.DAL.Repositories
 
             // If the item exists in the database by its id, GetAsync must retrive the corresponding entity
             entityToDelete!.IsDeleted = true;
-            await _dbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync();
         }
     }
 }

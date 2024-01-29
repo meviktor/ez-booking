@@ -14,7 +14,7 @@ namespace BookingWebAPI.DAL.Repositories
             : base(dbContext)
         {}
 
-        protected override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[]
+        public override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[]
         {
             new ErrorCodeAssociation(DatabaseConstraintNames.User_UserName_UQ, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.UserUserNameMustBeUnique),
             new ErrorCodeAssociation(DatabaseConstraintNames.User_Email_UQ, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.UserEmailMustBeUnique),
@@ -28,10 +28,6 @@ namespace BookingWebAPI.DAL.Repositories
         };
 
         public async Task<BookingWebAPIUser?> FindByUserEmailAsync(string emailAddress) => await Set.SingleOrDefaultAsync(user => !user.IsDeleted && user.Email == emailAddress);
-
-        public async Task<BookingWebAPIUser?> FindByEmailVerificationTokenAsync(Guid token) => await Set.SingleOrDefaultAsync(user => !user.IsDeleted && !user.EmailConfirmed && user.Token == token);
-
-        public async Task<bool> ExistsByEmailVerificationTokenAsync(Guid token) => await Set.AnyAsync(user => !user.IsDeleted && !user.EmailConfirmed && user.Token == token);
 
         public async Task<bool> ExistsByUserNameAsync(string userName) => await Set.AnyAsync(user => !user.IsDeleted && user.UserName == userName);
 

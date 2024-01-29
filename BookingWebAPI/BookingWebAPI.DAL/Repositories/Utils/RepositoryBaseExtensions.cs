@@ -1,22 +1,17 @@
 ﻿using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
-using BookingWebAPI.Common.Models;
-using BookingWebAPI.DAL.Infrastructure;
-using BookingWebAPI.DAL.Interfaces;
+using BookingWebAPI.Common.Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookingWebAPI.DAL.Repositories
+namespace BookingWebAPI.DAL.Repositories.Utils
 {
-    internal class CRURepository<TEntity> : ReadRepository<TEntity>, ICRURepository<TEntity> where TEntity : ModelBase
+    internal static class RepositoryBaseExtensions
     {
-        public CRURepository(BookingWebAPIDbContext dbContext) 
-            : base(dbContext) {}
-
-        // TODO: handling concurrency? Tested?
-        public virtual async Task<TEntity> CreateOrUpdateAsync(TEntity entity)
+        // TODO: Substitute of CRURepository.CreateOrUpdateAsync() !
+        internal static async Task<TEntity> CreateOrUpdateInternalAsync<TEntity>(this RepositoryBase<TEntity> repository, TEntity entity) where TEntity : class, IEntity
         {
-            if (entity.Id != default && !await ExistsAsync(entity.Id))
+            if (entity.Id != default && !await repository.ExistsAsync(entity.Id))
             {
                 throw new DALException(ApplicationErrorCodes.EntityNotFound);
             }
@@ -24,20 +19,20 @@ namespace BookingWebAPI.DAL.Repositories
             if (entity.Id == default)
             {
                 entity.Id = Guid.NewGuid();
-                Set.Add(entity);
+                repository.Set.Add(entity);
             }
-            else 
+            else
             {
-                Set.Update(entity);
+                repository.Set.Update(entity);
             }
 
             try
             {
-                await DbContext.SaveChangesAsync();
+                await repository.DbContext.SaveChangesAsync();
             }
             catch (DbUpdateException e) when (e.InnerException is SqlException sqlEx)
             {
-                var errorCode = ErrorCodeAssosications
+                var errorCode = repository.ErrorCodeAssosications
                     .SingleOrDefault(association => sqlEx.Message.Contains(association.DatabaseObject) && sqlEx.Number == (int)association.ErrorCode)?
                     .ApplicationErrorCode;
                 if (errorCode != default)
@@ -48,8 +43,7 @@ namespace BookingWebAPI.DAL.Repositories
             }
 
             // If SaveChanges operation succeeds there must be an entity in the database having this specific id
-            return (await GetAsync(entity.Id))!;
+            return (await repository.GetAsync(entity.Id))!;
         }
     }
 }
-

@@ -5,6 +5,7 @@ using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
 using BookingWebAPI.Common.Models.Config;
 using BookingWebAPI.Common.Utils;
+using BookingWebAPI.DAL;
 using BookingWebAPI.DAL.Interfaces;
 using BookingWebAPI.Services.Interfaces;
 using Hangfire;
@@ -21,14 +22,19 @@ namespace BookingWebAPI.Services
         private readonly ISettingService _settingService;
         private readonly IBackgroundJobClient _jobClient;
         private readonly ISiteRepository _siteRepository;
+        private readonly IEmailConfirmationAttemptService _emailConfirmationService;
+        // TODO: instead of using the DbContext directly a dedicated interface would be nice for only the specific needed operations, e.g. transaction handling
+        private readonly BookingWebAPIDbContext _dbContext;
 
-        public UserService(IOptions<JwtConfiguration> jwtConfiguration, IUserRepository userRepository, ISettingService settingService, IBackgroundJobClient jobClient, ISiteRepository siteRepository)
+        public UserService(IOptions<JwtConfiguration> jwtConfiguration, IUserRepository userRepository, ISettingService settingService, IBackgroundJobClient jobClient, ISiteRepository siteRepository, IEmailConfirmationAttemptService emailConfirmationService, BookingWebAPIDbContext dbContext)
         {
             _jwtConfiguration = jwtConfiguration;
             _userRepository = userRepository;
             _settingService = settingService;
             _jobClient = jobClient;
             _siteRepository = siteRepository;
+            _emailConfirmationService = emailConfirmationService;
+            _dbContext = dbContext;
         }
 
         public async Task<BookingWebAPIUser?> GetAsync(Guid id) => await _userRepository.GetAsync(id);
@@ -60,51 +66,50 @@ namespace BookingWebAPI.Services
                 throw new BookingWebAPIException(ApplicationErrorCodes.SiteDoesNotExist);
             }
 
-            var registeredUser = await _userRepository.CreateOrUpdateAsync(new BookingWebAPIUser
+            BookingWebAPIUser registeredUser;
+            int minLength = await _settingService.GetValueBySettingNameAsync<int>(ApplicationConstants.PasswordPolicyMinLength);
+            var tempKey = Utilities.RandomString(minLength, true, true, true);
+            using (var registerUserTransaction = _dbContext.Database.BeginTransaction()) 
             {
-                Email = emailAddress,
-                EmailConfirmed = false,
-                Token = Guid.NewGuid(),
-                UserName = await ProposeUserNameAsync(firstName.Trim(), lastName.Trim()),
-                FirstName = firstName.Trim(),
-                LastName = lastName.Trim(),
-                SiteId = siteId
-            });
+                registeredUser = await _userRepository.CreateOrUpdateAsync(new BookingWebAPIUser
+                {
+                    Email = emailAddress,
+                    EmailConfirmed = false,
+                    UserName = await ProposeUserNameAsync(firstName.Trim(), lastName.Trim()),
+                    FirstName = firstName.Trim(),
+                    LastName = lastName.Trim(),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(tempKey),
+                    SiteId = siteId
+                });
+                await _emailConfirmationService.CreateOrUpdateAsync(new EmailConfirmationAttempt
+                {
+                    UserId = registeredUser.Id,
+                    CreatedAt = DateTimeOffset.UtcNow,
+                    Status = EmailConfirmationStatus.Initiated
+                });
+                registerUserTransaction.Commit();
+            }
 
-            _jobClient.Enqueue<IEmailService>(emailService => emailService.SendUserConfirmationEmailAsync(registeredUser.Id));
+            _jobClient.Enqueue<IEmailService>(emailService => emailService.SendUserConfirmationEmailAsync(registeredUser.Id, tempKey));
 
             return registeredUser;
         }
 
-        public async Task<BookingWebAPIUser> FindUserForEmailConfirmationAsync(Guid token)
+        public async Task<Guid> ConfirmEmailRegistrationAsync(Guid attemptId)
         {
-            var foundUser = await _userRepository.FindByEmailVerificationTokenAsync(token);
-            if(foundUser == null)
-            {
-                throw new BookingWebAPIException(ApplicationErrorCodes.UserDoesNotExist);
-            }
-            return foundUser;
-        }
+            var (attempt, userToConfirm) = await GetValidatedEmailConfirmationAttemptAndUserAsync(attemptId);
 
-        public async Task<BookingWebAPIUser> ConfirmRegistrationAsync(Guid userId, Guid token, string password)
-        {
-            if(!await _userRepository.ExistsAsync(userId) || !await _userRepository.ExistsByEmailVerificationTokenAsync(token))
+            userToConfirm.EmailConfirmed = true;
+            attempt.Status = EmailConfirmationStatus.Succeeded;
+
+            BookingWebAPIUser user;
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
-                throw new BookingWebAPIException(ApplicationErrorCodes.UserDoesNotExist);
+                user = await _userRepository.CreateOrUpdateAsync(userToConfirm);
+                await _emailConfirmationService.CreateOrUpdateAsync(attempt);
             }
 
-            if (!await IsPasswordValidByPolicyAsync(password))
-            {
-                throw new BookingWebAPIException(ApplicationErrorCodes.UserPasswordNotValidByPolicy);
-            }
-
-            var confirmedUser = await _userRepository.GetAsync(userId);
-
-            confirmedUser!.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
-            confirmedUser!.EmailConfirmed = true;
-            confirmedUser!.Token = null;
-
-            return await _userRepository.CreateOrUpdateAsync(confirmedUser);
+            return user.Id;
         }
 
         public async Task<(BookingWebAPIUser, string)> AuthenticateAsync(string emailAddress, string password)
@@ -181,6 +186,36 @@ namespace BookingWebAPI.Services
         {
             var usersWithSameName = await _userRepository.GetAll().CountAsync(user => user.FirstName == firstName && user.LastName == lastName);
             return $"{firstName.ToLower()}.{lastName.ToLower()}{(usersWithSameName > 0 ? usersWithSameName : string.Empty)}";
+        }
+
+        private async Task<(EmailConfirmationAttempt, BookingWebAPIUser)> GetValidatedEmailConfirmationAttemptAndUserAsync(Guid confirmationAttemptId)
+        {
+            var confirmationAttempt = await _emailConfirmationService.GetAsync(confirmationAttemptId);
+            // Only those attempts are accepted whose email has been already sent out to the user (so NOT 'Initiated'), are in-progress (so, NOT yet 'Succeeded' or 'Failed') and hasn't been expired.
+            if (confirmationAttempt == null || confirmationAttempt.Status != EmailConfirmationStatus.InProgress)
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.EmailConfirmationInvalidAttempt);
+            }
+            if (confirmationAttempt.CreatedAt.AddHours(ApplicationConstants.ActivationLinkExpirationHours) < DateTimeOffset.UtcNow)
+            {
+                confirmationAttempt.Status = EmailConfirmationStatus.Failed;
+                confirmationAttempt.FailReason = EmailConfirmationFailReason.Expired;
+                await _emailConfirmationService.CreateOrUpdateAsync(confirmationAttempt);
+
+                throw new BookingWebAPIException(ApplicationErrorCodes.EmailConfirmationLinkExpired);
+            }
+
+            var foundUser = await _userRepository.GetAsync(confirmationAttempt.UserId);
+            if (foundUser == null)
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.UserDoesNotExist);
+            }
+            if (foundUser.EmailConfirmed)
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.UserEmailAlreadyConfirmed);
+            }
+
+            return (confirmationAttempt, foundUser);
         }
 
         private string GenerateJwtToken(Guid userId, string userEmail, string userName)

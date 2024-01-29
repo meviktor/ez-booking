@@ -17,6 +17,7 @@ namespace BookingWebAPI.DAL
         public DbSet<Site> Sites { get; set; } = null!;
         public DbSet<BookingWebAPIUser> Users { get; set; } = null!;
         public DbSet<BookingWebAPISetting> Settings { get; set; } = null!;
+        public DbSet<EmailConfirmationAttempt> EmailConfirmationAttempts { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,6 +1,8 @@
-﻿namespace BookingWebAPI.Common.Models
+﻿using BookingWebAPI.Common.Interfaces;
+
+namespace BookingWebAPI.Common.Models
 {
-    public class ModelBase
+    public class ModelBase : IEntity
     {
         public Guid Id { get; set; }
 

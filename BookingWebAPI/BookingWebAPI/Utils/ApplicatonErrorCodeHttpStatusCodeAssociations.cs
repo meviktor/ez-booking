@@ -51,15 +51,18 @@ namespace BookingWebAPI.Utils
                 ApplicationErrorCodes.UserFirstNameRequired,
                 ApplicationErrorCodes.UserLastNameRequired,
                 ApplicationErrorCodes.UserPasswordNotValidByPolicy,
-                ApplicationErrorCodes.LoginPasswordRequired
+                ApplicationErrorCodes.LoginPasswordRequired,
+                ApplicationErrorCodes.UserEmailAlreadyConfirmed
             }, HttpStatusCode.BadRequest),
             (new string[]{
-                ApplicationErrorCodes.UserLockedOut
+                ApplicationErrorCodes.UserLockedOut,
+                ApplicationErrorCodes.EmailConfirmationLinkExpired,
+                ApplicationErrorCodes.EmailConfirmationInvalidAttempt
             }, HttpStatusCode.Forbidden),
             (new string[]{
                 ApplicationErrorCodes.LoginInvalidUserNameOrPassword,
                 ApplicationErrorCodes.CannotAuthenticate,
-                ApplicationErrorCodes.LoginEmailNotConfirmed,
+                ApplicationErrorCodes.LoginEmailNotConfirmed
             }, HttpStatusCode.Unauthorized)
         };
 
