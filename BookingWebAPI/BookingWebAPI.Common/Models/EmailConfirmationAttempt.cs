@@ -15,7 +15,6 @@ namespace BookingWebAPI.Common.Models
 
         public EmailConfirmationFailReason? FailReason { get; set; }
 
-        // The clustered index of the table is set on this column.
         public Guid UserId { get; set; }
 
         public virtual BookingWebAPIUser User { get; set; } = null!;
