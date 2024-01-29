@@ -11,18 +11,18 @@ namespace BookingWebAPI.Services
     internal class EmailService : IEmailService
     {
         private readonly IOptions<EmailConfiguration> _emailConfig;
-        private readonly IOptions<FrontEndConfiguration> _frontEndConfig;
+        private readonly IOptions<BackEndConfiguration> _backEndConfig;
         private readonly ISettingService _settingService;
         private readonly IUserService _userService;
         private readonly IEmailConfirmationAttemptService _emailConfirmationAttemptService;
 
-        public EmailService(IOptions<EmailConfiguration> emailConfig, ISettingService settingService, IUserService userService, IEmailConfirmationAttemptService emailConfirmationAttemptService, IOptions<FrontEndConfiguration> frontEndConfig) 
+        public EmailService(IOptions<EmailConfiguration> emailConfig, ISettingService settingService, IUserService userService, IEmailConfirmationAttemptService emailConfirmationAttemptService, IOptions<BackEndConfiguration> backEndConfig)
         {
             _emailConfig = emailConfig;
             _settingService = settingService;
             _userService = userService;
             _emailConfirmationAttemptService = emailConfirmationAttemptService;
-            _frontEndConfig = frontEndConfig;
+            _backEndConfig = backEndConfig;
         }
 
         public async Task SendUserConfirmationEmailAsync(Guid userId, string tempKey)
@@ -43,7 +43,8 @@ namespace BookingWebAPI.Services
             {
                 var emailSubject = await _settingService.GetValueBySettingNameAsync<string>(ApplicationConstants.UserRegistrationConfirmationEmailSubject);
                 var emailContent = (await _settingService.GetValueBySettingNameAsync<string>(ApplicationConstants.UserRegistrationConfirmationEmailContent))
-                    .Replace(ApplicationConstants.UserRegistrationConfirmationEmailLinkPlaceholder, $"{_frontEndConfig.Value.Address}/{string.Format(_frontEndConfig.Value.PathConfimEmailAddress, emailConfirmationAttempt.Id)}")
+                    .Replace(ApplicationConstants.UserRegistrationConfirmationEmailLinkPlaceholder, $"{_backEndConfig.Value.Address}/{_backEndConfig.Value.PathConfimEmailAddress}")
+                    .Replace(ApplicationConstants.UserRegistrationConfirmationAttemptIdPlaceHolder, $"{emailConfirmationAttempt.Id}")
                     .Replace(ApplicationConstants.UserRegistrationConfirmationEmailFirstNamePlaceholder, newUser.FirstName)
                     .Replace(ApplicationConstants.UserRegistrationConfirmationEmailTemporaryKeyPlaceholder, tempKey);
 

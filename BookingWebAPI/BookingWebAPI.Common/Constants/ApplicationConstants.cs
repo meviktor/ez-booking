@@ -42,6 +42,7 @@
         public const string UserRegistrationConfirmationEmailFirstNamePlaceholder = "##userFirstName##";
         public const string UserRegistrationConfirmationEmailLinkPlaceholder = "##confrimUserLink##";
         public const string UserRegistrationConfirmationEmailTemporaryKeyPlaceholder = "##temporaryKey##";
+        public const string UserRegistrationConfirmationAttemptIdPlaceHolder = "##confirmationAttemptId##";
 
         // TODO: this e-mail content should come from an html file!
         public const string UserRegistrationConfirmationEmailDefaultContent = @"
@@ -77,7 +78,12 @@
                <div>
                  <p><b>Hi ##userFirstName##!</b></p>
                  <p>A new ez-booking account has been created for this e-mail address. You have to activate it first in order to get an access. To do this, you have to click on the link below:</p>
-                 <p>##confrimUserLink##</p>
+                 <form method=""post"" action=""##confrimUserLink##"" class=""inline"">
+                   <input type=""hidden"" name=""confirmationAttemptId"" value=""##confirmationAttemptId##"">
+                   <button type=""submit"" name=""submit_param"" value=""submit_value"" class=""link-button"">
+                     Confirm your e-mail address
+                   </button>
+                 </form>
                  <p>After the activation succeeded, you will be able to log in. Your default password is the following: <b>##temporaryKey##</b><br> For your safety, please change your password after the first successful login.</p>
                  <p>Please consider the displayed policy when choosing an appropriate password.</p>
                  <p>If you were not expecting to get an access to ez-booking and so this confirmation e-mail, please ignore this message.</p>

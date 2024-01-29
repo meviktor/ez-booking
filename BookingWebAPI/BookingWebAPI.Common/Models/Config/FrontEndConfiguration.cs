@@ -4,8 +4,6 @@
     {
         public string Address { get; set; } = null!;
 
-        public string PathConfimEmailAddress { get; set; } = null!;
-
-        public string PathEmailAddressConfirmed { get; set; } = null!;
+        public string PathEmailAddressConfirmationResult { get; set; } = null!;
     }
 }

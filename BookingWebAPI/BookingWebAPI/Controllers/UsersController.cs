@@ -43,7 +43,7 @@ namespace BookingWebAPI.Controllers
         public async Task<IActionResult> ConfirmEmailAddress(Guid confirmationAttemptId)
         {
             var confirmedUserId = await _userService.ConfirmEmailRegistrationAsync(confirmationAttemptId);
-            return Redirect($"{_frontEndOptions.Value.Address}/{string.Format(_frontEndOptions.Value.PathEmailAddressConfirmed, confirmedUserId)}");
+            return Redirect($"{_frontEndOptions.Value.Address}/{string.Format(_frontEndOptions.Value.PathEmailAddressConfirmationResult, confirmedUserId)}");
         }
 
         [AllowAnonymous]
