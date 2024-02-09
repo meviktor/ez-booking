@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using BookingWebAPI.Attributes;
 using BookingWebAPI.Common.Constants;
+using BookingWebAPI.Common.ErrorCodes;
+using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models.Config;
 using BookingWebAPI.Common.ViewModels;
+using BookingWebAPI.Infrastructure.ViewModels;
 using BookingWebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,11 +42,24 @@ namespace BookingWebAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost(nameof(ConfirmEmailAddress))]
+        [HttpGet]
+        [Route($"{nameof(ConfirmEmailAddress)}/{{confirmationAttemptId}}")]
         public async Task<IActionResult> ConfirmEmailAddress(Guid confirmationAttemptId)
         {
-            var confirmedUserId = await _userService.ConfirmEmailRegistrationAsync(confirmationAttemptId);
-            return Redirect($"{_frontEndOptions.Value.Address}/{string.Format(_frontEndOptions.Value.PathEmailAddressConfirmationResult, confirmedUserId)}");
+            await _userService.ConfirmEmailRegistrationAsync(confirmationAttemptId);
+            return Redirect($"{_frontEndOptions.Value.Address}/{string.Format(_frontEndOptions.Value.PathEmailAddressConfirmationResult, confirmationAttemptId)}");
+        }
+
+        [AllowAnonymous]
+        [HttpGet(nameof(ConfirmEmailAddressResult))]
+        public async Task<EmailConfirmationResultViewModel> ConfirmEmailAddressResult(Guid confirmationAttemptId)
+        {
+            var attempt = await _emailConfirmationService.GetAsync(confirmationAttemptId);
+            if(attempt == null)
+            {
+                throw new BookingWebAPIException(ApplicationErrorCodes.EmailConfirmationInvalidAttempt);
+            }
+            return _mapper.Map<EmailConfirmationResultViewModel>(attempt);
         }
 
         [AllowAnonymous]

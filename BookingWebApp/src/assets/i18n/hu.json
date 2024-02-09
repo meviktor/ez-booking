@@ -17,6 +17,12 @@
         "NAME": "Név",
         "PASSWORD": "Jelszó"
     },
+    "EMAILADDRESSCONFIRMATIONCOMPONENT": {
+        "SUCCESS": "Sikeresen aktivalta e-mail címét!",
+        "FAIL": "Az e-mail cím aktiválása sikertelen.",
+        "GOTOLOGIN": "Kérjük, kattintson a lenti gombra, hogy bejelentkezzen fiókjába.",
+        "CONTACTSUPPORT": "Kérjük vagye fel a kapcsolatot a támogatással, hogy új aktiváló küldjünk e-mail címére."
+    },
     "CONFIRMUSERCOMPONENT": {
         "ERRORS":{
             "CONFIRMPASSWORDREQUIRED": "A jelszó megerősítése kötelező.",

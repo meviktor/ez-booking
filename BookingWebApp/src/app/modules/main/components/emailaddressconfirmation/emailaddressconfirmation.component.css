@@ -1,0 +1,25 @@
+#confirmEmailContent {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../../../../../assets/img/confirmuseraccount/close-up-mobile-phones.jpg');
+}
+
+#confirmEmailWindow {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    margin: 1rem;
+    padding: 2rem;
+}
+
+#confirmUserForm {
+    width: 50%;
+    min-width: 250px;
+    margin: auto;
+}
+
+.resultIcon {
+    color: #bcdbe6;
+}

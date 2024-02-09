@@ -107,6 +107,8 @@ namespace BookingWebAPI.Services
             {
                 user = await _userRepository.CreateOrUpdateAsync(userToConfirm);
                 await _emailConfirmationService.CreateOrUpdateAsync(attempt);
+
+                transaction.Commit();
             }
 
             return user.Id;

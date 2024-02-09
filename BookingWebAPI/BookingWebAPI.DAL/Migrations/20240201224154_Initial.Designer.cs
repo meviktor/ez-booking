@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingWebAPI.DAL.Migrations
 {
     [DbContext(typeof(BookingWebAPIDbContext))]
-    [Migration("20240129202903_Initial")]
+    [Migration("20240201224154_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -44,8 +44,8 @@ namespace BookingWebAPI.DAL.Migrations
 
                     b.Property<string>("RawValue")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasMaxLength(2500)
+                        .HasColumnType("nvarchar(2500)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()

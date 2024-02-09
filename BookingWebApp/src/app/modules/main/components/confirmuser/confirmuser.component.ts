@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors,
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, of, take } from 'rxjs';
-import { BookingWebAPISettingViewModel, BookingWebAPIUserConfirmationViewModel, BookingWebAPIUserViewModel, UsersService } from 'src/app/modules/data-access/';
+import { BookingWebAPIUserViewModel, UsersService } from 'src/app/modules/data-access/';
 import { BookingWebAPIErrorResponse } from 'src/shared/models/bookingWebAPIErrorResponse';
 
 
@@ -20,7 +20,7 @@ export class ConfirmUserComponent {
   // TODO: implement 48 hours expiration!
   public userTokenExpired: boolean = false;
   public userToConfirm?: BookingWebAPIUserViewModel;
-  public passwordPolicy?: { [key: string]: BookingWebAPISettingViewModel };
+  public passwordPolicy?: { [key: string]: any };
 
   private userToken: string | null;
 
@@ -30,7 +30,7 @@ export class ConfirmUserComponent {
     this.userToken = this.route.snapshot.paramMap.get('userToken');
     if(this.userToken !== null){
       // TODO: take token from URL
-      this.userService.apiUsersConfirmUserGet(this.userToken).pipe(take(1)).subscribe(this.fillConfirmUserData);
+      //this.userService.apiUsersConfirmUserGet(this.userToken).pipe(take(1)).subscribe(this.fillConfirmUserData);
     }
     // TODO: else redirect to HTTP 404 page
     else console.error("No user token was provided in the URL.");
@@ -43,7 +43,7 @@ export class ConfirmUserComponent {
     confirmPassword: new FormControl<string | null>(null, [Validators.required, this.confirmPasswordMatch]), // TODO: custom validator function: match with passowrd
   });
 
-  private fillConfirmUserData: (confirmUserData: BookingWebAPIUserConfirmationViewModel) => void = (confirmUserData) => {
+  private fillConfirmUserData: (confirmUserData: any) => void = (confirmUserData) => {
     this.userToConfirm = confirmUserData.user;
     this.confirmUserForm.setValue({
       id: confirmUserData.user?.id,
@@ -52,8 +52,8 @@ export class ConfirmUserComponent {
       confirmPassword: null 
     });
     
-    this.passwordPolicy = {};
-    confirmUserData.passwordSettings?.forEach(ps => this.passwordPolicy![ps.name!] = ps);
+    //this.passwordPolicy = {};
+    //confirmUserData.passwordSettings?.forEach(ps => this.passwordPolicy![ps.name!] = ps);
   };
 
   private confirmPasswordMatch: (confirmPasswordControl: AbstractControl) => ValidationErrors | null = (confirmPasswordControl) => {
@@ -69,25 +69,25 @@ export class ConfirmUserComponent {
     this.confirmUserForm.setErrors(null);
 
     if(this.confirmUserForm.valid){
-      this.userService.apiUsersConfirmUserPost({ userId: this.confirmUserForm.controls.id.value!, token: this.userToken!, password: this.confirmUserForm.controls.password.value! })
-      .pipe(
-        take(1),
-        catchError((error: HttpErrorResponse) => of<BookingWebAPIErrorResponse>(error.error))
-      )
-      .subscribe(confirmResponse => {
-          let confirmedUser = confirmResponse as BookingWebAPIUserViewModel; 
-          if(confirmedUser.emailConfirmed === true) {
-            this.confirmUserFinished = true;
-          }
-          else if (confirmedUser.emailConfirmed === false) {
-            this.confirmUserForm.setErrors({errorAfterSubmit: 'CONFIRMUSERCOMPONENT.ERRORS.CONFIRMUSERFAILURE'});
-          }
-          else {
-            // setting the error from the backend on root level
-            this.confirmUserForm.setErrors({errorAfterSubmit: (confirmResponse as BookingWebAPIErrorResponse).errorCode});
-          }
-        }
-      );
+      // this.userService.apiUsersConfirmUserPost({ userId: this.confirmUserForm.controls.id.value!, token: this.userToken!, password: this.confirmUserForm.controls.password.value! })
+      // .pipe(
+      //   take(1),
+      //   catchError((error: HttpErrorResponse) => of<BookingWebAPIErrorResponse>(error.error))
+      // )
+      // .subscribe(confirmResponse => {
+      //     let confirmedUser = confirmResponse as BookingWebAPIUserViewModel; 
+      //     if(confirmedUser.emailConfirmed === true) {
+      //       this.confirmUserFinished = true;
+      //     }
+      //     else if (confirmedUser.emailConfirmed === false) {
+      //       this.confirmUserForm.setErrors({errorAfterSubmit: 'CONFIRMUSERCOMPONENT.ERRORS.CONFIRMUSERFAILURE'});
+      //     }
+      //     else {
+      //       // setting the error from the backend on root level
+      //       this.confirmUserForm.setErrors({errorAfterSubmit: (confirmResponse as BookingWebAPIErrorResponse).errorCode});
+      //     }
+      //   }
+      // );
     }
   };
 }

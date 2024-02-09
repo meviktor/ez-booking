@@ -21,11 +21,9 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { BookingWebAPIAuthenticationViewModel } from '../model/bookingWebAPIAuthenticationViewModel';
 // @ts-ignore
-import { BookingWebAPIUserConfirmationViewModel } from '../model/bookingWebAPIUserConfirmationViewModel';
-// @ts-ignore
 import { BookingWebAPIUserViewModel } from '../model/bookingWebAPIUserViewModel';
 // @ts-ignore
-import { ConfirmRegistrationViewModel } from '../model/confirmRegistrationViewModel';
+import { EmailConfirmationResultViewModel } from '../model/emailConfirmationResultViewModel';
 // @ts-ignore
 import { LoginViewModel } from '../model/loginViewModel';
 // @ts-ignore
@@ -170,19 +168,16 @@ export class UsersService {
     }
 
     /**
-     * @param token 
+     * @param confirmationAttemptId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiUsersConfirmUserGet(token?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<BookingWebAPIUserConfirmationViewModel>;
-    public apiUsersConfirmUserGet(token?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<BookingWebAPIUserConfirmationViewModel>>;
-    public apiUsersConfirmUserGet(token?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<BookingWebAPIUserConfirmationViewModel>>;
-    public apiUsersConfirmUserGet(token?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (token !== undefined && token !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>token, 'token');
+    public apiUsersConfirmEmailAddressConfirmationAttemptIdGet(confirmationAttemptId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
+    public apiUsersConfirmEmailAddressConfirmationAttemptIdGet(confirmationAttemptId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiUsersConfirmEmailAddressConfirmationAttemptIdGet(confirmationAttemptId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiUsersConfirmEmailAddressConfirmationAttemptIdGet(confirmationAttemptId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+        if (confirmationAttemptId === null || confirmationAttemptId === undefined) {
+            throw new Error('Required parameter confirmationAttemptId was null or undefined when calling apiUsersConfirmEmailAddressConfirmationAttemptIdGet.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -191,9 +186,6 @@ export class UsersService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'text/plain',
-                'application/json',
-                'text/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -218,11 +210,10 @@ export class UsersService {
             }
         }
 
-        let localVarPath = `/api/Users/ConfirmUser`;
-        return this.httpClient.request<BookingWebAPIUserConfirmationViewModel>('get', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/Users/ConfirmEmailAddress/${this.configuration.encodeParam({name: "confirmationAttemptId", value: confirmationAttemptId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: "uuid"})}`;
+        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -233,14 +224,20 @@ export class UsersService {
     }
 
     /**
-     * @param confirmRegistrationViewModel 
+     * @param confirmationAttemptId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiUsersConfirmUserPost(confirmRegistrationViewModel?: ConfirmRegistrationViewModel, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<BookingWebAPIUserViewModel>;
-    public apiUsersConfirmUserPost(confirmRegistrationViewModel?: ConfirmRegistrationViewModel, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<BookingWebAPIUserViewModel>>;
-    public apiUsersConfirmUserPost(confirmRegistrationViewModel?: ConfirmRegistrationViewModel, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<BookingWebAPIUserViewModel>>;
-    public apiUsersConfirmUserPost(confirmRegistrationViewModel?: ConfirmRegistrationViewModel, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiUsersConfirmEmailAddressResultGet(confirmationAttemptId?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<EmailConfirmationResultViewModel>;
+    public apiUsersConfirmEmailAddressResultGet(confirmationAttemptId?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<EmailConfirmationResultViewModel>>;
+    public apiUsersConfirmEmailAddressResultGet(confirmationAttemptId?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<EmailConfirmationResultViewModel>>;
+    public apiUsersConfirmEmailAddressResultGet(confirmationAttemptId?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (confirmationAttemptId !== undefined && confirmationAttemptId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>confirmationAttemptId, 'confirmationAttemptId');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -264,17 +261,6 @@ export class UsersService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json',
-            'text/json',
-            'application/*+json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -286,11 +272,11 @@ export class UsersService {
             }
         }
 
-        let localVarPath = `/api/Users/ConfirmUser`;
-        return this.httpClient.request<BookingWebAPIUserViewModel>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/Users/ConfirmEmailAddressResult`;
+        return this.httpClient.request<EmailConfirmationResultViewModel>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: confirmRegistrationViewModel,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

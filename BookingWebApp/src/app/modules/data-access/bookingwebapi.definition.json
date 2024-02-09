@@ -93,14 +93,38 @@
         }
       }
     },
-    "/api/Users/ConfirmUser": {
+    "/api/Users/ConfirmEmailAddress/{confirmationAttemptId}": {
       "get": {
         "tags": [
           "Users"
         ],
         "parameters": [
           {
-            "name": "token",
+            "name": "confirmationAttemptId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Users/ConfirmEmailAddressResult": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "confirmationAttemptId",
             "in": "query",
             "style": "form",
             "schema": {
@@ -115,63 +139,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/BookingWebAPIUserConfirmationViewModel"
+                  "$ref": "#/components/schemas/EmailConfirmationResultViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BookingWebAPIUserConfirmationViewModel"
+                  "$ref": "#/components/schemas/EmailConfirmationResultViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BookingWebAPIUserConfirmationViewModel"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConfirmRegistrationViewModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConfirmRegistrationViewModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConfirmRegistrationViewModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BookingWebAPIUserViewModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BookingWebAPIUserViewModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BookingWebAPIUserViewModel"
+                  "$ref": "#/components/schemas/EmailConfirmationResultViewModel"
                 }
               }
             }
@@ -284,42 +262,6 @@
         },
         "additionalProperties": false
       },
-      "BookingWebAPISettingViewModel": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "$ref": "#/components/schemas/SettingCategory"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "valueType": {
-            "$ref": "#/components/schemas/SettingValueType"
-          },
-          "rawValue": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "BookingWebAPIUserConfirmationViewModel": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "$ref": "#/components/schemas/BookingWebAPIUserViewModel"
-          },
-          "passwordSettings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BookingWebAPISettingViewModel"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "BookingWebAPIUserViewModel": {
         "type": "object",
         "properties": {
@@ -349,23 +291,11 @@
         },
         "additionalProperties": false
       },
-      "ConfirmRegistrationViewModel": {
-        "required": [
-          "password"
-        ],
+      "EmailConfirmationResultViewModel": {
         "type": "object",
         "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "token": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "password": {
-            "minLength": 1,
-            "type": "string"
+          "success": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -428,36 +358,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "SettingCategory": {
-        "enum": [
-          1,
-          2,
-          3
-        ],
-        "x-enum-varnames": [
-          "PasswordPolicy",
-          "Email",
-          "Login"
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "SettingValueType": {
-        "enum": [
-          1,
-          2,
-          3,
-          4
-        ],
-        "x-enum-varnames": [
-          "Integer",
-          "Float",
-          "String",
-          "Boolean"
-        ],
-        "type": "integer",
-        "format": "int32"
       }
     }
   }

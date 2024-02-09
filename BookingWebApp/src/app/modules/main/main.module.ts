@@ -14,6 +14,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CookieHttpInterceptor } from './interceptors/cookieinterceptor';
 import { LoginSlideShowComponent } from './components/login/loginslideshow.component';
 import { ConfirmUserComponent } from './components/confirmuser/confirmuser.component';
+import { EmailAddressConfirmationComponent } from './components/emailaddressconfirmation/emailaddressconfirmation.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../assets/i18n/', '.json');
@@ -25,7 +27,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoginComponent,
     DashboardComponent,
     LoginSlideShowComponent,
-    ConfirmUserComponent
+    ConfirmUserComponent,
+    EmailAddressConfirmationComponent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +38,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FontAwesomeModule,
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,

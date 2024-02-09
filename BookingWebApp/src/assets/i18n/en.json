@@ -17,6 +17,12 @@
         "NAME": "Name",
         "PASSWORD": "Password"
     },
+    "EMAILADDRESSCONFIRMATIONCOMPONENT": {
+        "SUCCESS": "Your e-mail address has been successfully activated!",
+        "FAIL": "Your e-mail address could not be activated.",
+        "GOTOLOGIN": "Please click the button below to log in to your account.",
+        "CONTACTSUPPORT": "Please contact support to get a new e-mail activation link."
+    },
     "CONFIRMUSERCOMPONENT": {
         "ERRORS":{
             "CONFIRMPASSWORDREQUIRED": "Password confirmation is required.",

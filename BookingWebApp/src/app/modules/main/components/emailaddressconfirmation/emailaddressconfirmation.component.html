@@ -1,0 +1,12 @@
+<div id="confirmEmailContent">
+    <div id="confirmEmailWindow">
+        <div class="center brand-logo">{{ 'CORE.BRANDNAME' | translate }}</div>
+        <div class="center pb-3">
+            <fa-icon *ngIf="confirmationSucceeded" [icon]="faCircleCheck" size="5x" class="resultIcon"></fa-icon>
+            <fa-icon *ngIf="!confirmationSucceeded" [icon]="faCircleXmark" size="5x" class="resultIcon"></fa-icon>
+        </div>
+        <div class="h2 center pb-3">{{ (confirmationSucceeded ? 'EMAILADDRESSCONFIRMATIONCOMPONENT.SUCCESS' : 'EMAILADDRESSCONFIRMATIONCOMPONENT.FAIL') | translate }}</div>
+        <div class="center pb-3">{{ (confirmationSucceeded ? 'EMAILADDRESSCONFIRMATIONCOMPONENT.GOTOLOGIN' : 'EMAILADDRESSCONFIRMATIONCOMPONENT.CONTACTSUPPORT') | translate }}</div>
+        <div *ngIf="confirmationSucceeded" class="pb-2 center"><a routerLink="/login"><button class="btn btn-primary">{{ 'CORE.GOTOLOGIN' | translate }}</button></a></div>
+    </div>
+</div>

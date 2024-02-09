@@ -43,8 +43,8 @@ namespace BookingWebAPI.Services
             {
                 var emailSubject = await _settingService.GetValueBySettingNameAsync<string>(ApplicationConstants.UserRegistrationConfirmationEmailSubject);
                 var emailContent = (await _settingService.GetValueBySettingNameAsync<string>(ApplicationConstants.UserRegistrationConfirmationEmailContent))
-                    .Replace(ApplicationConstants.UserRegistrationConfirmationEmailLinkPlaceholder, $"{_backEndConfig.Value.Address}/{_backEndConfig.Value.PathConfimEmailAddress}")
-                    .Replace(ApplicationConstants.UserRegistrationConfirmationAttemptIdPlaceHolder, $"{emailConfirmationAttempt.Id}")
+                    .Replace(ApplicationConstants.UserRegistrationConfirmationEmailLinkPlaceholder, $"{_backEndConfig.Value.Address}/{_backEndConfig.Value.PathConfimEmailAddress}/{emailConfirmationAttempt.Id}")
+                    //.Replace(ApplicationConstants.UserRegistrationConfirmationAttemptIdPlaceHolder, $"{emailConfirmationAttempt.Id}")
                     .Replace(ApplicationConstants.UserRegistrationConfirmationEmailFirstNamePlaceholder, newUser.FirstName)
                     .Replace(ApplicationConstants.UserRegistrationConfirmationEmailTemporaryKeyPlaceholder, tempKey);
 
@@ -62,6 +62,9 @@ namespace BookingWebAPI.Services
                 await emailClient.AuthenticateAsync(_emailConfig.Value.SmtpUsername, _emailConfig.Value.SmtpPassword);
                 await emailClient.SendAsync(confirmationEmail);
                 await emailClient.DisconnectAsync(true);
+
+                emailConfirmationAttempt.Status = EmailConfirmationStatus.InProgress;
+                await _emailConfirmationAttemptService.CreateOrUpdateAsync(emailConfirmationAttempt);
             }
             catch
             {
