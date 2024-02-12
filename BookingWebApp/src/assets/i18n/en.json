@@ -1,5 +1,6 @@
 {
     "CORE": {
+        "BACKTOMAIN": "Back to main page",
         "BRANDNAME": "ez-booking",
         "CONFIRMPASSWORD": "Confirm password",
         "CONFIRMUSERACCOUNT": "Confirm account",
@@ -16,6 +17,12 @@
         },
         "NAME": "Name",
         "PASSWORD": "Password"
+    },
+    "APPLICATIONERROR": {
+        "UNKNOWNERROR": "Unkown error happened",
+        "EMAILCONFIRMATIONINVALIDATTEMPT": "E-mail confirmation attempt is invalid",
+        "EMAILCONFIRMATIONLINKEXPIRED": "E-mail confirmation link has expired",
+        "ENTITYNOTFOUND": "The searched entity could not be found"
     },
     "EMAILADDRESSCONFIRMATIONCOMPONENT": {
         "SUCCESS": "Your e-mail address has been successfully activated!",

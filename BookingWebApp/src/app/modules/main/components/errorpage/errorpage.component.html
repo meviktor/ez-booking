@@ -1,0 +1,21 @@
+<div id="errorPageContent">
+    <div id="errorInfoWidow">
+        <div class="center brand-logo">{{ 'CORE.BRANDNAME' | translate }}</div>
+        <div *ngIf="errorObject">
+            <div class="center pb-3">
+                <fa-icon *ngIf="errorObject.statusCode < 500" [icon]="faExclamation" size="4x" class="resultIcon"></fa-icon>
+                <fa-icon *ngIf="errorObject.statusCode >= 500" [icon]="faBug" size="4x" class="resultIcon"></fa-icon>
+            </div>
+            <div class="h2 center pb-3">{{ errorObject.statusCode }}</div>
+            <div class="center pb-3">{{ 'APPLICATIONERROR.' + errorObject.errorCode | uppercase | translate }}</div>
+        </div>
+        <div *ngIf="!errorObject">
+            <div class="center pb-3">
+                <fa-icon [icon]="faBug" size="4x" class="resultIcon"></fa-icon>
+            </div>
+            <div class="h2 center pb-3">500</div>
+            <div class="center pb-3">{{ 'APPLICATIONERROR.UNKNOWNERROR' | translate }}</div>
+        </div>
+        <div class="pb-2 center"><a routerLink="/"><button class="btn btn-primary">{{ 'CORE.BACKTOMAIN' | translate }}</button></a></div>
+    </div>
+</div>

@@ -16,6 +16,7 @@ import { LoginSlideShowComponent } from './components/login/loginslideshow.compo
 import { ConfirmUserComponent } from './components/confirmuser/confirmuser.component';
 import { EmailAddressConfirmationComponent } from './components/emailaddressconfirmation/emailaddressconfirmation.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ErrorPageComponent } from './components/errorpage/errorpage.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../assets/i18n/', '.json');
@@ -28,7 +29,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     DashboardComponent,
     LoginSlideShowComponent,
     ConfirmUserComponent,
-    EmailAddressConfirmationComponent
+    EmailAddressConfirmationComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,

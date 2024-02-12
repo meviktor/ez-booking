@@ -1,0 +1,19 @@
+#errorPageContent {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #083e9c;
+}
+
+#errorInfoWidow {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    margin: 1rem;
+    padding: 2rem;
+}
+
+.resultIcon {
+    color: #083e9c;
+}

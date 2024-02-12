@@ -14,10 +14,11 @@ namespace BookingWebAPI.Middleware
         {
             var occurredException = context.Features.Get<IExceptionHandlerPathFeature>()?.Error;
             var errorCode = (occurredException as BookingWebAPIException)?.ErrorCode ?? ApplicationErrorCodes.UnknownError;
-
-            context.Response.StatusCode = (int)ApplicatonErrorCodeHttpStatusCodeAssociations.GetHttpStatusCode(errorCode);
+            var statusCode = ApplicatonErrorCodeHttpStatusCodeAssociations.GetHttpStatusCode(errorCode);
+                
+            context.Response.StatusCode = (int)statusCode;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(new BookingWebAPIErrorResponse(errorCode));
+            await context.Response.WriteAsJsonAsync(new BookingWebAPIErrorResponse(statusCode, errorCode));
         }
     }
 }

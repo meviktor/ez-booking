@@ -1,5 +1,6 @@
 {
     "CORE": {
+        "BACKTOMAIN": "Vissza a főoldalra",
         "BRANDNAME": "ez-booking",
         "CONFIRMPASSWORD": "Jelszó megerősítése",
         "CONFIRMUSERACCOUNT": "Fiók megerősítése",
@@ -16,6 +17,12 @@
         },
         "NAME": "Név",
         "PASSWORD": "Jelszó"
+    },
+    "APPLICATIONERROR": {
+        "UNKNOWNERROR": "Ismeretlen hiba történt",
+        "EMAILCONFIRMATIONINVALIDATTEMPT": "Érvénytelen e-mail cím megerősítési kísérlet",
+        "EMAILCONFIRMATIONLINKEXPIRED": "Az e-mail cím megerősítő link lejárt",
+        "ENTITYNOTFOUND": "A keresett elem nem található"
     },
     "EMAILADDRESSCONFIRMATIONCOMPONENT": {
         "SUCCESS": "Sikeresen aktivalta e-mail címét!",
