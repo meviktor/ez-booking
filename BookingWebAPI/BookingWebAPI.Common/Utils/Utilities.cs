@@ -35,6 +35,11 @@ namespace BookingWebAPI.Common.Utils
 
         public static string RandomString(int length, bool hasUppercaseLetter, bool hasDigits, bool hasSpecialCharacters)
         {
+            if(length <= 0)
+            {
+                throw new ArgumentException("Not valid string length.", nameof(length));
+            }
+
             var positions = GenerateUniqueRandoms(3, 0, length);
             int? digitPos = hasDigits ? positions.ElementAt(0) : null;
             int? uppercasePos = hasUppercaseLetter ? positions.ElementAt(1) : null;
