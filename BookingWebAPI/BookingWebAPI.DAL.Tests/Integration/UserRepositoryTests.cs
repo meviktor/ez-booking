@@ -94,51 +94,6 @@ namespace BookingWebAPI.DAL.Tests.Integration
             else userFound.Should().BeNull();
         }
 
-        [Ignore("Implementation has to be fixed!")]
-        [TestCase(true, true, false)]
-        [TestCase(true, false, true)]
-        [TestCase(false, true, false)]
-        [TestCase(false, false, false)]
-        public async Task FindByEmailVerificationTokenAsync_Test(bool userActive, bool emailConfirmed, bool successExpected)
-        {
-            //// prepare
-            //var token = Guid.NewGuid();
-            //await _repository.CreateOrUpdateAsync(CreateUser(email: Constants.NotRegisteredUserEmail, emailConfirmed: emailConfirmed, token: token, deleted: !userActive));
-
-            //// action
-            //var userFound = await _repository.FindByEmailVerificationTokenAsync(token);
-
-            //// assert
-            //if (successExpected)
-            //{
-            //    userFound.Should().NotBeNull();
-            //    userFound!.Token.Should().Be(token);
-            //}
-            //else userFound.Should().BeNull();
-        }
-
-        [Ignore("Implementation has to be fixed!")]
-        [TestCase(true, true, false)]
-        [TestCase(true, false, true)]
-        [TestCase(false, true, false)]
-        [TestCase(false, false, false)]
-        public async Task ExistsByEmailVerificationTokenAsync_Test(bool userActive, bool emailConfirmed, bool successExpected)
-        {
-            //// prepare
-            //var token = Guid.NewGuid();
-            //await _repository.CreateOrUpdateAsync(CreateUser(email: Constants.NotRegisteredUserEmail, emailConfirmed: emailConfirmed, token: token, deleted: !userActive));
-
-            //// action
-            //var userFound = await _repository.ExistsByEmailVerificationTokenAsync(token);
-
-            //// assert
-            //if (successExpected)
-            //{
-            //    userFound.Should().BeTrue();
-            //}
-            //else userFound.Should().BeFalse();
-        }
-
         [TestCase(Constants.ActiveUserEmail, true)]
         [TestCase(Constants.NotRegisteredUserEmail, false)]
         [TestCase("", false)]

@@ -15,12 +15,12 @@ using NUnit.Framework;
 
 namespace BookingWebAPI.Services.Tests.Integration
 {
-    [Ignore("Implementation has to be fixed! (Uncomment _userservice in constructor.)")]
     internal class UserServiceTests : IntegrationTestBase
     {
         private IUserService _userService;
         private IUserRepository _userRepository;
         private ISettingService _settingService;
+        private IEmailConfirmationAttemptService _emailConfirmationAttemptService;
 
         [SetUp]
         public override void SetUp()
@@ -31,7 +31,8 @@ namespace BookingWebAPI.Services.Tests.Integration
             var hangfireMock = new Mock<IBackgroundJobClient>();
             _userRepository = new UserRepository(_dbContext);
             _settingService = new SettingService(new SettingRepository(_dbContext));
-            //_userService = new UserService(jwtOptions, _userRepository, _settingService, hangfireMock.Object, new SiteRepository(_dbContext));
+            _emailConfirmationAttemptService = new EmailConfirmationAttemptService(new EmailConfirmationAttemptRepository(_dbContext));
+            _userService = new UserService(jwtOptions, _userRepository, _settingService, hangfireMock.Object, new SiteRepository(_dbContext), _emailConfirmationAttemptService, _dbContext);
         }
 
         [Test]

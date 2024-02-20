@@ -2,6 +2,8 @@
 using BookingWebAPI.Common.Models.Config;
 using BookingWebAPI.DAL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.EntityFrameworkCore;
@@ -11,15 +13,24 @@ namespace BookingWebAPI.Testing.Common
 {
     public class UnitTestBase
     {
-        private Mock<IOptions<JwtConfiguration>> _jwtMock = new Mock<IOptions<JwtConfiguration>>();
-        private Mock<BookingWebAPIDbContext> _dbContextMock = new Mock<BookingWebAPIDbContext>(new DbContextOptions<BookingWebAPIDbContext>());
+        private Mock<IOptions<JwtConfiguration>> _jwtMock;
+        private Mock<BookingWebAPIDbContext> _dbContextMock;
+        private Mock<DatabaseFacade> _databaseMock;
+        private Mock<IDbContextTransaction> _transactionMock;
 
         public IOptions<JwtConfiguration> JwtConfigMock => _jwtMock.Object;
         public BookingWebAPIDbContext DbContextMock => _dbContextMock.Object;
 
         public UnitTestBase()
         {
-            _jwtMock.Setup(jwtConfig => jwtConfig.Value).Returns(new JwtConfiguration { Secret = "YA1o0Bo1FEH4Hedo", ValidInSeconds = 3600});
+            _jwtMock = new Mock<IOptions<JwtConfiguration>>();
+            _dbContextMock = new Mock<BookingWebAPIDbContext>(new DbContextOptions<BookingWebAPIDbContext>());
+            _databaseMock = new Mock<DatabaseFacade>(_dbContextMock.Object);
+            _transactionMock = new Mock<IDbContextTransaction>();
+
+            _jwtMock.Setup(jwtConfig => jwtConfig.Value).Returns(new JwtConfiguration { Secret = "YA1o0Bo1FEH4HedoYA1o0Bo1FEH4Hedo", ValidInSeconds = 3600});
+            _databaseMock.Setup(db => db.BeginTransaction()).Returns(_transactionMock.Object);
+            _dbContextMock.Setup(ctx => ctx.Database).Returns(_databaseMock.Object);
             SetupDbContextMockDbSets();
         }
 
