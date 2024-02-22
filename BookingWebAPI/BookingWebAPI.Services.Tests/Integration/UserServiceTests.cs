@@ -26,7 +26,7 @@ namespace BookingWebAPI.Services.Tests.Integration
         public override void SetUp()
         {
             base.SetUp();
-            var jwtOptions = Options.Create(new JwtConfiguration { Secret = "secret" });
+            var jwtOptions = Options.Create(new JwtConfiguration { Secret = "thisIsASecretForTheUserServiceTestsClass", ValidInSeconds = 3600 });
             // We do not intend testing Hangfire dependent functionality (yet)
             var hangfireMock = new Mock<IBackgroundJobClient>();
             _userRepository = new UserRepository(_dbContext);
@@ -60,6 +60,31 @@ namespace BookingWebAPI.Services.Tests.Integration
             await action.Should().ThrowExactlyAsync<BookingWebAPIException>().Where(e => e.ErrorCode == ApplicationErrorCodes.LoginInvalidUserNameOrPassword);
             // number of max login attempts reached... user has been locked out
             await action.Should().ThrowExactlyAsync<BookingWebAPIException>().Where(e => e.ErrorCode == ApplicationErrorCodes.UserLockedOut);
+        }
+
+        [Test]
+        public async Task Authenticate_Test_AccessFailedCount_SetToZero()
+        {
+            // prepare
+            var lockoutTreshold = await _settingService.GetValueBySettingNameAsync<int>(ApplicationConstants.LoginMaxAttempts);
+            var emailToAuthenticate = "testing@mymail.com";
+            var passwordToAuthenticate = "authPwd!";
+            await _userRepository.CreateOrUpdateAsync(new BookingWebAPIUser
+            {
+                Email = emailToAuthenticate,
+                UserName = "Test",
+                FirstName = "Test",
+                LastName = "Test",
+                EmailConfirmed = true,
+                LockoutEnabled = false,
+                AccessFailedCount = lockoutTreshold - 1,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(passwordToAuthenticate),
+                SiteId = Guid.Parse(TestDatabaseSeeder.Constants.ActiveSiteId)
+            });
+
+            // action & assert
+            var (userAfterLogin, _) = await _userService.AuthenticateAsync(emailToAuthenticate, passwordToAuthenticate);
+            userAfterLogin.AccessFailedCount.Should().Be(0);
         }
     }
 }
