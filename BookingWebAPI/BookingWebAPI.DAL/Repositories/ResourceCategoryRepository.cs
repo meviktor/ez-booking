@@ -1,9 +1,9 @@
 ﻿using BookingWebAPI.Common.Constants;
 using BookingWebAPI.Common.ErrorCodes;
-using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
+using BookingWebAPI.DAL.Enums;
+using BookingWebAPI.DAL.Infrastructure;
 using BookingWebAPI.DAL.Interfaces;
-using Microsoft.Data.SqlClient;
 
 namespace BookingWebAPI.DAL.Repositories
 {
@@ -13,21 +13,12 @@ namespace BookingWebAPI.DAL.Repositories
             : base(dbContext)
         {}
 
-        // TODO: revise this!
-        public override async Task<ResourceCategory> CreateOrUpdateAsync(ResourceCategory resourceCategory)
+        public override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[]
         {
-            try
-            {
-                return await base.CreateOrUpdateAsync(resourceCategory);
-            }
-            catch (SqlException e)
-            {
-                if (e.Message.Contains(DatabaseConstraintNames.ResourceCategory_Name_UQ))
-                {
-                    throw new DALException(ApplicationErrorCodes.SiteStateOrCountryNeeded);
-                }
-                else throw e;
-            }
-        }
+            new ErrorCodeAssociation(DatabaseConstraintNames.ResourceCategory_Name_UQ, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.ResourceCategoryNameMustBeUnique),
+            new ErrorCodeAssociation(nameof(Resource.Name), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.ResourceCategoryNameRequired),
+            new ErrorCodeAssociation(nameof(Resource.Name), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.ResourceCategoryNameTooLong),
+            new ErrorCodeAssociation(nameof(Resource.Description), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.ResourceCategoryDescriptionTooLong)
+        };
     }
 }

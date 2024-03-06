@@ -29,9 +29,15 @@
 
         // Resource
         public const string ResourceNameMustBeUnique = nameof(ResourceNameMustBeUnique);
+        public const string ResourceNameRequired = nameof(ResourceNameRequired);
+        public const string ResourceNameTooLong = nameof(ResourceNameTooLong);
+        public const string ResourceDescriptionTooLong = nameof(ResourceDescriptionTooLong);
 
         // ResourceCategory
         public const string ResourceCategoryNameMustBeUnique = nameof(ResourceCategoryNameMustBeUnique);
+        public const string ResourceCategoryNameRequired = nameof(ResourceCategoryNameRequired);
+        public const string ResourceCategoryNameTooLong = nameof(ResourceCategoryNameTooLong);
+        public const string ResourceCategoryDescriptionTooLong = nameof(ResourceCategoryDescriptionTooLong);
 
         // BookingWebAPIUser
         public const string UserDoesNotExist = nameof(UserDoesNotExist);

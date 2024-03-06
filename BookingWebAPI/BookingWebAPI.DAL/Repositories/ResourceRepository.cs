@@ -1,9 +1,9 @@
 ﻿using BookingWebAPI.Common.Constants;
 using BookingWebAPI.Common.ErrorCodes;
-using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
+using BookingWebAPI.DAL.Enums;
+using BookingWebAPI.DAL.Infrastructure;
 using BookingWebAPI.DAL.Interfaces;
-using Microsoft.Data.SqlClient;
 
 namespace BookingWebAPI.DAL.Repositories
 {
@@ -13,21 +13,12 @@ namespace BookingWebAPI.DAL.Repositories
             : base(dbContext)
         {}
 
-        // TODO: revise this!
-        public override async Task<Resource> CreateOrUpdateAsync(Resource resource)
+        public override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[]
         {
-            try
-            {
-                return await base.CreateOrUpdateAsync(resource);
-            }
-            catch (SqlException e)
-            {
-                if (e.Message.Contains(DatabaseConstraintNames.Resource_Name_UQ))
-                {
-                    throw new DALException(ApplicationErrorCodes.ResourceNameMustBeUnique);
-                }
-                else throw e;
-            }
-        }
+            new ErrorCodeAssociation(DatabaseConstraintNames.Resource_Name_UQ, SqlServerErrorCode.CannotInsertDuplicate, ApplicationErrorCodes.ResourceNameMustBeUnique),
+            new ErrorCodeAssociation(nameof(Resource.Name), SqlServerErrorCode.CannotInsertNull, ApplicationErrorCodes.ResourceNameRequired),
+            new ErrorCodeAssociation(nameof(Resource.Name), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.ResourceNameTooLong),
+            new ErrorCodeAssociation(nameof(Resource.Description), SqlServerErrorCode.StringOrBinaryTruncated, ApplicationErrorCodes.ResourceDescriptionTooLong)
+        };
     }
 }

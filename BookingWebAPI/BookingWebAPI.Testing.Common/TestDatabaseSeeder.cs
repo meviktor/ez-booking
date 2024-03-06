@@ -21,6 +21,18 @@ namespace BookingWebAPI.Testing.Common
             new BookingWebAPIUser { Id = new Guid(Constants.DeletedUserId), Email = Constants.DeletedUserEmail, UserName = Constants.DeletedUserUserName, PasswordHash = DummyPasswordHash, EmailConfirmed = true, IsDeleted = true, SiteId = Guid.Parse(Constants.DeletedSiteId), FirstName = "John", LastName = "Doe" }
         };
 
+        public static readonly IEnumerable<ResourceCategory> ResourceCategories = new ResourceCategory[]
+        {
+            new ResourceCategory { Id = new Guid(Constants.ActiveResourceCategoryId), Name = "ActiveResourceCategory", Description = "Description of ActiveResourceCategory", BaseCategoryId = null },
+            new ResourceCategory { Id = new Guid(Constants.DeletedResourceCategoryId), Name = "DeletedResourceCategory", Description = "Description of DeletedResourceCategory", BaseCategoryId = null }
+        };
+
+        public static readonly IEnumerable<Resource> Resources = new Resource[]
+        {
+            new Resource { Id = new Guid(Constants.ActiveResourceId), Name = "ActiveResource", Description = "Description of ActiveResource", ResourceCategoryId = Guid.Parse(Constants.ActiveResourceCategoryId), SiteId = Guid.Parse(Constants.ActiveSiteId) },
+            new Resource { Id = new Guid(Constants.DeletedResourceId), Name = "DeletedResource", Description = "Description of DeletedResource", ResourceCategoryId = Guid.Parse(Constants.DeletedResourceCategoryId), SiteId = Guid.Parse(Constants.ActiveSiteId) }
+        };
+
         public static readonly IEnumerable<BookingWebAPISetting> Settings = new BookingWebAPISetting[]
         {
             new BookingWebAPISetting { Id = new Guid(Constants.ActiveSettingId), Name = Constants.ActiveSettingName, ValueType = SettingValueType.String, RawValue = "rawValueActive", Category = Constants.SettingCategoryTesting, IsDeleted = false },
@@ -36,6 +48,8 @@ namespace BookingWebAPI.Testing.Common
             dbContext.Sites.AddRange(Sites);
             dbContext.Users.AddRange(Users);
             dbContext.Settings.AddRange(Settings);
+            dbContext.ResourceCategories.AddRange(ResourceCategories);
+            dbContext.Resources.AddRange(Resources);
             dbContext.SaveChanges();
         }
 
@@ -66,6 +80,14 @@ namespace BookingWebAPI.Testing.Common
             public const string ActiveSettingName = "testSettingActive";
             public const string DeletedSettingName = "testSettingDeleted";
             public const SettingCategory SettingCategoryTesting = SettingCategory.Email;
+
+            // ResourceCategory
+            public const string ActiveResourceCategoryId = "17aacb0f-7ad0-490f-a078-378b1473c488";
+            public const string DeletedResourceCategoryId = "71fb1352-d201-438e-a056-b1c97506bb27";
+
+            // Resource
+            public const string ActiveResourceId = "adec92d8-7c18-4318-b616-bcfac11cff86";
+            public const string DeletedResourceId = "97fb0dd0-e1eb-48fd-8d48-327ba294d7eb";
         }
     }
 }
