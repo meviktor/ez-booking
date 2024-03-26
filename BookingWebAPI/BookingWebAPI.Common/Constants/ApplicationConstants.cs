@@ -97,5 +97,10 @@
         // Authorization
         public const string JwtToken = nameof(JwtToken);
         public const string Authorization = nameof(Authorization);
+
+        // Utilities
+        public const string RegexNumbers = "[0-9]";
+        public const string RegexUppercase = "[A-Z]";
+        public const string RegexSpecialChars = @"[""~`!#\$%\^&\*\+,\-\./:;<>\?@\[\]_\{\}\|\(\)\|\\]";
     }
 }

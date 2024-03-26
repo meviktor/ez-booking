@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookingWebAPI.Common\BookingWebAPI.Common.csproj" />
+    <ProjectReference Include="..\BookingWebAPI.Testing.Common\BookingWebAPI.Testing.Common.csproj" />
   </ItemGroup>
 
 </Project>

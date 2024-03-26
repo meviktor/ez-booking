@@ -65,5 +65,6 @@
         //EmailConfirmationAttempt
         public const string EmailConfirmationInvalidAttempt = nameof(EmailConfirmationInvalidAttempt);
         public const string EmailConfirmationLinkExpired = nameof(EmailConfirmationLinkExpired);
+        public const string EmailConfirmationUserIdRequired = nameof(EmailConfirmationUserIdRequired);
     }
 }

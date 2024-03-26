@@ -40,7 +40,9 @@ namespace BookingWebAPI.Testing.Common
             new BookingWebAPISetting { Id = Guid.NewGuid(), Name = $"{Constants.DeletedSettingName}_{Constants.SettingCategoryTesting}", ValueType = SettingValueType.String, RawValue = "rawValueDeleted", Category = Constants.SettingCategoryTesting, IsDeleted = true },
             // Deleted setting from different category as the active one
             new BookingWebAPISetting { Id = Guid.NewGuid(), Name = $"{Constants.DeletedSettingName}_{SettingCategory.PasswordPolicy}", ValueType = SettingValueType.String, RawValue = "rawValueDeleted", Category = SettingCategory.PasswordPolicy, IsDeleted = true },
-            new BookingWebAPISetting { Id = Guid.NewGuid(), Name = ApplicationConstants.LoginMaxAttempts, ValueType = SettingValueType.Integer, RawValue = "5", Category = SettingCategory.Login }
+            new BookingWebAPISetting { Id = Guid.NewGuid(), Name = ApplicationConstants.LoginMaxAttempts, ValueType = SettingValueType.Integer, RawValue = "5", Category = SettingCategory.Login },
+            new BookingWebAPISetting { Id = Guid.NewGuid(), Name = ApplicationConstants.PasswordPolicyMinLength, ValueType = SettingValueType.Integer, RawValue = "8", Category = SettingCategory.PasswordPolicy }
+
         };
 
         internal static void SeedTestData(this BookingWebAPIDbContext dbContext)

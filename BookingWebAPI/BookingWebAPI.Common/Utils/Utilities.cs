@@ -40,16 +40,24 @@ namespace BookingWebAPI.Common.Utils
                 throw new ArgumentException("Not valid string length.", nameof(length));
             }
 
+            // This check is necessary because the upper case letters, the digits and the special characters are coming from totally different character sets.
+            // So as a minimum, your string has to be as long, as many "types" of characters should it contain.
+            int minimumLength = new bool[] { hasUppercaseLetter, hasDigits, hasSpecialCharacters }.Count(x => x == true);
+            if(length < minimumLength)
+            {
+                throw new ArgumentException("The desired string length is not enough to satisfy all given conditions.", nameof(length));
+            }
+
             var positions = GenerateUniqueRandoms(3, 0, length);
             int? digitPos = hasDigits ? positions.ElementAt(0) : null;
             int? uppercasePos = hasUppercaseLetter ? positions.ElementAt(1) : null;
             int? specialPos = hasSpecialCharacters ? positions.ElementAt(2) : null;
 
-            string? digit = digitPos.HasValue ? new Xeger("[0-9]").Generate() : null;
-            string? uppercase = uppercasePos.HasValue ? new Xeger("[A-Z]").Generate() : null;
-            string? special = specialPos.HasValue ? new Xeger(@"[""~`!#\$%\^&\*\+,\-\./:;<>\?@\[\]_\{\}\|\(\)\|\\]").Generate() : null;
+            string? digit = digitPos.HasValue ? new Xeger(ApplicationConstants.RegexNumbers).Generate() : null;
+            string? uppercase = uppercasePos.HasValue ? new Xeger(ApplicationConstants.RegexUppercase).Generate() : null;
+            string? special = specialPos.HasValue ? new Xeger(ApplicationConstants.RegexSpecialChars).Generate() : null;
 
-            string regex = $@"({(hasDigits ? "[0-9]|" : string.Empty)}{(hasUppercaseLetter ? "[A-Z]|" : string.Empty)}{(hasSpecialCharacters ? @"[""~`!#\$%\^&\*\+,\-\./:;<>\?@\[\]_\{\}\|\(\)\|\\]|" : string.Empty)}[a-z]){{{length}}}";
+            string regex = $@"({(hasDigits ? $"{ApplicationConstants.RegexNumbers}|" : string.Empty)}{(hasUppercaseLetter ? $"{ApplicationConstants.RegexUppercase}|" : string.Empty)}{(hasSpecialCharacters ? $"{ApplicationConstants.RegexSpecialChars}|" : string.Empty)}[a-z]){{{length}}}";
             string randomString = new Xeger(regex).Generate();
 
             char[] letters = randomString.ToArray();
@@ -73,7 +81,7 @@ namespace BookingWebAPI.Common.Utils
             if (valuesToExclude != null && valuesToExclude.Any())
             {
                 var valuesToExcludeInRange = valuesToExclude.Where(v => v >= lowerLimit && v < upperLimit);
-                int numberOfPossibleValues = upperLimit - lowerLimit - qunatity;
+                int numberOfPossibleValues = upperLimit - lowerLimit - valuesToExcludeInRange.Count();
                 if (numberOfPossibleValues < qunatity)
                 {
                     throw new ArgumentException($"Cannot generate {qunatity} random values, too many values have been exluded.");
