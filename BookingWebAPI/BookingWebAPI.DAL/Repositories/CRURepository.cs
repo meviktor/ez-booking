@@ -1,10 +1,6 @@
-﻿using BookingWebAPI.Common.ErrorCodes;
-using BookingWebAPI.Common.Exceptions;
-using BookingWebAPI.Common.Models;
-using BookingWebAPI.DAL.Infrastructure;
+﻿using BookingWebAPI.Common.Models;
 using BookingWebAPI.DAL.Interfaces;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+using BookingWebAPI.DAL.Repositories.Utils;
 
 namespace BookingWebAPI.DAL.Repositories
 {
@@ -13,43 +9,6 @@ namespace BookingWebAPI.DAL.Repositories
         public CRURepository(BookingWebAPIDbContext dbContext) 
             : base(dbContext) {}
 
-        // TODO: handling concurrency? Tested?
-        public virtual async Task<TEntity> CreateOrUpdateAsync(TEntity entity)
-        {
-            if (entity.Id != default && !await ExistsAsync(entity.Id))
-            {
-                throw new DALException(ApplicationErrorCodes.EntityNotFound);
-            }
-
-            if (entity.Id == default)
-            {
-                entity.Id = Guid.NewGuid();
-                Set.Add(entity);
-            }
-            else 
-            {
-                Set.Update(entity);
-            }
-
-            try
-            {
-                await DbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException e) when (e.InnerException is SqlException sqlEx)
-            {
-                var errorCode = ErrorCodeAssosications
-                    .SingleOrDefault(association => sqlEx.Message.Contains(association.DatabaseObject) && sqlEx.Number == (int)association.ErrorCode)?
-                    .ApplicationErrorCode;
-                if (errorCode != default)
-                {
-                    throw new DALException(errorCode);
-                }
-                else throw e;
-            }
-
-            // If SaveChanges operation succeeds there must be an entity in the database having this specific id
-            return (await GetAsync(entity.Id))!;
-        }
+        public virtual Task<TEntity> CreateOrUpdateAsync(TEntity entity) => this.CreateOrUpdateInternalAsync(entity);
     }
 }
-
