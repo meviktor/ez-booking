@@ -23,13 +23,10 @@ builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection(
 builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("JwtConfig"));
 builder.Services.Configure<FrontEndConfiguration>(builder.Configuration.GetSection("FrontEndConfig"));
 builder.Services.Configure<BackEndConfiguration>(builder.Configuration.GetSection("BackEndConfig"));
-// TODO: this should come from some configuration file!
-builder.Services.AddCors(options => options.AddDefaultPolicy(builder => {
-    builder.WithOrigins("http://app.ezbooking.com:4200", "https://api.ezbooking.com:8000")
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    .AllowCredentials();
-}));
+
+var corsPolicy = new CorsPolicyConfiguration();
+builder.Configuration.GetSection("CorsPolicy").Bind(corsPolicy);
+builder.Services.AddCors(options => options.AddDefaultPolicy(b => b.WithOrigins(corsPolicy.AllowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials() ));
 
 var app = builder.Build();
 
