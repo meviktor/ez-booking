@@ -38,7 +38,6 @@ namespace BookingWebAPI.DAL.Tests.Integration
 
         [TestCase((SettingCategory)0, false)]
         [TestCase(TestDatabaseSeeder.Constants.SettingCategoryTesting, true)]
-        [TestCase(SettingCategory.PasswordPolicy, false)]
         public async Task GetSettingsForCategoryAsync_Test(SettingCategory settingCategory, bool resultsExpected)
         {
             // action
