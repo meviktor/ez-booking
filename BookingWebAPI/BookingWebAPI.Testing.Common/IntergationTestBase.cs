@@ -1,5 +1,7 @@
 using BookingWebAPI.DAL;
+using BookingWebAPI.DAL.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace BookingWebAPI.Testing.Common
@@ -13,6 +15,7 @@ namespace BookingWebAPI.Testing.Common
         private static string? ConnectionString => _testConfiguration["TestDbConnection"];
 
         protected BookingWebAPIDbContext _dbContext;
+        protected IDbContextTransactionManager _transactionManager;
 
         static IntegrationTestBase()
         {
@@ -43,13 +46,15 @@ namespace BookingWebAPI.Testing.Common
         public virtual void SetUp()
         {
             _dbContext = GetDatabaseContext();
-            _dbContext.Database.BeginTransaction();
+            _transactionManager = new BookingWebAPITransactionManager(_dbContext);
+
+            _transactionManager.BeginTransaction();
         }
 
         [TearDown]
         public virtual void TearDown()
         {
-            // TODO: check if transaction will be rolled back as well
+            _transactionManager.RollbackTransaction();
             _dbContext.Dispose();
         }
     }

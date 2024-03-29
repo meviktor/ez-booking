@@ -1,7 +1,9 @@
 ﻿using BookingWebAPI.Common.Constants;
+using BookingWebAPI.DAL.Infrastructure;
 using BookingWebAPI.DAL.Interfaces;
 using BookingWebAPI.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookingWebAPI.DAL
@@ -20,6 +22,7 @@ namespace BookingWebAPI.DAL
             services.AddScoped<ISiteRepository, SiteRepository>();
             services.AddScoped<ISettingRepository, SettingRepository>();
             services.AddScoped<IEmailConfirmationAttemptRepository, EmailConfirmationAttemptRepository>();
+            services.AddScoped<IDbContextTransactionManager, BookingWebAPITransactionManager>();
 
             if (connectionString is null)
             {

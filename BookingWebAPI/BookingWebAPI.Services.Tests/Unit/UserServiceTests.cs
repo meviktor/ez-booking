@@ -1,5 +1,4 @@
 ﻿using BookingWebAPI.Common.Constants;
-using BookingWebAPI.Common.Enums;
 using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
@@ -124,7 +123,7 @@ namespace BookingWebAPI.Services.Tests.Unit
                 (IQueryable<BookingWebAPIUser>)Enumerable.Empty<BookingWebAPIUser>().AsEnumerableMockWithAsyncQueryableSetup().Object
             );
             _siteRepositoryMock.Setup(sr => sr.ExistsAsync(It.IsAny<Guid>())).ReturnsAsync(siteExists);
-            _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object, _emailConfirmationAttemptService.Object, DbContextMock);
+            _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object, _emailConfirmationAttemptService.Object, TransactionManagerMock);
 
             var siteId = Guid.NewGuid();
 
@@ -156,7 +155,7 @@ namespace BookingWebAPI.Services.Tests.Unit
                 (IQueryable<BookingWebAPIUser>)Enumerable.Empty<BookingWebAPIUser>().AsEnumerableMockWithAsyncQueryableSetup().Object
             );
             _siteRepositoryMock.Setup(sr => sr.ExistsAsync(It.IsAny<Guid>())).ReturnsAsync(true);
-            _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object, _emailConfirmationAttemptService.Object, DbContextMock);
+            _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object, _emailConfirmationAttemptService.Object, TransactionManagerMock);
 
             // action & assert
             var action = async () => await _userService.RegisterAsync("testuser@testmailprovider.com", Guid.NewGuid(), "Test", "User");
@@ -215,7 +214,7 @@ namespace BookingWebAPI.Services.Tests.Unit
                     null
             };
             _userRepositoryMock.Setup(ur => ur.FindByUserEmailAsync(emailAddress)).ReturnsAsync(emailRegistered ? mockUser : null);
-            _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object, _emailConfirmationAttemptService.Object, DbContextMock);
+            _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object, _emailConfirmationAttemptService.Object, TransactionManagerMock);
 
             // action & assert
             var action = async () => await _userService.AuthenticateAsync(emailAddress, password);
@@ -252,7 +251,7 @@ namespace BookingWebAPI.Services.Tests.Unit
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword($"{password}ruinPassword")
             };
             _userRepositoryMock.Setup(ur => ur.FindByUserEmailAsync(emailAddress)).ReturnsAsync(mockUser);
-            _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object, _emailConfirmationAttemptService.Object, DbContextMock);
+            _userService = new UserService(JwtConfigMock, _userRepositoryMock.Object, _settingServiceMock.Object, _jobClientMock.Object, _siteRepositoryMock.Object, _emailConfirmationAttemptService.Object, TransactionManagerMock);
 
             // action
             string? errorCode = null;

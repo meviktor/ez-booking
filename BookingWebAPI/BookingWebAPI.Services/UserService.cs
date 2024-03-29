@@ -5,11 +5,11 @@ using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
 using BookingWebAPI.Common.Models.Config;
 using BookingWebAPI.Common.Utils;
-using BookingWebAPI.DAL;
 using BookingWebAPI.DAL.Interfaces;
 using BookingWebAPI.Services.Interfaces;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 using System.Text.RegularExpressions;
 
@@ -23,10 +23,9 @@ namespace BookingWebAPI.Services
         private readonly IBackgroundJobClient _jobClient;
         private readonly ISiteRepository _siteRepository;
         private readonly IEmailConfirmationAttemptService _emailConfirmationService;
-        // TODO: instead of using the DbContext directly a dedicated interface would be nice for only the specific needed operations, e.g. transaction handling
-        private readonly BookingWebAPIDbContext _dbContext;
+        private readonly IDbContextTransactionManager _transactionManager;
 
-        public UserService(IOptions<JwtConfiguration> jwtConfiguration, IUserRepository userRepository, ISettingService settingService, IBackgroundJobClient jobClient, ISiteRepository siteRepository, IEmailConfirmationAttemptService emailConfirmationService, BookingWebAPIDbContext dbContext)
+        public UserService(IOptions<JwtConfiguration> jwtConfiguration, IUserRepository userRepository, ISettingService settingService, IBackgroundJobClient jobClient, ISiteRepository siteRepository, IEmailConfirmationAttemptService emailConfirmationService, IDbContextTransactionManager transactionProvider)
         {
             _jwtConfiguration = jwtConfiguration;
             _userRepository = userRepository;
@@ -34,7 +33,7 @@ namespace BookingWebAPI.Services
             _jobClient = jobClient;
             _siteRepository = siteRepository;
             _emailConfirmationService = emailConfirmationService;
-            _dbContext = dbContext;
+            _transactionManager = transactionProvider;
         }
 
         public async Task<BookingWebAPIUser?> GetAsync(Guid id) => await _userRepository.GetAsync(id);
@@ -69,7 +68,7 @@ namespace BookingWebAPI.Services
             BookingWebAPIUser registeredUser;
             int minLength = await _settingService.GetValueBySettingNameAsync<int>(ApplicationConstants.PasswordPolicyMinLength);
             var tempKey = Utilities.RandomString(minLength, true, true, true);
-            using (var registerUserTransaction = _dbContext.Database.BeginTransaction()) 
+            using (var registerUserTransaction = _transactionManager.BeginTransaction()) 
             {
                 registeredUser = await _userRepository.CreateOrUpdateAsync(new BookingWebAPIUser
                 {
@@ -103,7 +102,7 @@ namespace BookingWebAPI.Services
             attempt.Status = EmailConfirmationStatus.Succeeded;
 
             BookingWebAPIUser user;
-            using (var transaction = _dbContext.Database.BeginTransaction())
+            using (var transaction = _transactionManager.BeginTransaction())
             {
                 user = await _userRepository.CreateOrUpdateAsync(userToConfirm);
                 await _emailConfirmationService.CreateOrUpdateAsync(attempt);

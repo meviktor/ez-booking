@@ -1,4 +1,5 @@
 ﻿using BookingWebAPI.Common.Constants;
+using BookingWebAPI.Common.Enums;
 using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
@@ -9,6 +10,7 @@ using BookingWebAPI.Services.Interfaces;
 using BookingWebAPI.Testing.Common;
 using FluentAssertions;
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
@@ -20,6 +22,7 @@ namespace BookingWebAPI.Services.Tests.Integration
         private IUserService _userService;
         private IUserRepository _userRepository;
         private ISettingService _settingService;
+        private IEmailConfirmationAttemptRepository _emailConfirmationAttemptRepository;
         private IEmailConfirmationAttemptService _emailConfirmationAttemptService;
 
         [SetUp]
@@ -31,8 +34,9 @@ namespace BookingWebAPI.Services.Tests.Integration
             var hangfireMock = new Mock<IBackgroundJobClient>();
             _userRepository = new UserRepository(_dbContext);
             _settingService = new SettingService(new SettingRepository(_dbContext));
-            _emailConfirmationAttemptService = new EmailConfirmationAttemptService(new EmailConfirmationAttemptRepository(_dbContext));
-            _userService = new UserService(jwtOptions, _userRepository, _settingService, hangfireMock.Object, new SiteRepository(_dbContext), _emailConfirmationAttemptService, _dbContext);
+            _emailConfirmationAttemptRepository = new EmailConfirmationAttemptRepository(_dbContext);
+            _emailConfirmationAttemptService = new EmailConfirmationAttemptService(_emailConfirmationAttemptRepository);
+            _userService = new UserService(jwtOptions, _userRepository, _settingService, hangfireMock.Object, new SiteRepository(_dbContext), _emailConfirmationAttemptService, _transactionManager);
         }
 
         [Test]
@@ -85,6 +89,29 @@ namespace BookingWebAPI.Services.Tests.Integration
             // action & assert
             var (userAfterLogin, _) = await _userService.AuthenticateAsync(emailToAuthenticate, passwordToAuthenticate);
             userAfterLogin.AccessFailedCount.Should().Be(0);
+        }
+
+        [Test]
+        public async Task RegisterAsync_Test_EntitiesCreated()
+        {
+            // prepare
+            var numberOfUsersBeforeSave = await _userRepository.GetAll().CountAsync();
+            var numberOfEmailConfirmationAttemptsBeforeSave = await _emailConfirmationAttemptRepository.GetAll().CountAsync();
+
+            // action
+            var registeredUser = await _userService.RegisterAsync(TestDatabaseSeeder.Constants.NotRegisteredUserEmail, Guid.Parse(TestDatabaseSeeder.Constants.ActiveSiteId), "New", "User");
+
+            // assert
+            var numberOfUsersAfterSave = await _userRepository.GetAll().CountAsync();
+            var numberOfEmailConfirmationAttemptsAfterSave = await _emailConfirmationAttemptRepository.GetAll().CountAsync();
+
+            registeredUser.Email.Should().Be(TestDatabaseSeeder.Constants.NotRegisteredUserEmail);
+            registeredUser.EmailConfirmed.Should().BeFalse();
+            numberOfUsersAfterSave.Should().Be(numberOfUsersBeforeSave + 1);
+
+            var registeredUsersAttempt = _emailConfirmationAttemptService.GetByStatusAsync(registeredUser.Id, EmailConfirmationStatus.Initiated);
+            registeredUsersAttempt.Should().NotBeNull();
+            numberOfEmailConfirmationAttemptsAfterSave.Should().Be(numberOfEmailConfirmationAttemptsBeforeSave + 1);
         }
     }
 }
