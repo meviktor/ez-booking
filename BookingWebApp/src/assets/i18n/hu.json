@@ -47,6 +47,10 @@
         "TOKENEXPIRED": "Az aktiválási linkje lejárt. Kérjük vagye fel a kapcsolatot a támogatással, hogy új aktiváló linket kapjon.",
         "WELCOME": "Kedves {{firstName}}! A fiókod aktiválásához meg kell adnod egy általad választott jelszót, mely megfelel az alábbi feltételeknek:"
     },
+    "DATAGRIDTEST": {
+        "USERNAME": "Felhasználónév",
+        "AGE": "Kor"
+    },
     "LOGINCOMPONENT": {
         "ERRORS": {
             "USEREMAILREQUIRED": "Az e-mail cím megadása kötelező.",

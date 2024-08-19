@@ -1,0 +1,66 @@
+<div class="row thead">
+  <div *ngIf="viewURL || editAllowed || deleteAllowed" class="col-1"></div>
+  <div *ngFor="let column of columnSettings"  [class]="column.widthProportion ? ('col-' + column.widthProportion) : 'col'">
+    <b>{{ column.headerName | translate }}</b>
+  </div>
+</div>
+<div *ngIf="!data || !data?.length" class="row ">
+  <!--TODO: translation -->
+  There are no items in the list.
+</div>
+<div *ngIf="data && data!.length > 0">
+  <!-- TODO: check how to solve this with async pipe -->
+  <div *ngFor="let dataElement of data; index as rowIndex" class="row trow {{oddClass(rowIndex)}}">
+    <div class="col-1 center">
+      <div *ngIf="(viewURL || editAllowed || deleteAllowed) && (!rowUnderEdit)">
+        <a><fa-icon *ngIf="viewURL" [icon]="faEye" class="actionIcon"></fa-icon></a>
+        <a><fa-icon *ngIf="editAllowed" [icon]="faPencil" (click)="onEditClick(dataElement.gridRowId)" class="actionIcon"></fa-icon></a>
+        <a><fa-icon *ngIf="deleteAllowed" [icon]="faTrashCan" class="actionIcon"></fa-icon></a>
+      </div>
+    </div>
+    <ng-container *ngIf="dataElement.gridRowId == rowUnderEdit else rowNotEdited">
+      <form [formGroup]="editForm" (ngSubmit)="onEditSubmit()" name="editForm">
+        <div class="row">
+          <div class="actionIconContainer col-1">
+            <button type="submit" class="fabutton"><fa-icon [icon]="faCheck" class="fa-lg actionIcon"></fa-icon></button>
+            <button (click)="onEditCancel()" class="fabutton"><fa-icon [icon]="faXmark" class="fa-lg actionIcon"></fa-icon></button>
+          </div>
+          <div *ngFor="let column of columnSettings" [class]="column.widthProportion ? ('col-' + column.widthProportion) : 'col'">
+            <input [id]="column.fieldName" [formControlName]="column.fieldName" [type]="getInputType(column.type)" [value]="extractFieldValue(dataElement, column.fieldName)" class="form-control">
+            <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NotEmpty)" class="alert alert-danger">{{DataValidationErrorCode.NotEmpty}}</div>
+            <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.StringTooShort)" class="alert alert-danger">{{DataValidationErrorCode.StringTooShort}}</div>
+            <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.StringTooLong)" class="alert alert-danger">{{DataValidationErrorCode.StringTooLong}}</div>
+            <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NumberTooLow)" class="alert alert-danger">{{DataValidationErrorCode.NumberTooLow}}</div>
+            <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NumberTooHigh)" class="alert alert-danger">{{DataValidationErrorCode.NumberTooHigh}}</div>
+            <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NumberNotInteger)" class="alert alert-danger">{{DataValidationErrorCode.NumberNotInteger}}</div>
+            <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.DateTooLow)" class="alert alert-danger">{{DataValidationErrorCode.DateTooLow}}</div>
+            <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.DateTooHigh)" class="alert alert-danger">{{DataValidationErrorCode.DateTooHigh}}</div>
+          </div>
+        </div>
+      </form>
+    </ng-container>
+    <ng-template #rowNotEdited>
+      <div *ngFor="let column of columnSettings" [class]="column.widthProportion ? ('col-' + column.widthProportion) : 'col'">
+        {{ extractFieldValue(dataElement, column.fieldName) }}
+      </div>
+    </ng-template>
+  </div>
+  <div class="row tfooter">
+    <div class="col">
+      <span><!--TODO: translation -->Total: {{itemsTotal}} item(s)</span>
+    </div>
+    <div class="col">
+        <span [class]="actualPage <= 1 ? 'nav-element off' : 'nav-element'" (click)="navTo(1)">&lt;&lt;</span>
+        <span [class]="actualPage <= 1 ? 'nav-element off' : 'nav-element'" (click)="navOne(Direction.Backward)">&lt;</span>
+        <span *ngFor="let pageIndex of actualPageRange" [class]="pageIndex == actualPage ? 'nav-element off' : 'nav-element'" (click)="navTo(pageIndex)">{{pageIndex}}</span>
+        <span [class]="actualPage >= pagesTotal ? 'nav-element off' : 'nav-element'" (click)="navOne(Direction.Forward)">&gt;</span>
+        <span [class]="actualPage >= pagesTotal ? 'nav-element off' : 'nav-element'" (click)="navTo(pagesTotal)">&gt;&gt;</span>
+    </div>
+    <div class="col">
+      <span><!--TODO: translation -->Page size: </span>
+      <select [(ngModel)]="pageSize" (change)="pageSizeChanged()">
+        <option *ngFor="let sizeOption of availablePageSizes" [ngValue]="sizeOption">{{sizeOption}}</option>
+      </select>
+    </div>
+  </div>
+</div>

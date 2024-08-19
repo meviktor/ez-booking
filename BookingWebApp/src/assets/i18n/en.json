@@ -47,6 +47,10 @@
         "TOKENEXPIRED": "Your activation link has expired. Please contact support for recieving a new user account confirmation link.",
         "WELCOME": "Dear {{firstName}}! To active your user account you have to provide a password which complies the password policy consists of the below rules:"
     },
+    "DATAGRIDTEST": {
+        "USERNAME": "User's name",
+        "AGE": "User age"
+    },
     "LOGINCOMPONENT": {
         "ERRORS": {
             "USEREMAILREQUIRED": "E-mail address is required.",

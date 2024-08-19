@@ -36,3 +36,11 @@ label {
     align-items: center;
     text-align: center;
 }
+
+.fabutton {
+    background: none;
+    border: none;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+    size: 1.5em;
+}

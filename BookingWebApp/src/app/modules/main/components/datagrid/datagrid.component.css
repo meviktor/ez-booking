@@ -1,0 +1,49 @@
+.actionIcon {
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+    cursor: pointer;
+}
+
+.actionIconContainer {
+    margin: auto;
+}
+
+.odd {
+    background-color: #dae5f0;
+}
+
+.thead {
+    background-color: #95b9de;
+}
+
+.tfooter {
+    background-color: #95b9de;
+}
+
+.nav-element {
+    padding: 0.5em;
+    font-weight: bold;
+    color: #174dba;
+    cursor: pointer;
+}
+
+.nav-element.off {
+    font-weight: normal;
+    color: #727272;
+    cursor: auto;
+}
+
+.noItems {
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+}
+
+.row.thead, .row.tfooter {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.row.trow {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
