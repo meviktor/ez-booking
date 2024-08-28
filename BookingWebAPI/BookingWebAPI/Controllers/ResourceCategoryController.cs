@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookingWebAPI.Attributes;
+using BookingWebAPI.Common.Models;
 using BookingWebAPI.Infrastructure.ViewModels;
 using BookingWebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,15 @@ namespace BookingWebAPI.Controllers
         {
             _mapper = mapper;
             _resourceCategoryService = resourceCategoryService;
+        }
+
+        //[Authorized]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ResourceCategoryViewModel>>> GetResourceCategories()
+        {
+            var foundCategories = await _resourceCategoryService.GetResourceCategoriesAsync();
+            //return NotFound(new { message = $"Reasons" });
+            return _mapper.Map<IEnumerable<ResourceCategory>, List<ResourceCategoryViewModel>>(foundCategories);
         }
 
         [Authorized]
