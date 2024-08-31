@@ -9,7 +9,7 @@ namespace BookingWebAPI.Infrastructure.ViewModels.Mapping
     {
         public ViewModelProfile()
         {
-            CreateMap<ResourceCategory, ResourceCategoryViewModel>();
+            CreateMap<ResourceCategory, ResourceCategoryViewModel>().ReverseMap();
 
             CreateMap<BookingWebAPIUser, BookingWebAPIUserViewModel>();
             CreateMap<(BookingWebAPIUser, string), BookingWebAPIAuthenticationViewModel>()

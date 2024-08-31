@@ -19,4 +19,12 @@ export class ResourceService {
       catchError((error: HttpErrorResponse) => of(error.error))
     );
   };
+
+  public createOrUpdateResourceCategory: (rc: ResourceCategoryViewModel) => Observable<ResourceCategoryViewModel> = (rc) => {
+    return this.resourceCategoryService.apiResourceCategoryPut(rc);
+  };
+
+  public deleteResourceCategory: (rc: ResourceCategoryViewModel) => Observable<string> = (rc) => {
+    return this.resourceCategoryService.apiResourceCategoryDelete(rc);
+  };
 }

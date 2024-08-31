@@ -1,17 +1,18 @@
 <div class="row thead">
   <div *ngIf="viewURL || editAllowed || deleteAllowed" class="col-1"></div>
-  <div *ngFor="let column of columnSettings"  [class]="column.widthProportion ? ('col-' + column.widthProportion) : 'col'">
-    <b>{{ column.headerName | translate }}</b>
+  <div *ngFor="let column of (this.columnSettings | visibleColumns)"  [class]="column.widthProportion ? ('col-' + column.widthProportion) : 'col'">
+    <!-- header name has to be provided for visible columns -->
+    <b>{{ column.headerName! | translate }}</b>
   </div>
 </div>
 <ng-container *ngIf="dataViewModel as data; else noItems">
   <ng-container *ngIf="data.pageItems.length > 0 else noItems">
     <div *ngFor="let dataElement of data.pageItems; index as rowIndex" class="row trow {{oddClass(rowIndex)}}">
       <div class="col-1 center">
-        <div *ngIf="(viewURL || editAllowed || deleteAllowed) && (!rowUnderEdit)">
+        <div *ngIf="(this.viewURL || this.editAllowed || this.deleteAllowed) && (!this.rowUnderEdit)">
           <a><fa-icon *ngIf="viewURL" [icon]="faEye" class="actionIcon"></fa-icon></a>
           <a><fa-icon *ngIf="editAllowed" [icon]="faPencil" (click)="onEditClick(dataElement)" class="actionIcon"></fa-icon></a>
-          <a><fa-icon *ngIf="deleteAllowed" [icon]="faTrashCan" class="actionIcon"></fa-icon></a>
+          <a><fa-icon *ngIf="deleteAllowed" [icon]="faTrashCan" (click)="onDeleteClick(dataElement)" class="actionIcon"></fa-icon></a>
         </div>
       </div>
       <ng-container *ngIf="dataElement.gridRowId == rowUnderEdit else rowNotEdited">
@@ -21,22 +22,39 @@
               <button type="submit" class="fabutton"><fa-icon [icon]="faCheck" class="fa-lg actionIcon"></fa-icon></button>
               <button (click)="onEditCancel()" class="fabutton"><fa-icon [icon]="faXmark" class="fa-lg actionIcon"></fa-icon></button>
             </div>
-            <div *ngFor="let column of this.columnSettings" [class]="column.widthProportion ? ('col-' + column.widthProportion) : 'col'">
-              <input [id]="column.fieldName" [formControlName]="column.fieldName" [type]="getInputType(column.type)" [value]="extractFieldValue(dataElement, column.fieldName)" class="form-control">
-              <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NotEmpty)" class="alert alert-danger">{{DataValidationErrorCode.NotEmpty}}</div>
-              <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.StringTooShort)" class="alert alert-danger">{{DataValidationErrorCode.StringTooShort}}</div>
-              <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.StringTooLong)" class="alert alert-danger">{{DataValidationErrorCode.StringTooLong}}</div>
-              <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NumberTooLow)" class="alert alert-danger">{{DataValidationErrorCode.NumberTooLow}}</div>
-              <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NumberTooHigh)" class="alert alert-danger">{{DataValidationErrorCode.NumberTooHigh}}</div>
-              <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NumberNotInteger)" class="alert alert-danger">{{DataValidationErrorCode.NumberNotInteger}}</div>
-              <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.DateTooLow)" class="alert alert-danger">{{DataValidationErrorCode.DateTooLow}}</div>
-              <div *ngIf="editForm?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.DateTooHigh)" class="alert alert-danger">{{DataValidationErrorCode.DateTooHigh}}</div>
+            <div *ngFor="let column of (this.columnSettings | visibleColumns)" [class]="column.widthProportion ? ('col-' + column.widthProportion) : 'col'">
+              <!-- type has to be provided for visible columns -->
+              <input [id]="column.fieldName" [formControlName]="column.fieldName" [type]="getInputType(column.type!)" [value]="extractFieldValue(dataElement, column.fieldName)" class="form-control">
+              <div *ngIf="editForm.controls[column.fieldName]?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NotEmpty)" class="validationError">
+                {{ ('DATAGRID.VALIDATIONERRORS.' + DataValidationErrorCode.NotEmpty) | uppercase | translate }}
+              </div>
+              <div *ngIf="editForm.controls[column.fieldName]?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.StringTooShort)" class="validationError">
+                {{ ('DATAGRID.VALIDATIONERRORS.' + DataValidationErrorCode.StringTooShort) | uppercase | translate:{ min: column.validationRules!['stringMinLength'] } }}
+              </div>
+              <div *ngIf="editForm.controls[column.fieldName]?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.StringTooLong)" class="validationError">
+                {{ ('DATAGRID.VALIDATIONERRORS.' + DataValidationErrorCode.StringTooLong) | uppercase | translate:{ max: column.validationRules!['stringMaxLength'] } }}
+              </div>
+              <div *ngIf="editForm.controls[column.fieldName]?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NumberTooLow)" class="validationError">
+                {{ ('DATAGRID.VALIDATIONERRORS.' + DataValidationErrorCode.NumberTooLow) | uppercase | translate:{ min: column.validationRules!['numberMin'] } }}
+              </div>
+              <div *ngIf="editForm.controls[column.fieldName]?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NumberTooHigh)" class="validationError">
+                {{ ('DATAGRID.VALIDATIONERRORS.' + DataValidationErrorCode.NumberTooHigh) | uppercase | translate:{ max: column.validationRules!['numberMax'] } }}
+              </div>
+              <div *ngIf="editForm.controls[column.fieldName]?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.NumberNotInteger)" class="validationError">
+                {{ ('DATAGRID.VALIDATIONERRORS.' + DataValidationErrorCode.NumberNotInteger) | uppercase | translate }}
+              </div>
+              <div *ngIf="editForm.controls[column.fieldName]?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.DateTooLow)" class="validationError">
+                {{ ('DATAGRID.VALIDATIONERRORS.' + DataValidationErrorCode.DateTooLow) | uppercase | translate:{ min: column.validationRules!['dateFrom'] } }}
+              </div>
+              <div *ngIf="editForm.controls[column.fieldName]?.errors?.['validationErrorCodes'].includes(DataValidationErrorCode.DateTooHigh)" class="validationError">
+                {{ ('DATAGRID.VALIDATIONERRORS.' + DataValidationErrorCode.DateTooHigh) | uppercase | translate:{ max: column.validationRules!['dateTo'] } }}
+              </div>
             </div>
           </div>
         </form>
       </ng-container>
       <ng-template #rowNotEdited>
-        <div *ngFor="let column of this.columnSettings" [class]="column.widthProportion ? ('col-' + column.widthProportion) : 'col'">
+        <div *ngFor="let column of (this.columnSettings | visibleColumns)" [class]="column.widthProportion ? ('col-' + column.widthProportion) : 'col'">
           {{ extractFieldValue(dataElement, column.fieldName) }}
         </div>
       </ng-template>

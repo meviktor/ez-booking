@@ -35,6 +35,7 @@ namespace BookingWebAPI.Controllers
         }
 
         // TODO: restrict access to this methods only to users with admin privileges!
+        [AllowAnonymous]
         [HttpPost(nameof(Register))]
         public async Task<CreatedResult> Register(RegisterViewModel registerViewModel)
         {

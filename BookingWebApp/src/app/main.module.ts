@@ -22,6 +22,7 @@ import { StoreModule } from '@ngrx/store';
 import { resourceCategoryReducer } from './state/reducers/resourcecategory.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ResourceCategoryEffects } from './state/effects/resourcecategory.effects';
+import { DataGridVisibleColumnsPipe } from "./pipes/dataGridVisibleColumns.pipe";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../assets/i18n/', '.json');
@@ -48,15 +49,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     FontAwesomeModule,
     TranslateModule.forRoot({
-      loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
-      }
+        loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+        }
     }),
     StoreModule.forRoot({ resourceCategories: resourceCategoryReducer }),
-    EffectsModule.forRoot([ResourceCategoryEffects])
-  ],
+    EffectsModule.forRoot([ResourceCategoryEffects]),
+    DataGridVisibleColumnsPipe
+],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: CookieHttpInterceptor, multi: true }],
   bootstrap: [MainComponent]
 })

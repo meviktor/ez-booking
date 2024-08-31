@@ -47,10 +47,6 @@
         "TOKENEXPIRED": "Az aktiválási linkje lejárt. Kérjük vagye fel a kapcsolatot a támogatással, hogy új aktiváló linket kapjon.",
         "WELCOME": "Kedves {{firstName}}! A fiókod aktiválásához meg kell adnod egy általad választott jelszót, mely megfelel az alábbi feltételeknek:"
     },
-    "DATAGRIDTEST": {
-        "USERNAME": "Felhasználónév",
-        "AGE": "Kor"
-    },
     "LOGINCOMPONENT": {
         "ERRORS": {
             "USEREMAILREQUIRED": "Az e-mail cím megadása kötelező.",
@@ -59,6 +55,18 @@
             "USERLOCKEDOUT": "A felhasználói fiók zárolva lett.",
             "LOGINEMAILNOTCONFIRMED": "Az fiókhoz tartozó e-mail cím nincs megerősítve.",
             "LOGININVALIDUSERNAMEORPASSWORD": "A megadott e-mail cím és/vagy jelszó helytelen."
+        }
+    },
+    "DATAGRID": {
+        "VALIDATIONERRORS": {
+            "NOTEMPTY": "A mező nem lehet üres.",
+            "STRINGTOOSHORT": "A szöveg túl rövid. Minimum hossz: {{min}} karakter.",
+            "STRINGTOOLONG": "A szöveg túl hosszú. Maximum hossz: {{max}} karakter.",
+            "NUMBERTOOLOW": "Az érték túl alacsony. Minimum: {{min}}.",
+            "NUMBERTOOHIGH": "Az érték túl magas. Maximum: {{max}}.",
+            "NUMBERNOTINTEGER": "A megadott érék nem egész szám.",
+            "DATETOOLOW": "Érvénytelen dátum. Minimum megadható dátum: {{min}}.",
+            "DATETOOHIGH": "Érvénytelen dátum. Maximum megadható dátum: {{max}}."
         }
     }
 }

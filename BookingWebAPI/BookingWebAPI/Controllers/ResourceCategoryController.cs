@@ -34,11 +34,24 @@ namespace BookingWebAPI.Controllers
         public async Task<ActionResult<ResourceCategoryViewModel>> GetResourceCategory(Guid id)
         {
             var foundCategory = await _resourceCategoryService.GetResourceCategoryAsync(id);
-            if (foundCategory == null)
-            {
-                return NotFound(new { message = $"There is no item with the id {id}" });
-            }
-            return _mapper.Map<ResourceCategoryViewModel>(foundCategory);
+            return foundCategory != null ? _mapper.Map<ResourceCategoryViewModel>(foundCategory) : NotFound(new { message = $"There is no item with the id {id}" });
+        }
+
+        //[Authorized]
+        [HttpPut]
+        public async Task<ActionResult<ResourceCategoryViewModel>> CreateOrUpdateResourceCategory(ResourceCategoryViewModel resourceCategory)
+        {
+            var foundCategory = await _resourceCategoryService.GetResourceCategoryAsync(resourceCategory.Id);
+            return _mapper.Map<ResourceCategoryViewModel>(
+                await _resourceCategoryService.CreateOrUpdateResourceCategoryAsync(_mapper.Map(resourceCategory, foundCategory ?? new ResourceCategory()))
+            );
+        }
+
+        //[Authorized]
+        [HttpDelete]
+        public async Task<ActionResult<Guid>> DeleteResourceCategory(ResourceCategoryViewModel resourceCategory)
+        {
+            return await _resourceCategoryService.DeleteResourceCategoryAsync(resourceCategory.Id);
         }
     }
 }

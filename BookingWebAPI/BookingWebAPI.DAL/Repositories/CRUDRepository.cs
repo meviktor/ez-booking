@@ -12,7 +12,7 @@ namespace BookingWebAPI.DAL.Repositories
         {}
 
         // TODO: handling concurrency? Tested?
-        public async Task DeleteAsync(Guid id)
+        public async Task<Guid> DeleteAsync(Guid id)
         {
             if(id == default || !await ExistsAsync(id))
             {
@@ -23,6 +23,8 @@ namespace BookingWebAPI.DAL.Repositories
             // If the item exists in the database by its id, GetAsync must retrive the corresponding entity
             entityToDelete!.IsDeleted = true;
             await DbContext.SaveChangesAsync();
+
+            return entityToDelete.Id;
         }
     }
 }

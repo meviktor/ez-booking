@@ -2,6 +2,6 @@
 {
     public interface ICRUDRepository<TEntity> : ICRURepository<TEntity> where TEntity : class
     {
-        public Task DeleteAsync(Guid id);
+        public Task<Guid> DeleteAsync(Guid id);
     }
 }

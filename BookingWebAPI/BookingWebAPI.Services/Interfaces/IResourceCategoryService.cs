@@ -7,5 +7,9 @@ namespace BookingWebAPI.Services.Interfaces
         Task<ResourceCategory?> GetResourceCategoryAsync(Guid id);
 
         Task<IEnumerable<ResourceCategory>> GetResourceCategoriesAsync();
+
+        Task<ResourceCategory> CreateOrUpdateResourceCategoryAsync(ResourceCategory resourceCategory);
+
+        Task<Guid> DeleteResourceCategoryAsync(Guid id);
     }
 }

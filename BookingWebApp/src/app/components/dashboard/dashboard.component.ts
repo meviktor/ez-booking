@@ -16,8 +16,9 @@ import { map, Subscription } from 'rxjs';
 export class DashboardComponent implements OnInit, OnDestroy {
   public welcomeMessage?: string = 'Welcome to the dark side!';
   public gridColumns: DataGridColumnDefinition[] = [ 
-    { headerName: "CORE.NAME", fieldName: "name", type: DataType.String, canEdit: false, validationRules: { notEmpty: null } },
-    { headerName: "CORE.DESCRIPTION", fieldName: "description", type: DataType.String, canEdit: false, validationRules: { notEmpty: null } }
+    { fieldName: "name", type: DataType.String, headerName: "CORE.NAME",  canEdit: false, validationRules: { notEmpty: null, stringMinLength: 10 }, visible: true },
+    { fieldName: "description", type: DataType.String, headerName: "CORE.DESCRIPTION", canEdit: false, validationRules: { notEmpty: null }, visible: true },
+    { fieldName: "id", visible: false },
   ];
 
   @ViewChild('mainDataGrid', { static: true }) dataGrid?: DataGridComponent<ResourceCategoryViewModel>;
@@ -39,10 +40,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.gridDataSubscription?.unsubscribe();
     this.gridDataSubscription = this.store.select(selectEntityListFromState(s => s.resourceCategories, pageSize, whichPage))
               .pipe(map(rcs => ({ totalItems: rcs.totalItems, pageIndex: whichPage, pageItems: rcs.selectedItems })))
-              .subscribe(fpm => { this.gridData = fpm; });
-  };
+              .subscribe(fpm => { this.gridData = fpm; console.log("New grid data arrived:"); console.log(fpm); });
+  }
 
-  public editUser: (user: any) => void = (user) => {
-    console.log(`Action modifying user info to: ${user.username}, ${user.age} has been fired.`);
+  public editResourceCategory: (resourceCategory: ResourceCategoryViewModel) => void = (resourceCategory) => {
+    this.store.dispatch({ type: ResourceCategoryActionNames.createOrUpdateResourceCategory, resourceCategory });
+  }
+
+  public deleteResourceCategory: (resourceCategory: ResourceCategoryViewModel) => void = (resourceCategory) => {
+    this.store.dispatch({ type: ResourceCategoryActionNames.deleteResourceCategory, resourceCategory });
   }
 }

@@ -38,15 +38,15 @@ class DataGridComponent<TElement extends object> implements OnChanges, AfterView
    */
   @Input() fetchAction: (pageSize: number, whichPage: number) => void = null!;
   /**
-   * Callback for editing a grid item. Editing an item has to trigger the grid's selector (data$).
+   * Callback for editing a grid item.
    @param editedItem the edited grid item.
    */
   @Input() editAction: (editedItem: TElement) => void = null!;
    /**
-   * Callback for deleting a grid item. Deleting an item has to trigger the grid's selector (data$).
+   * Callback for deleting a grid item.
    @param deletedItem the item selected for deletion.
    */
-  @Input() deleteAction: (deletedItem: TElement) => void = null!;
+  @Input() deleteAction: (editedItem: TElement) => void = null!;
 
   public DataValidationErrorCode = DataValidationErrorCode;
 
@@ -91,6 +91,7 @@ class DataGridComponent<TElement extends object> implements OnChanges, AfterView
   protected onEditSubmit(){
     if(this.rowUnderEdit !== undefined && this.editForm !== undefined && this.editForm.valid){
       this.editAction(this.editForm.value);
+      this.rowUnderEdit = undefined;
     }
   }
 
@@ -158,12 +159,8 @@ class DataGridComponent<TElement extends object> implements OnChanges, AfterView
     this.rowUnderEdit = item.gridRowId;
   }
 
-  protected editItem(editedItem: TElement): void {
-    this.editAction(editedItem);
-  }
-
-  protected deleteItem(editedItem: TElement): void {
-    this.deleteAction(editedItem);
+  protected onDeleteClick(element: TElement): void {
+    this.deleteAction(element);
   }
 
   protected createFormGroup(item: DataGridInternalViewModel<TElement>): FormGroup {
@@ -213,9 +210,13 @@ type DataGridInternalViewModel<T> = T & {
  */
 interface DataGridColumnDefinition {
   /**
+   * Specifies if the filed should be displayed in its own column in the grid or not.
+   */
+  visible?: boolean;
+  /**
    * Translation text identifier for the column header.
    */
-  headerName: string;
+  headerName?: string;
   /**
    * Name of the field which will be displayed in the column.
    */
@@ -223,11 +224,11 @@ interface DataGridColumnDefinition {
   /**
    * Type of the field which will be displayed in the column.
    */
-  type: DataType;
+  type?: DataType;
   /**
    * Specifies if the column supports editing.
    */
-  canEdit: boolean;
+  canEdit?: boolean;
   /**
    * Specifies the width of the column if specified. The whole grid has 12 width units (comes from bootstrap).
    */
@@ -237,7 +238,7 @@ interface DataGridColumnDefinition {
    * Keys has to be chosen from the {@link DataValidation} type. The keys also refer to the type of the value has to be chosen for the validation rule.
    * E.g. when the rule StringMinLength is chosen, then the value must have the string type.
    */
-  validationRules?: { [key: string]: string | number | Date | null }
+  validationRules?: { [key: DataValidation]: string | number | Date | null }
 }
 
 /**

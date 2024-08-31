@@ -12,6 +12,7 @@
 
 
 export interface ResourceCategoryViewModel { 
+    id?: string;
     name?: string | null;
     description?: string | null;
 }
