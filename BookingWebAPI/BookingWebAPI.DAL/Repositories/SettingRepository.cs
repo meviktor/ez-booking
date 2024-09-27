@@ -1,5 +1,6 @@
 ﻿using BookingWebAPI.Common.Enums;
 using BookingWebAPI.Common.Models;
+using BookingWebAPI.DAL.Infrastructure;
 using BookingWebAPI.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ namespace BookingWebAPI.DAL.Repositories
         public SettingRepository(BookingWebAPIDbContext dbContext) : base(dbContext)
         {
         }
+
+        public override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[] { };
 
         public async Task<BookingWebAPISetting?> GetSettingByNameAsync(string settingName) => await Set.SingleOrDefaultAsync(s => !s.IsDeleted && s.Name == settingName);
 

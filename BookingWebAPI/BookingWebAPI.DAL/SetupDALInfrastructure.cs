@@ -28,6 +28,9 @@ namespace BookingWebAPI.DAL
             {
                 throw new ArgumentNullException(nameof(connectionString), ApplicationConstants.AppStartupErrorNoConnectionString);
             }
+            // Here in the lambda we "configure" what DbContextOptionsBuilder object will be passed to the db context's constructor.
+            // Other possible option would be call this without any arguments and configure the context (to use SQL Server as db provider/engine, specify connection string...)
+            // int its OnConfigure() method. 
             return services.AddDbContext<BookingWebAPIDbContext>(options => options.UseSqlServer(connectionString));
         }
     }

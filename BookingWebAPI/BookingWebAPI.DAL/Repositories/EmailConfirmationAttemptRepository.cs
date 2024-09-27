@@ -1,16 +1,15 @@
-﻿using BookingWebAPI.Common.Constants;
-using BookingWebAPI.Common.Enums;
+﻿using BookingWebAPI.Common.Enums;
 using BookingWebAPI.Common.ErrorCodes;
+using BookingWebAPI.Common.Interfaces;
 using BookingWebAPI.Common.Models;
 using BookingWebAPI.DAL.Enums;
 using BookingWebAPI.DAL.Infrastructure;
 using BookingWebAPI.DAL.Interfaces;
-using BookingWebAPI.DAL.Repositories.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookingWebAPI.DAL.Repositories
 {
-    internal class EmailConfirmationAttemptRepository : RepositoryBase<EmailConfirmationAttempt>, IEmailConfirmationAttemptRepository
+    internal class EmailConfirmationAttemptRepository : CRURepository<EmailConfirmationAttempt>, IEmailConfirmationAttemptRepository
     {
         public EmailConfirmationAttemptRepository(BookingWebAPIDbContext dbContext) : base(dbContext)
         {
@@ -20,8 +19,13 @@ namespace BookingWebAPI.DAL.Repositories
             new ErrorCodeAssociation("FK_EmailConfirmationAttempts_Users_UserId", SqlServerErrorCode.ConstraintViolated, ApplicationErrorCodes.EmailConfirmationUserIdRequired)
         };
 
-        public async Task<EmailConfirmationAttempt> CreateOrUpdateAsync(EmailConfirmationAttempt entity) => await this.CreateOrUpdateInternalAsync(entity);
+        public async Task<IEnumerable<EmailConfirmationAttempt>> GetByStatusAsync(Guid userId, EmailConfirmationStatus status) 
+            => await DbContext.EmailConfirmationAttempts.Where(eca => eca.UserId == userId && eca.Status == status).ToListAsync();
 
-        public async Task<IEnumerable<EmailConfirmationAttempt>> GetByStatusAsync(Guid userId, EmailConfirmationStatus status) => await DbContext.EmailConfirmationAttempts.Where(eca => eca.UserId == userId && eca.Status == status).ToListAsync();
+        public override async Task<EmailConfirmationAttempt?> GetAsync(Guid id) => await Set.SingleOrDefaultAsync(e => e.Id == id);
+
+        public override async Task<bool> ExistsAsync(Guid id) => await Set.AnyAsync(e => e.Id == id);
+
+        public override IQueryable<EmailConfirmationAttempt> GetAll() => Set;
     }
 }

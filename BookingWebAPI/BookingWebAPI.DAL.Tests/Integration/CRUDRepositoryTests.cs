@@ -1,6 +1,7 @@
 ﻿using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
 using BookingWebAPI.Common.Models;
+using BookingWebAPI.DAL.Infrastructure;
 using BookingWebAPI.DAL.Repositories;
 using BookingWebAPI.Testing.Common;
 using FluentAssertions;
@@ -9,15 +10,28 @@ using NUnit.Framework;
 
 namespace BookingWebAPI.DAL.Tests.Integration
 {
+    /// <summary>
+    /// Class created for testing CRUDRepository<T>, as it cannot be instantiated.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    internal class CRUDRepositoryDerived<T> : CRUDRepository<T> where T : ModelBase, new()
+    {
+        public CRUDRepositoryDerived(BookingWebAPIDbContext dbContext) : base(dbContext)
+        {
+        }
+
+        public override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[] { };
+    }
+
     internal class CRUDRepositoryTests : IntegrationTestBase
     {
-        private CRUDRepository<Site> _repository;
+        private CRUDRepositoryDerived<Site> _repository;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-            _repository = new CRUDRepository<Site>(_dbContext);
+            _repository = new CRUDRepositoryDerived<Site>(_dbContext);
         }
 
         [TestCase(TestDatabaseSeeder.Constants.EmptyId)]

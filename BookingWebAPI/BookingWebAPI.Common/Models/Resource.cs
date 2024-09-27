@@ -16,10 +16,10 @@ namespace BookingWebAPI.Common.Models
 
         public Guid ResourceCategoryId { get; set; }
 
-        public virtual ResourceCategory ResourceCategory { get; set; } = null!;
+        public ResourceCategory ResourceCategory { get; set; } = null!;
 
-        public virtual Guid SiteId { get; set; }
+        public Guid SiteId { get; set; }
 
-        public virtual Site Site { get; set; } = null!;
+        public Site Site { get; set; } = null!;
     }
 }

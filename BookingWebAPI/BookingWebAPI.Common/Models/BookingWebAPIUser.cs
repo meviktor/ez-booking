@@ -37,8 +37,8 @@ namespace BookingWebAPI.Common.Models
 
         public Guid SiteId { get; set; }
 
-        public virtual Site Site { get; set; } = null!;
+        public Site Site { get; set; } = null!;
 
-        public virtual ICollection<EmailConfirmationAttempt> EmailConfirmationAttempts { get; set; } = new List<EmailConfirmationAttempt>();
+        public ICollection<EmailConfirmationAttempt> EmailConfirmationAttempts { get; set; } = new List<EmailConfirmationAttempt>();
     }
 }

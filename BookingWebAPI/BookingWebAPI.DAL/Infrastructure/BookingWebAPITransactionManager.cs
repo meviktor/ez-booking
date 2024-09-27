@@ -25,12 +25,10 @@ namespace BookingWebAPI.DAL.Infrastructure
                 _dbContext.Database.BeginTransaction();
             }
             _transactionDepthLevel++;
-#pragma warning disable CS8603
             // If _transactionNestingLevel was zero, there will be a current transaction because of the BeginTransaction() call.
             // If _transactionNestingLevel is not zero, we already have a transaction which is in progress.
             // Eventually, it should not be null at this point.
             return new BookingWebAPITransaction(this, _transactionDepthLevel);
-#pragma warning restore
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
@@ -40,10 +38,8 @@ namespace BookingWebAPI.DAL.Infrastructure
                 await _dbContext.Database.BeginTransactionAsync(cancellationToken);
             }
             _transactionDepthLevel++;
-#pragma warning disable CS8603
             // See the BeginTransaction() method for explanation.
             return new BookingWebAPITransaction(this, _transactionDepthLevel);
-#pragma warning restore
         }
 
         public void CommitTransaction()

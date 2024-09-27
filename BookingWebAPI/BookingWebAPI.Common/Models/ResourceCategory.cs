@@ -16,8 +16,8 @@ namespace BookingWebAPI.Common.Models
 
         public Guid? BaseCategoryId { get; set; }
 
-        public virtual ResourceCategory? BaseCategory { get; set; }
+        public ResourceCategory? BaseCategory { get; set; }
 
-        public virtual ICollection<Resource> Resources { get; set; } = new List<Resource>();
+        public ICollection<Resource> Resources { get; set; } = new List<Resource>();
     }
 }

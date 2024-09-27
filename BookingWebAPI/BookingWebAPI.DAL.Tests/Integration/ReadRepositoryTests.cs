@@ -1,23 +1,36 @@
 ﻿using BookingWebAPI.Common.Models;
+using BookingWebAPI.DAL.Infrastructure;
 using BookingWebAPI.DAL.Repositories;
 using BookingWebAPI.Testing.Common;
-using NUnit.Framework;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using BookingWebAPI.Common.Exceptions;
-using BookingWebAPI.Common.ErrorCodes;
+using NUnit.Framework;
 
 namespace BookingWebAPI.DAL.Tests.Integration
 {
+    /// <summary>
+    /// Class created for testing ReadRepository<T>, as it cannot be instantiated.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    internal class ReadRepositoryDerived<T> : ReadRepository<T> where T : ModelBase 
+    {
+        public ReadRepositoryDerived(BookingWebAPIDbContext dbContext) : base(dbContext)
+        {
+        }
+
+        public override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[] { };
+ 
+    }
+
     internal class ReadRepositoryTests : IntegrationTestBase
     {
-        private ReadRepository<Site> _repository;
+        private ReadRepositoryDerived<Site> _repository;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-            _repository = new ReadRepository<Site>(_dbContext);
+            _repository = new ReadRepositoryDerived<Site>(_dbContext);
         }
 
         [Test]
