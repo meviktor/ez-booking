@@ -1,0 +1,3 @@
+<div id="alertContainer">
+    <ngb-alert *ngFor="let alert of this.alerts" [type]="alert.type" (closed)="dismiss(alert)">{{ alert.message }}</ngb-alert>
+</div>

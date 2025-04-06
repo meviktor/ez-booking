@@ -15,14 +15,12 @@ export class LoginComponent {
   public loginFormSubmitted: boolean;
   
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private translateService: TranslateService, private router: Router) {
-    this.loginForm = this.buildLoginForm();
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
     this.loginFormSubmitted = false;
   }
-
-  private buildLoginForm = (): FormGroup<LoginFormControls> => this.formBuilder.group<LoginFormControls>({
-    email: new FormControl<string | null>('', [Validators.required, Validators.email]),
-    password: new FormControl<string | null>('', Validators.required)
-  });
 
   public onLoginFormSubmit = (): void => {
     this.loginFormSubmitted = true;

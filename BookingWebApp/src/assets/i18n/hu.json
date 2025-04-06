@@ -68,5 +68,12 @@
             "DATETOOLOW": "Érvénytelen dátum. Minimum megadható dátum: {{min}}.",
             "DATETOOHIGH": "Érvénytelen dátum. Maximum megadható dátum: {{max}}."
         }
+    },
+    "RESOURCECATEGORY": {
+        "GETFAILED": "Hiba történt az erőforrás kategóriák lekérése közben!",
+        "CREATEORUPDATESUCCESS": "Erőforrás kategória sikeresen létrehozva/módosítva!",
+        "CREATEORUPDATEFAILED": "Erőforrás kategória létrehozása/módosítása sikertelen!",
+        "DELETESUCCESS": "Erőforrás kategória sikeresen törölve!",
+        "DELETEFAILED": "Erőforrás kategória törlése sikertelen!"
     }
 }

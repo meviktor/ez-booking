@@ -68,5 +68,12 @@
             "DATETOOLOW": "Invalid date. Minium valid date: {{min}}.",
             "DATETOOHIGH": "Invalid date. Maximum valid date: {{max}}."
         }
+    },
+    "RESOURCECATEGORY": {
+        "GETFAILED": "Could not get list of resource categories!",
+        "CREATEORUPDATESUCCESS": "Resource category successfully created/modified!",
+        "CREATEORUPDATEFAILED": "Could not create/modify resource category.",
+        "DELETESUCCESS": "Resource category successfully deleted!",
+        "DELETEFAILED": "Could not delete resource category."
     }
 }

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -23,7 +23,9 @@ import { resourceCategoryReducer } from './state/reducers/resourcecategory.reduc
 import { EffectsModule } from '@ngrx/effects';
 import { ResourceCategoryEffects } from './state/effects/resourcecategory.effects';
 import { DataGridVisibleColumnsPipe } from "./pipes/dataGridVisibleColumns.pipe";
+import { AlertBarComponent } from './components/alertbar/alertbar.component';
 
+// TODO: try out file loader instead of HTTP loader
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../assets/i18n/', '.json');
 }
@@ -37,28 +39,31 @@ export function HttpLoaderFactory(http: HttpClient) {
     ConfirmUserComponent,
     EmailAddressConfirmationComponent,
     ErrorPageComponent,
-    DataGridComponent
+    DataGridComponent,
+    AlertBarComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MainRoutingModule,
     NgbModule,
+    NgbAlertModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     FontAwesomeModule,
     TranslateModule.forRoot({
-        loader: {
-            provide: TranslateLoader,
-            useFactory: HttpLoaderFactory,
-            deps: [HttpClient]
-        }
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
     }),
     StoreModule.forRoot({ resourceCategories: resourceCategoryReducer }),
     EffectsModule.forRoot([ResourceCategoryEffects]),
+    // todo: what does this pipe doing here?
     DataGridVisibleColumnsPipe
-],
+  ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: CookieHttpInterceptor, multi: true }],
   bootstrap: [MainComponent]
 })
