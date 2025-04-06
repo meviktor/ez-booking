@@ -12,11 +12,11 @@ namespace BookingWebAPI.Common.Models
     public class BookingWebAPIUser : ModelBase
     {
         [Required]
-        [MaxLength(ApplicationConstants.UserNameMaximumLength)]
+        [MaxLength(ApplicationConstants.UserNameMaximumLength, ErrorMessage = ApplicationErrorCodes.UserUserNameTooLong)]
         public string UserName { get; set; } = null!;
 
         [Required]
-        [MaxLength(ApplicationConstants.EmailMaximumLength)]
+        [MaxLength(ApplicationConstants.EmailMaximumLength, ErrorMessage = ApplicationErrorCodes.UserEmailTooLong)]
         [BookingWebAPIEmailAddress(ErrorMessage = ApplicationErrorCodes.UserEmailInvalidFormat)]
         public string Email { get; set; } = null!;
 

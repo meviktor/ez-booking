@@ -1,6 +1,8 @@
 ﻿using BookingWebAPI.Common.Constants;
 using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
+using BookingWebAPI.Common.Models.Config;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,10 +16,9 @@ namespace BookingWebAPI.Middleware
 
         public JwtAuthMiddleware(RequestDelegate next) => _next = next;
 
-        public async Task Invoke(HttpContext context, IConfiguration configuration)
+        public async Task Invoke(HttpContext context, IOptions<JwtConfiguration> jwtConfiguration)
         {
-            var jwtSecret = configuration["JwtConfig:Secret"];
-            if (jwtSecret == null)
+            if (jwtConfiguration.Value.Secret == null)
             {
                 throw new BookingWebAPIException(ApplicationErrorCodes.CannotAuthenticate, "No JWT secret found for authentication.");
             }
@@ -27,7 +28,7 @@ namespace BookingWebAPI.Middleware
                 try
                 {
                     var tokenHandler = new JwtSecurityTokenHandler();
-                    var key = Encoding.ASCII.GetBytes(jwtSecret);
+                    var key = Encoding.ASCII.GetBytes(jwtConfiguration.Value.Secret);
                     tokenHandler.ValidateToken(token, new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,

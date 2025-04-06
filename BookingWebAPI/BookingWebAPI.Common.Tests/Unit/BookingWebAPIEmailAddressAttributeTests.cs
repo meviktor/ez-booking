@@ -28,7 +28,7 @@ namespace BookingWebAPI.Common.Tests.Unit
             new object?[] { true, false, "testmail@provider.com" },
             new object?[] { false, false, "testmail@providercom" },
             new object?[] { false, false, "" },
-            new object?[] { false, true, (string?)null },
+            new object?[] { false, false, null },
             new object?[] { false, true, (byte)1 },
             new object?[] { false, true, 7.6f }
         };

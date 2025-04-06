@@ -1,12 +1,13 @@
 ﻿using BookingWebAPI.Common.Constants;
 using BookingWebAPI.Common.ErrorCodes;
 using BookingWebAPI.Common.Exceptions;
+using BookingWebAPI.Common.Models.Config;
 using BookingWebAPI.Common.Utils;
 using BookingWebAPI.Middleware;
 using BookingWebAPI.Testing.Common;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
@@ -20,21 +21,21 @@ namespace BookingWebAPI.Test.Unit
         private const string _userName = "jwtMiddlewareTest";
         private const string _jwtSecret = "testJwtSecret!ForJwtAuthMiddlewareTests";
         private const int _expirationTimeInSecs = 2;
+        private readonly JwtConfiguration _jwtConfigObj = new JwtConfiguration { Secret = _jwtSecret, ValidInSeconds = _expirationTimeInSecs };
 
-        private readonly Mock<IConfiguration> _jwtConfigurationMock;
+        private readonly Mock<IOptions<JwtConfiguration>> _jwtConfigurationMock;
         private readonly Guid _userId;
 
         public JwtAuthMiddlewareTests() : base()
         {
-            _jwtConfigurationMock = new Mock<IConfiguration>();
+            _jwtConfigurationMock = new Mock<IOptions<JwtConfiguration>>();
             _userId = Guid.NewGuid();
         }
 
         [SetUp]
         public void SetUp()
         {
-            _jwtConfigurationMock.Setup(configuration => configuration["JwtConfig:Secret"]).Returns(_jwtSecret);
-            _jwtConfigurationMock.Setup(configuration => configuration["JwtConfig:ValidInSeconds"]).Returns($"{_expirationTimeInSecs}");
+            _jwtConfigurationMock.Setup(options => options.Value).Returns(_jwtConfigObj);
         }
 
         [TestCase(true, false)]
@@ -49,7 +50,8 @@ namespace BookingWebAPI.Test.Unit
             var jwtAuthMiddleware = new JwtAuthMiddleware((httpContext) => Task.CompletedTask);
             var httpContext = CreateHttpContext(authHeader, cookie);
 
-            _jwtConfigurationMock.Setup(configuration => configuration["JwtConfig:Secret"]).Returns(jwtSecret); // "default" JWT secret set up in SetUp() may be overridden with value coming from TestCaseAttribute
+            // "default" JWT secret set up in SetUp() may be overridden with value coming from TestCaseAttribute
+            _jwtConfigurationMock.Setup(options => options.Value).Returns(new JwtConfiguration { Secret = jwtSecret, ValidInSeconds = _expirationTimeInSecs });
             var action = async () => await jwtAuthMiddleware.Invoke(httpContext, _jwtConfigurationMock.Object);
 
             // action & assert

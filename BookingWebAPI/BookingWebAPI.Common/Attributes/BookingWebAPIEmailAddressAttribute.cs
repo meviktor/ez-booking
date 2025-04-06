@@ -23,7 +23,7 @@ namespace BookingWebAPI.Common.Attributes
         {
             if (value == null)
             {
-                throw new ArgumentException(nameof(value));
+                return false;
             }
 
             var type = value.GetType();
