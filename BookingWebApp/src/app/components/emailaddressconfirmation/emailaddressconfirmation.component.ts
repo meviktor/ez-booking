@@ -1,13 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { IconDefinition, faCircleCheck, faCircleXmark} from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, of, take } from 'rxjs';
-import { EmailConfirmationResultViewModel } from 'src/app/model/';
+
+import { EmailConfirmationResultViewModel } from 'src/app/model';
 import { UsersService } from 'src/app/api/api';
-import { BookingWebAPIErrorResponse } from 'src/shared/models/bookingWebAPIErrorResponse';
-import { IconDefinition, faCircleCheck, faCircleXmark} from '@fortawesome/free-solid-svg-icons';
-import { ErrorService } from '../../services';
+import { BookingWebAPIErrorResponse } from 'src/shared/models';
+
+import { ErrorService } from 'src/app/services';
 
 
 @Component({

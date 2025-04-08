@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+
+import { TranslateService } from '@ngx-translate/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, exhaustMap, catchError, tap } from 'rxjs/operators';
-import { ResourceService } from '../../services';
-import * as ACTIONS from '../actions/resourcecategory.actions';
-import { ResourceCategoryActionNames } from '../actions/resourcecategory.actions';
-import { AlertService } from 'src/app/services/alert.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { TranslateService } from '@ngx-translate/core';
-import { NotificationType } from 'src/shared/models/alertBarItem';
+
+import * as ACTIONS from 'src/app/state/actions';
+import { ResourceCategoryActionNames } from 'src/app/state/actions';
+import { AlertService } from 'src/app/services';
+import { ResourceService } from 'src/app/services';
+import { NotificationType } from 'src/shared/models';
 
 @Injectable()
 export class ResourceCategoryEffects {

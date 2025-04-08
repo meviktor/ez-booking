@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ResourceCategoryViewModel } from '../../model';
-import { DataGridColumnDefinition, DataGridComponent, DataType, FetchPageModel } from '../datagrid/datagrid.component';
+
 import { Store } from '@ngrx/store';
-import { BookingWebAppState } from 'src/app/state/bookingwebappstate';
-import { ResourceCategoryActionNames } from 'src/app/state/actions/resourcecategory.actions';
-import { selectEntityListFromState } from 'src/app/state/selectors/generic.selectors';
 import { map, Subscription } from 'rxjs';
 
+import { ResourceCategoryViewModel } from 'src/app/model';
+import { BookingWebAppState } from 'src/app/state/';
+import { ResourceCategoryActionNames } from 'src/app/state/actions/';
+import { selectEntityListFromState } from 'src/app/state/selectors/';
+import { DataGridColumnDefinition, DataGridComponent, DataType, FetchPageModel } from 'src/app/components';
 
 @Component({
   selector: 'app-dashboard',

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+
 import { TranslateService } from '@ngx-translate/core';
-import { BookingWebAPIErrorResponse } from 'src/shared/models/bookingWebAPIErrorResponse';
 import { IconDefinition, faCircleExclamation, faBug} from '@fortawesome/free-solid-svg-icons';
-import { ErrorService } from '../../services';
+
+import { BookingWebAPIErrorResponse } from 'src/shared/models';
+import { ErrorService } from 'src/app/services';
 
 @Component({
   selector: 'app-errorpage',

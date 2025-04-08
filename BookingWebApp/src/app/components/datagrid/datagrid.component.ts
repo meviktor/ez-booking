@@ -1,10 +1,12 @@
 import { Component, Input, OnChanges, SimpleChanges, SimpleChange, AfterViewInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { arrayOfRange } from 'src/shared/utils';
 import { IconDefinition, faPencil, faEye, faTrashCan, faSquareCheck, faSquareXmark} from '@fortawesome/free-solid-svg-icons'
 import { v4 as uidGen } from 'uuid';
+
+import { arrayOfRange } from 'src/shared/utils';
 
 /**
  * Custom grid control for displaying items regardless of their type. Allows view, edit and delete actions via externally provided callbacks (via attributes). 

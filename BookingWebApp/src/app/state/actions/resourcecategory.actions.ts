@@ -1,5 +1,5 @@
 import { createAction, emptyProps, props } from '@ngrx/store';
-import { ResourceCategoryViewModel } from '../../model';
+import { ResourceCategoryViewModel } from 'src/app/model';
 
 export const ResourceCategoryActionNames = {
   getResourceCategories: "getResourceCategories",

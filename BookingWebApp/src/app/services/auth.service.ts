@@ -1,9 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
+
 import { Observable, Subject, catchError, map, of, tap } from 'rxjs';
-import { BookingWebAPIAuthenticationViewModel, BookingWebAPIUserViewModel, LoginViewModel } from '../model';
-import { UsersService } from '../api/api';
-import { BookingWebAPIErrorResponse } from 'src/shared/models/bookingWebAPIErrorResponse';
+
+import { BookingWebAPIAuthenticationViewModel, BookingWebAPIUserViewModel, LoginViewModel } from 'src/app/model';
+import { UsersService } from 'src/app/api/api';
+import { BookingWebAPIErrorResponse } from 'src/shared/models';
 
 @Injectable({
   providedIn: 'root'

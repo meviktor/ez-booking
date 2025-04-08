@@ -1,5 +1,6 @@
-import { AnimationTriggerMetadata, animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy } from '@angular/core';
+import { AnimationTriggerMetadata, animate, state, style, transition, trigger } from '@angular/animations';
+
 import { Subscription, interval, map } from 'rxjs';
 
 enum AnimationState {

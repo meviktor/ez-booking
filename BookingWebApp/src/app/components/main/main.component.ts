@@ -1,13 +1,15 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import { BookingWebAPIUserViewModel } from 'src/app/model';
-import { AuthService } from '../../services';
 import { Router } from '@angular/router';
+
 import { Subscription, take } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { LocaleCode } from '../../../shared/enums';
-import * as Utils from '../../../shared/utils';
-import { AlertBarComponent } from '../alertbar/alertbar.component';
-import { AlertService } from 'src/app/services/alert.service';
+
+import { AlertBarComponent } from 'src/app/components';
+import { AlertService } from 'src/app/services';
+import { AuthService } from 'src/app/services';
+import { LocaleCode } from 'src/shared/enums';
+import * as Utils from 'src/shared/utils';
+import { BookingWebAPIUserViewModel } from 'src/app/model';
 
 @Component({
   selector: 'app-root',

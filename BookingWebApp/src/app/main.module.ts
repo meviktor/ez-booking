@@ -1,29 +1,35 @@
+// Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
+// Other npm dependencies
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { MainRoutingModule } from './main-routing.module';
-import { MainComponent } from './components/main/main.component';
-import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { CookieHttpInterceptor } from './interceptors/cookieinterceptor';
-import { LoginSlideShowComponent } from './components/login/loginslideshow.component';
-import { ConfirmUserComponent } from './components/confirmuser/confirmuser.component';
-import { EmailAddressConfirmationComponent } from './components/emailaddressconfirmation/emailaddressconfirmation.component';
+import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ErrorPageComponent } from './components/errorpage/errorpage.component';
-import { DataGridComponent } from './components/datagrid/datagrid.component';
 import { StoreModule } from '@ngrx/store';
-import { resourceCategoryReducer } from './state/reducers/resourcecategory.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { ResourceCategoryEffects } from './state/effects/resourcecategory.effects';
-import { DataGridVisibleColumnsPipe } from "./pipes/dataGridVisibleColumns.pipe";
-import { AlertBarComponent } from './components/alertbar/alertbar.component';
+// Components
+import { AlertBarComponent } from './components';
+import { ConfirmUserComponent } from './components';
+import { DashboardComponent } from './components';
+import { DataGridComponent } from './components';
+import { EmailAddressConfirmationComponent } from './components';
+import { ErrorPageComponent } from './components';
+import { LoginComponent } from './components';
+import { LoginSlideShowComponent } from './components';
+import { MainComponent } from './components';
+// Pipes
+import { DataGridVisibleColumnsPipe } from "./pipes";
+// State
+import { resourceCategoryReducer } from './state/reducers';
+import { ResourceCategoryEffects } from './state/effects';
+// Interceptors
+import { CookieHttpInterceptor } from './interceptors';
+// Modules
+import { MainRoutingModule } from './main-routing.module';
 
 // TODO: try out file loader instead of HTTP loader
 export function HttpLoaderFactory(http: HttpClient) {

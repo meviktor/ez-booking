@@ -2,12 +2,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, of, take } from 'rxjs';
-import { BookingWebAPIUserViewModel } from '../../model';
-import { UsersService } from '../../api/api';
-import { BookingWebAPIErrorResponse } from 'src/shared/models/bookingWebAPIErrorResponse';
 
+import { BookingWebAPIUserViewModel } from 'src/app/model';
+import { UsersService } from 'src/app/api/api';
+import { BookingWebAPIErrorResponse } from 'src/shared/models';
 
 @Component({
   selector: 'app-confirmuser',

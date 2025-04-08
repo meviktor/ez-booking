@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import authGuard from './guards/auth.guard';
-import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import confirmUserGuard from './guards/confirmuser.guard';
-import { EmailAddressConfirmationComponent } from './components/emailaddressconfirmation/emailaddressconfirmation.component';
-import { ErrorPageComponent } from './components/errorpage/errorpage.component';
+import * as Guards from 'src/app/guards';
+
+import { DashboardComponent } from 'src/app/components';
+import { EmailAddressConfirmationComponent } from 'src/app/components';
+import { ErrorPageComponent } from 'src/app/components';
+import { LoginComponent } from 'src/app/components';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent, canActivate: [authGuard] },
-  { path: 'emailaddressconfirmation/:confirmationAttemptId', component: EmailAddressConfirmationComponent, canActivate: [confirmUserGuard] },
+  { path: '', component: DashboardComponent, canActivate: [Guards.authGuard] },
+  { path: 'emailaddressconfirmation/:confirmationAttemptId', component: EmailAddressConfirmationComponent, canActivate: [Guards.confirmUserGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'error', component: ErrorPageComponent }
 ];

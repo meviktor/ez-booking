@@ -1,5 +1,6 @@
 import { createSelector } from '@ngrx/store';
-import { BookingWebAppState } from '../bookingwebappstate';
+
+import { BookingWebAppState } from 'src/app/state/bookingwebappstate';
 
 /**
  * Selector for returning items from the state, optionally in paged/sorted form.

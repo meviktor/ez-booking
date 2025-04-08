@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BookingWebAPIErrorResponse } from 'src/shared/models/bookingWebAPIErrorResponse';
+
+import { BookingWebAPIErrorResponse } from 'src/shared/models';
 
 @Injectable({
   providedIn: 'root'

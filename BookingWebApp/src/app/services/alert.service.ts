@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { AlertBarItem } from 'src/shared/models/alertBarItem';
 
+import { Subject } from 'rxjs';
+
+import { AlertBarItem } from 'src/shared/models/';
 
 @Injectable({
   providedIn: 'root'

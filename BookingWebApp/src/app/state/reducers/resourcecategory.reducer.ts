@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { getResourceCategoriesSuccess, createOrUpdateResourceCategorySuccess, deleteResourceCategorySuccess } from '../actions/resourcecategory.actions';
-import { ResourceCategoryViewModel } from '../../model';
+import { getResourceCategoriesSuccess, createOrUpdateResourceCategorySuccess, deleteResourceCategorySuccess } from 'src/app/state/actions';
+import { ResourceCategoryViewModel } from 'src/app/model';
 
 export const initialStateResourceCategory: ReadonlyArray<ResourceCategoryViewModel> = [];
 

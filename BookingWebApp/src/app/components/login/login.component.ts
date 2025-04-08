@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+
 import { take } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+
+import { AuthService } from 'src/app/services';
 
 @Component({
   selector: 'app-login',

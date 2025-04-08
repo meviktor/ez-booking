@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DataGridColumnDefinition } from '../components/datagrid/datagrid.component';
+
+import { DataGridColumnDefinition } from '../components';
 
 @Pipe({
   standalone: true,

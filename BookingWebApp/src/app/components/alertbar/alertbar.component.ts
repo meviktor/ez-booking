@@ -1,5 +1,6 @@
-import { AlertBarItem } from 'src/shared/models/alertBarItem';
 import { Component } from '@angular/core';
+
+import { AlertBarItem } from 'src/shared/models';
 
 @Component({
   selector: 'app-alertbar',

@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, of, throwError } from 'rxjs';
-import { ResourceCategoryService } from '../api/api';
-import { ResourceCategoryViewModel } from '../model';
+import { Observable, catchError, of } from 'rxjs';
+
+import { ResourceCategoryService } from 'src/app/api/api';
+import { ResourceCategoryViewModel } from 'src/app/model';
 
 @Injectable({
   providedIn: 'root'
