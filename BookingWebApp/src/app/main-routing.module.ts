@@ -12,7 +12,8 @@ const routes: Routes = [
   { path: '', component: DashboardComponent, canActivate: [Guards.authGuard] },
   { path: 'emailaddressconfirmation/:confirmationAttemptId', component: EmailAddressConfirmationComponent, canActivate: [Guards.confirmUserGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'error', component: ErrorPageComponent }
+  { path: 'error', component: ErrorPageComponent },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
