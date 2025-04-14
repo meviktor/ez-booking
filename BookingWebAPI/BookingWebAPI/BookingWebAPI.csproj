@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
-    <UserSecretsId>10fcc781-959a-4c36-8d3f-ab8929845dc1</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
