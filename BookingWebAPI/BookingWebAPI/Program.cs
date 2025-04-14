@@ -4,6 +4,7 @@ using BookingWebAPI.Infrastructure;
 using BookingWebAPI.Middleware;
 using BookingWebAPI.Services;
 using BookingWebAPI.TaskManagement;
+using BookingWebAPI.Utils;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,7 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer()
-    .AddSwaggerGen();
+    .AddSwaggerGen(SwaggerSecurityDefinition.Add);
 
 builder.Services.ConfigureHangfire(apiConnectionString);
 
