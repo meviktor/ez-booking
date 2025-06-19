@@ -1,3 +1,4 @@
+//using Azure.Identity;
 using BookingWebAPI.Common.Models.Config;
 using BookingWebAPI.DAL;
 using BookingWebAPI.Infrastructure;
@@ -8,6 +9,16 @@ using BookingWebAPI.Utils;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// If the app is not locally hosted: use Key Vault config.
+//if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != Environments.Development)
+//{
+//    string? keyVaultUri = Environment.GetEnvironmentVariable("AZURE_KEYVAULT_URI");
+//    if(keyVaultUri != null)
+//    {
+//        builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUri), new DefaultAzureCredential());
+//    }
+//}
 
 var apiConnectionString = builder.Configuration.GetConnectionString("DefaultDatabaseConnection");
 
@@ -31,11 +42,12 @@ builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection(
 
 var corsPolicy = new CorsPolicyConfiguration();
 builder.Configuration.GetSection("CorsPolicy").Bind(corsPolicy);
+// TODO: more restricitive CORS
 builder.Services.AddCors(options => options.AddDefaultPolicy(b => b.WithOrigins(corsPolicy.AllowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials() ));
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
     using (var scope = app.Services.CreateScope())
     {
