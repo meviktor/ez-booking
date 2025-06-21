@@ -37,7 +37,7 @@ namespace BookingWebAPI.Controllers
         // TODO: restrict access to this methods only to users with admin privileges!
         [AllowAnonymous]
         [HttpPost(nameof(Register))]
-        public async Task<CreatedResult> Register(RegisterViewModel registerViewModel)
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
         {
             // users will be created by admin. usernames are auto calculated via format <lastname>.<firstname><# of users having the same first & last name>.
             return Created(nameof(Authenticate), _mapper.Map<BookingWebAPIUserViewModel>(await _userService.RegisterAsync(registerViewModel.EmailAddress, registerViewModel.SiteId, registerViewModel.FirstName, registerViewModel.LastName)));
@@ -54,7 +54,7 @@ namespace BookingWebAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet(nameof(ConfirmEmailAddressResult))]
-        public async Task<EmailConfirmationResultViewModel> ConfirmEmailAddressResult(Guid confirmationAttemptId)
+        public async Task<ActionResult<EmailConfirmationResultViewModel>> ConfirmEmailAddressResult(Guid confirmationAttemptId)
         {
             var attempt = await _emailConfirmationService.GetInStatusAsync(confirmationAttemptId, new[] { EmailConfirmationStatus.Succeeded, EmailConfirmationStatus.Failed });
             return _mapper.Map<EmailConfirmationResultViewModel>(attempt);
@@ -62,7 +62,7 @@ namespace BookingWebAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost(nameof(Authenticate))]
-        public async Task<BookingWebAPIAuthenticationViewModel> Authenticate([FromBody] LoginViewModel loginViewModel)
+        public async Task<ActionResult<BookingWebAPIAuthenticationViewModel>> Authenticate(LoginViewModel loginViewModel)
         {
             var authModel = _mapper.Map<BookingWebAPIAuthenticationViewModel>(await _userService.AuthenticateAsync(loginViewModel.Email, loginViewModel.Password));
             HttpContext.Response.Cookies.Append(ApplicationConstants.JwtToken, authModel.Token, new CookieOptions { Domain = "ezbooking.com", Secure = true, HttpOnly = true, SameSite = SameSiteMode.None, Expires = DateTimeOffset.Now.AddDays(1), Path = "/" });
@@ -70,7 +70,7 @@ namespace BookingWebAPI.Controllers
         }
 
         [HttpGet(nameof(LoggedInUser))]
-        public async Task<BookingWebAPIUserViewModel> LoggedInUser()
+        public async Task<ActionResult<BookingWebAPIUserViewModel>> LoggedInUser()
         {
             var userIdClaim = HttpContext.User.Claims.Single(claim => claim.Type.Equals(ApplicationConstants.JwtClaimId));
             var loggedInUser = await _userService.GetAsync(Guid.Parse(userIdClaim.Value));
