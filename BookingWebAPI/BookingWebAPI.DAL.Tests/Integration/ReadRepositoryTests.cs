@@ -22,6 +22,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
  
     }
 
+    [TestFixture]
     internal class ReadRepositoryTests : IntegrationTestBase
     {
         private ReadRepositoryDerived<Site> _repository;

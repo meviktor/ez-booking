@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 namespace BookingWebAPI.DAL.Tests.Integration
 {
+    [TestFixture]
     internal class ResourceRepositoryTests : IntegrationTestBase
     {
         private ResourceRepository _repository;

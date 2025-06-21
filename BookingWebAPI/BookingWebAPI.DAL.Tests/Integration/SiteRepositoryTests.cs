@@ -11,6 +11,7 @@ using static BookingWebAPI.Testing.Common.TestDatabaseSeeder;
 
 namespace BookingWebAPI.DAL.Tests.Integration
 {
+    [TestFixture]
     internal class SiteRepositoryTests : IntegrationTestBase
     {
         private SiteRepository _repository;

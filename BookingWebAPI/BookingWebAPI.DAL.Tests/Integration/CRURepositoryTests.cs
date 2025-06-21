@@ -23,6 +23,7 @@ namespace BookingWebAPI.DAL.Tests.Integration
         public override IEnumerable<ErrorCodeAssociation> ErrorCodeAssosications => new ErrorCodeAssociation[] { };
     }
 
+    [TestFixture]
     internal class CRURepositoryTests : IntegrationTestBase
     {
         private CRURepository<Site> _repository;

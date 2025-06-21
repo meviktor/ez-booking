@@ -10,6 +10,7 @@ using NUnit.Framework;
 
 namespace BookingWebAPI.DAL.Tests.Integration
 {
+    [TestFixture]
     internal class EmailConfirmationAttemptRepositoryTests : IntegrationTestBase
     {
         private EmailConfirmationAttemptRepository _repository;

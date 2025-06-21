@@ -42,17 +42,57 @@ namespace BookingWebAPI.Testing.Common
             new BookingWebAPISetting { Id = Guid.NewGuid(), Name = $"{Constants.DeletedSettingName}_{SettingCategory.PasswordPolicy}", ValueType = SettingValueType.String, RawValue = "rawValueDeleted", Category = SettingCategory.PasswordPolicy, IsDeleted = true },
             new BookingWebAPISetting { Id = Guid.NewGuid(), Name = ApplicationConstants.LoginMaxAttempts, ValueType = SettingValueType.Integer, RawValue = "5", Category = SettingCategory.Login },
             new BookingWebAPISetting { Id = Guid.NewGuid(), Name = ApplicationConstants.PasswordPolicyMinLength, ValueType = SettingValueType.Integer, RawValue = "8", Category = SettingCategory.PasswordPolicy }
-
         };
 
-        internal static void SeedTestData(this BookingWebAPIDbContext dbContext)
+        internal static void SeedTestData(this BookingWebAPIDbContext dbContext, bool dbDroppedRecreated)
         {
-            dbContext.Sites.AddRange(Sites);
-            dbContext.Users.AddRange(Users);
-            dbContext.Settings.AddRange(Settings);
-            dbContext.ResourceCategories.AddRange(ResourceCategories);
-            dbContext.Resources.AddRange(Resources);
-            dbContext.SaveChanges();
+            // For Azure SQL database: it won't be dropped & recreated, like the test database in the local SQL Server instance on dev machines.
+            if (!dbDroppedRecreated)
+            {
+                dbContext.ClearTestData();
+            }
+
+            dbContext.InsertTestData();
+        }
+        
+        private static void ClearTestData(this BookingWebAPIDbContext dbContext)
+        {
+            dbContext.Resources.RemoveRange(dbContext.Resources);
+            dbContext.ResourceCategories.RemoveRange(dbContext.ResourceCategories);
+
+            dbContext.Users.RemoveRange(dbContext.Users);
+            dbContext.Sites.RemoveRange(dbContext.Sites);
+
+            dbContext.Settings.RemoveRange(dbContext.Settings);
+
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new IntegrationTestSetupException("Could not clear the database entries. See the inner exception for details.", e);
+            }
+        }
+
+        private static void InsertTestData(this BookingWebAPIDbContext dbContext)
+        {
+            dbContext.AddRange(Settings);
+
+            dbContext.AddRange(ResourceCategories);
+            dbContext.AddRange(Resources);
+
+            dbContext.AddRange(Sites);
+            dbContext.AddRange(Users);
+
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new IntegrationTestSetupException("Could not insert new entries. See the inner exception for details.", e);
+            }
         }
 
         public static class Constants
