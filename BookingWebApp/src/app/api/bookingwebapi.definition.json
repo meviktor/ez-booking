@@ -5,8 +5,13 @@
     "version": "1.0"
   },
   "servers" : [ {
-    "url": "https://api.ezbooking.com:8000",
-    "description": "BookingWebAPI dev"
+    "url": "https://{host}",
+    "variables": {
+      "host": {
+        "default": "api.ezbooking.com:8000",
+        "description": "Fallback variable of API URL for BookingWebAPI development environment. The URL in environment.ts is used at the first place."
+      }
+    }
   }],
   "paths": {
     "/Ping": {

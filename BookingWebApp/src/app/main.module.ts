@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
+import { Configuration } from './configuration';
 // Other npm dependencies
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -30,10 +31,23 @@ import { ResourceCategoryEffects } from './state/effects';
 import { CookieHttpInterceptor } from './interceptors';
 // Modules
 import { MainRoutingModule } from './main-routing.module';
+import { environment } from 'src/environments/environment';
+import { ApiModule } from './api.module';
 
 // TODO: try out file loader instead of HTTP loader
-export function HttpLoaderFactory(http: HttpClient) {
+function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../../../assets/i18n/', '.json');
+}
+
+/**
+ * Injecting the right configuration with the correct backend API URL
+ * for local development environment and production.
+ * @returns The configuration used for injection.
+ */
+function APIConfigFactory(): Configuration {
+  return new Configuration({
+    basePath: environment.apiBaseUrl
+  });
 }
 
 @NgModule({
@@ -67,6 +81,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     StoreModule.forRoot({ resourceCategories: resourceCategoryReducer }),
     EffectsModule.forRoot([ResourceCategoryEffects]),
+    ApiModule.forRoot(APIConfigFactory),
+    
     // todo: what does this pipe doing here?
     DataGridVisibleColumnsPipe
   ],

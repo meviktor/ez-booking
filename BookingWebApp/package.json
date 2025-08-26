@@ -4,10 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host app.ezbooking.com",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "api-generate": "openapi-generator-cli generate -g typescript-angular -i src/app/api/bookingwebapi.definition.json -o src/app --server-variables=server=api.ezbooking.com:8000"
+    "api-generate": "openapi-generator-cli generate -g typescript-angular -i src/app/api/bookingwebapi.definition.json -o src/app"
   },
   "private": true,
   "dependencies": {
